@@ -96,8 +96,7 @@
     .seal-button:hover { transform: scale(1.035); filter: brightness(1.14); box-shadow: 0 0 26px rgba(199,155,69,.24), inset 0 0 0 3px rgba(199,155,69,.16), 0 14px 38px rgba(0,0,0,.4); }
     .seal-button:hover::before { left: 130%; }
     .seal-button:active { transform: scale(.98); }
-    .corner-label { position: fixed; z-index: 30; top: max(12px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); display: flex; align-items: center; transition:opacity 180ms ease,visibility 0s; }
-    .stage.is-content-scrolled .corner-label { opacity:0;visibility:hidden;pointer-events:none;transition:opacity 180ms ease,visibility 0s linear 180ms; }
+    .corner-label { position: fixed; z-index: 30; top: max(12px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); display: flex; align-items: center; }
     .company-logos { display:flex; align-items:center; gap:7px; }
     .company-logo { display:block; width:132px; height:62px; padding:0; object-fit:contain; background:transparent; border:0; border-radius:0; box-shadow:none; }
     .company-logo--capital-one { width:132px; }
@@ -260,11 +259,12 @@
       .scene--result { padding-top:88px; }
     }
     @media (max-width: 540px) {
-      .corner-label { top:max(72px,calc(env(safe-area-inset-top, 0px) + 64px));left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));width:auto;justify-content:center; }
+      .corner-label { position:absolute;top:max(72px,calc(env(safe-area-inset-top, 0px) + 64px));left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));width:auto;justify-content:center; }
       .company-logos { width:min(100%,380px);justify-content:space-evenly;gap:5px; }
       .company-logo,.company-logo--capital-one { flex:0 1 calc(50% - 5px);width:calc(50% - 5px);height:auto;max-height:78px;padding:0; }
-      .language-switch { top:max(10px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right)); }
+      .language-switch { position:absolute;top:max(10px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right)); }
       .language-button { min-width:40px;min-height:44px;font-size:.76rem; }
+      .stage:not([data-scene="temple"]) .lantern { visibility:hidden;pointer-events:none; }
       .scene { justify-content:flex-start; overflow-y:auto; padding-top:max(166px,calc(env(safe-area-inset-top, 0px) + 156px)); padding-bottom:max(56px,calc(env(safe-area-inset-bottom, 0px) + 40px)); scrollbar-width:none; }
       .scene::-webkit-scrollbar { display:none;width:0;height:0; }
       .scene--temple .scene-content,#scene-number .number-content,.scene--reveal .reveal-paper { margin-top:auto; margin-bottom:auto; }
@@ -341,13 +341,6 @@
 <body>
   <a class="skip-link" href="#main" id="skipLink">ข้ามไปยังเนื้อหาหลัก</a>
   <div class="stage" id="main" data-scene="temple">
-    <div class="corner-label" id="companyBrand" role="group" aria-label="โลโก้บริษัท">
-      <span class="visually-hidden" id="brandLabel">THE ORACLE OF FORTUNE</span>
-      <div class="company-logos">
-        <img class="company-logo company-logo--capital-one" src="assets/capital-one-real-estate.png" alt="Capital One Real Estate Thailand" decoding="async">
-        <img class="company-logo company-logo--kw" src="assets/keller-williams-thailand-white.png" alt="Keller Williams Thailand" decoding="async">
-      </div>
-    </div>
     <div class="language-switch language-switch--utility" role="group" aria-label="เลือกภาษา" id="languageSwitchUtility">
       <button class="language-button is-current" type="button" data-language="th" aria-label="ภาษาไทย" aria-pressed="true">TH</button>
       <button class="language-button" type="button" data-language="en" aria-label="English" aria-pressed="false">EN</button>
@@ -460,6 +453,13 @@
     <main>
       <!-- Scene 01: enter the temple -->
       <section class="scene scene--temple is-active" id="scene-temple" aria-labelledby="heroTitle">
+        <div class="corner-label" id="companyBrand" role="group" aria-label="โลโก้บริษัท">
+          <span class="visually-hidden" id="brandLabel">THE ORACLE OF FORTUNE</span>
+          <div class="company-logos">
+            <img class="company-logo company-logo--capital-one" src="assets/capital-one-real-estate.png" alt="Capital One Real Estate Thailand" decoding="async">
+            <img class="company-logo company-logo--kw" src="assets/keller-williams-thailand-white.png" alt="Keller Williams Thailand" decoding="async">
+          </div>
+        </div>
         <div class="scene-content">
           <div class="eyebrow" id="heroEyebrow">A quiet moment with your own fortune</div>
           <h1 class="hero-title" id="heroTitle">เซียมซี</h1>
@@ -735,21 +735,22 @@
     const numberInput = document.getElementById("fortuneNumber");
     const numberError = document.getElementById("numberError");
     const companyBrand = document.getElementById("companyBrand");
+    const languageSwitchUtility = document.getElementById("languageSwitchUtility");
     const sceneElement = name => document.getElementById(`scene-${name}`);
     let selectedNumber = null;
     let resultStatusKey = "";
     let revealTimer = 0;
     const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
-    function syncMobileBrandVisibility() {
+    function syncBrandPlacement() {
       const activeScene = scenes.find(scene => scene.classList.contains("is-active"));
-      const hideBrand = matchMedia("(max-width: 540px)").matches && Boolean(activeScene && activeScene.scrollTop > 12);
-      stage.classList.toggle("is-content-scrolled",hideBrand);
+      if (!activeScene) return;
+      const target = matchMedia("(max-width: 540px)").matches ? activeScene : stage;
+      if (companyBrand.parentElement !== target) target.prepend(companyBrand);
+      if (languageSwitchUtility.parentElement !== target) target.prepend(languageSwitchUtility);
     }
-    scenes.forEach(scene => scene.addEventListener("scroll",() => {
-      if (scene.classList.contains("is-active")) syncMobileBrandVisibility();
-    },{passive:true}));
-    window.addEventListener("resize",syncMobileBrandVisibility,{passive:true});
+    window.addEventListener("resize",syncBrandPlacement,{passive:true});
+    syncBrandPlacement();
 
     function goToScene(name) {
       scenes.forEach(scene => {
@@ -764,7 +765,7 @@
         document.getElementById("resultHeading").focus({preventScroll:true});
         document.querySelector(".scene--result").scrollTop = 0;
       }
-      syncMobileBrandVisibility();
+      syncBrandPlacement();
     }
 
     function applyLanguage(language) {
