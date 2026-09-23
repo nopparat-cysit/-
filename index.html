@@ -783,25 +783,30 @@
       ctx.font = font;
       const locale = language === "th" ? "th-TH" : language === "zh" ? "zh-CN" : "en-US";
       let units;
+      const graphemes = input => {
+        try { return [...new Intl.Segmenter(locale,{granularity:"grapheme"}).segment(input)].map(part => part.segment); }
+        catch (_) { return Array.from(input); }
+      };
       try {
         const granularity = language === "zh" ? "grapheme" : "word";
         units = [...new Intl.Segmenter(locale,{granularity}).segment(value)].map(part => part.segment);
       } catch (_) {
-        units = language === "en" ? (value.match(/\S+\s*/g) || [value]) : Array.from(value);
+        units = language === "en" ? (value.match(/\S+\s*/g) || [value]) : graphemes(value);
       }
       const lines = [];
       let line = "";
       for (const unit of units) {
         const candidate = line + unit;
-        if (!line || ctx.measureText(candidate).width <= maxWidth) {
-          if (ctx.measureText(candidate).width <= maxWidth) { line = candidate; continue; }
-        }
+        if (ctx.measureText(candidate).width <= maxWidth) { line = candidate; continue; }
         if (line.trim()) lines.push(line.trimEnd());
-        let next = unit.trimStart();
         line = "";
-        for (const character of Array.from(next)) {
-          if (line && ctx.measureText(line + character).width > maxWidth) { lines.push(line); line = character; }
-          else line += character;
+        const pieces = graphemes(unit.trimStart());
+        for (const character of pieces) {
+          if (line && ctx.measureText(line + character).width > maxWidth) {
+            lines.push(line.trimEnd()); line = "";
+          }
+          if (ctx.measureText(character).width > maxWidth) continue;
+          line += character;
         }
       }
       if (line.trim()) lines.push(line.trimEnd());
@@ -862,7 +867,10 @@
         const lines = wrapPaperText(ctx,text,maxWidth,font,currentLanguage);
         ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = "alphabetic";
         const drawX = align === "center" ? x + maxWidth/2 : x;
+        const clipX = align === "center" ? x - maxWidth/2 : x;
+        ctx.save(); ctx.beginPath(); ctx.rect(clipX,top-lineHeight,maxWidth,Math.max(lineHeight,lines.length*lineHeight+4)); ctx.clip();
         lines.forEach((line,index) => ctx.fillText(line,drawX,top + index*lineHeight,maxWidth));
+        ctx.restore();
         return top + lines.length*lineHeight;
       };
       const drawRule = (top) => {
@@ -887,12 +895,20 @@
           const x = gridX + column*(columnWidth+gap);
           const headingFont = `600 18px ${fontFamily}`;
           const bodyFont = `400 17px ${fontFamily}`;
-          const headingLines = wrapPaperText(ctx,item.heading,columnWidth,headingFont,currentLanguage);
-          const bodyLines = wrapPaperText(ctx,item.text,columnWidth,bodyFont,currentLanguage);
+          const headingWidth = columnWidth-25;
+          const headingLines = wrapPaperText(ctx,item.heading,headingWidth,headingFont,currentLanguage);
+          const bodyLines = wrapPaperText(ctx,item.text,columnWidth-10,bodyFont,currentLanguage);
+          ctx.save(); ctx.beginPath(); ctx.rect(x,rowTop,columnWidth,500); ctx.clip();
           ctx.font = headingFont; ctx.fillStyle = red; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-          headingLines.forEach((line,lineIndex) => ctx.fillText(`◇ ${line}`,x,rowTop+26+lineIndex*25,columnWidth));
+          ctx.strokeStyle = gold; ctx.lineWidth = 1.4;
+          headingLines.forEach((line,lineIndex) => {
+            const baseline = rowTop+26+lineIndex*25;
+            ctx.save(); ctx.translate(x+7,baseline-6); ctx.rotate(Math.PI/4); ctx.strokeRect(-3,-3,6,6); ctx.restore();
+            ctx.fillText(line,x+20,baseline,headingWidth);
+          });
           ctx.font = bodyFont; ctx.fillStyle = ink;
-          bodyLines.forEach((line,lineIndex) => ctx.fillText(line,x+2,rowTop+59+headingLines.length*25+lineIndex*31,columnWidth));
+          bodyLines.forEach((line,lineIndex) => ctx.fillText(line,x+2,rowTop+59+headingLines.length*25+lineIndex*31,columnWidth-10));
+          ctx.restore();
           return {headingLines:headingLines.length,bodyLines:bodyLines.length};
         });
         const rowHeight = Math.max(...prepared.map(cell => 72 + cell.headingLines*25 + cell.bodyLines*31),86);
