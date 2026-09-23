@@ -110,9 +110,6 @@
     .language-legend { color:#e8d6ae; font-size:.82rem; font-weight:500; letter-spacing:.02em; white-space:nowrap; }
     .language-options { display:flex; justify-content:center; gap:3px; }
     .language-switch--home .language-button { min-width:46px; min-height:38px; padding:0 8px; border-radius:999px; font-size:.86rem; }
-    .sound-toggle { position: fixed; z-index: 31; top: max(64px, calc(env(safe-area-inset-top, 0px) + 60px)); right: max(14px, env(safe-area-inset-right)); min-width: 112px; height: 44px; border: 1px solid rgba(199,155,69,.58); background: rgba(16,10,8,.92); color: #f0dfb8; cursor: pointer; letter-spacing: .04em; font-size: .82rem; backdrop-filter: blur(7px); }
-    .sound-toggle:hover { border-color: var(--gold); background: rgba(73,26,17,.72); }
-    .sound-icon { display: inline-block; margin-right: 7px; color: var(--gold); }
     .scene-index { position: fixed; z-index: 30; left: max(20px, env(safe-area-inset-left)); bottom: max(18px, env(safe-area-inset-bottom)); color: #e9d9b4; font-size: .76rem; letter-spacing: .16em; text-shadow:0 1px 5px #080504; }
     .scene-index strong { color: var(--gold-light); font-size: .76rem; font-weight: 400; margin-right: 7px; }
 
@@ -268,8 +265,7 @@
       .company-logo--capital-one { width:86px; }
       .language-switch { top:max(10px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right)); }
       .language-button { min-width:40px;min-height:44px;font-size:.76rem; }
-      .sound-toggle { min-width:104px;height:44px;font-size:.78rem;top:max(60px,calc(env(safe-area-inset-top, 0px) + 58px));right:max(12px,env(safe-area-inset-right)); }
-      .scene { justify-content:flex-start; overflow-y:auto; padding-top:max(128px,calc(env(safe-area-inset-top, 0px) + 116px)); padding-bottom:max(56px,calc(env(safe-area-inset-bottom, 0px) + 40px)); scrollbar-width:none; }
+      .scene { justify-content:flex-start; overflow-y:auto; padding-top:max(82px,calc(env(safe-area-inset-top, 0px) + 72px)); padding-bottom:max(56px,calc(env(safe-area-inset-bottom, 0px) + 40px)); scrollbar-width:none; }
       .scene::-webkit-scrollbar { display:none;width:0;height:0; }
       .scene--temple .scene-content,#scene-number .number-content,.scene--reveal .reveal-paper { margin-top:auto; margin-bottom:auto; }
       .scene-content { margin-top:auto; }
@@ -284,7 +280,7 @@
       .number-content::before { inset:-14px -2px; }
       .number-instruction { font-size:1.05rem; }
       .fortune-slip { width:100%;margin-top:22px;padding:27px 18px 23px; }
-      .scene.scene--result { padding-left:14px;padding-right:14px;padding-top:148px!important; }
+      .scene.scene--result { padding-left:14px;padding-right:14px;padding-top:88px!important; }
       .scene--result .result-overline { display:none; }
       .reading-list { grid-template-columns:1fr; }
       .reading-item,.reading-item:nth-child(odd),.reading-item:nth-child(even) { border-right:0;padding:15px 5px; }
@@ -309,7 +305,7 @@
       .company-logo--capital-one { width:70px; }
       .scene .number-content { padding-left:8px;padding-right:8px; }
       .fortune-slip { width:100%; }
-      #scene-number { padding-top:max(132px,calc(env(safe-area-inset-top, 0px) + 120px));padding-bottom:28px; }
+      #scene-number { padding-top:max(86px,calc(env(safe-area-inset-top, 0px) + 74px));padding-bottom:28px; }
       #scene-number .number-content { margin:0 auto;padding:0 8px; }
       #scene-number .number-heading { margin-top:6px;font-size:clamp(1.75rem,8vw,2.2rem);line-height:1.28; }
       #scene-number .number-instruction { margin-top:4px;font-size:.98rem;line-height:1.5; }
@@ -321,8 +317,8 @@
       #scene-number .number-range { margin-top:8px;font-size:.86rem; }
     }
     @media (max-width: 760px) and (orientation: landscape) {
-      .scene { padding-top:max(84px,calc(env(safe-area-inset-top, 0px) + 72px));padding-bottom:34px; }
-      .scene.scene--result { padding-top:116px!important; }
+      .scene { padding-top:max(72px,calc(env(safe-area-inset-top, 0px) + 62px));padding-bottom:34px; }
+      .scene.scene--result { padding-top:82px!important; }
       .hero-title { font-size:clamp(3rem,10vh,4.5rem);margin-top:8px; }
       .hero-subtitle { margin-top:8px;line-height:1.55;font-size:1rem; }
       .hero-note { margin-top:4px;padding:2px 6px; }
@@ -358,9 +354,6 @@
       <button class="language-button" type="button" data-language="en" aria-label="English" aria-pressed="false">EN</button>
       <button class="language-button" type="button" data-language="zh" aria-label="简体中文" aria-pressed="false">中文</button>
     </div>
-    <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="false" aria-label="เปิดเสียงประกอบ">
-      <span class="sound-icon" aria-hidden="true">◖</span><span id="soundLabel">เสียงปิด</span>
-    </button>
     <div class="scene-index" aria-hidden="true"><strong id="sceneNumber">01</strong><span id="sceneName">THE TEMPLE</span></div>
 
     <!-- Layered temple illustration: moon, mountains, tiled roofs, gate, beams and carved columns. -->
@@ -570,7 +563,7 @@
     const fortuneLevels = ["มหามงคล","มงคล","มหามงคล","มหามงคล","มงคล","กลาง","มงคล","มหามงคล","มงคล","มหามงคล","มงคล","กลาง","มงคล","มงคล","กลาง","มหามงคล","มงคล","มหามงคล","มหามงคล","มงคล","กลาง","มหามงคล","มหามงคล","มงคล","มงคล","มหามงคล","ควรระวัง","มงคล","มหามงคล","มหามงคล"];
     const translations = {
       th: {
-        htmlLang:"th", title:"เปิดชะตาเซียมซี — คำทำนายของคุณ", description:"เปิดคำทำนายเซียมซีในประสบการณ์ดิจิทัลที่ได้รับแรงบันดาลใจจากศาลเจ้าจีน", skip:"ข้ามไปยังเนื้อหาหลัก", brand:"เปิดชะตาเซียมซี", companyLogos:"โลโก้บริษัท", soundOn:"เสียงเปิด", soundOff:"เสียงปิด", soundOnAria:"ปิดเสียงประกอบ", soundOffAria:"เปิดเสียงประกอบ", languageLabel:"เลือกภาษา",
+        htmlLang:"th", title:"เปิดชะตาเซียมซี — คำทำนายของคุณ", description:"เปิดคำทำนายเซียมซีในประสบการณ์ดิจิทัลที่ได้รับแรงบันดาลใจจากศาลเจ้าจีน", skip:"ข้ามไปยังเนื้อหาหลัก", brand:"เปิดชะตาเซียมซี", companyLogos:"โลโก้บริษัท", languageLabel:"เลือกภาษา",
         scenes:{temple:"ศาลเจ้า",number:"หมายเลขของคุณ",reveal:"เปิดคำทำนาย",result:"คำทำนายของคุณ"},
         heroEyebrow:"ช่วงเวลาเงียบสงบกับคำทำนายของคุณ",heroTitle:"เซียมซี",heroLineOne:"บางคำตอบ ไม่ได้ถูกค้นพบ",heroLineTwo:"แต่กำลังรอให้คุณเปิดมัน",heroNote:"เขย่าเซียมซีจริง แล้วนำเลขที่ได้มากรอกที่นี่",begin:"กรอกเลขเซียมซี",beginAria:"ไปกรอกหมายเลขเซียมซีที่ได้จากการเขย่าจริง",
         numberEyebrow:"หมายเลขจากเซียมซีจริง",numberTitle:"เลขเซียมซีของคุณ",numberInstruction:"ใส่เฉพาะหมายเลขที่ได้จากการเขย่าเซียมซีจริง",numberLabel:"กรอกหมายเลขเซียมซี ตั้งแต่ 1 ถึง 30",numberCaption:"กรอกหมายเลขเซียมซี · ๑ — ๓๐",numberRange:"หมายเลขเซียมซีมีตั้งแต่ ๑ ถึง ๓๐",revealButton:"เปิดคำทำนาย",errorEmpty:"โปรดกรอกหมายเลขที่คุณได้รับ",errorRange:"กรุณาเลือกหมายเลขตั้งแต่ 1 ถึง 30",
@@ -579,7 +572,7 @@
         demo:"หมายเลขนี้ยังไม่มีข้อมูลเฉพาะ จึงแสดงคำทำนายตัวอย่าง",again:"เสี่ยงเซียมซีอีกครั้ง",save:"บันทึกเป็นภาพ",share:"แชร์คำทำนาย",saveDone:"บันทึกใบคำทำนายเป็นภาพ PNG แล้ว",saveFailed:"บันทึกภาพไม่สำเร็จ ลองอีกครั้ง",shareDone:"ส่งต่อคำทำนายแล้ว",shareCopied:"คัดลอกคำทำนายและลิงก์ไว้ในคลิปบอร์ดแล้ว",shareFailed:"ไม่สามารถแชร์ได้ในเบราว์เซอร์นี้ ลองบันทึกคำทำนายแทน",footer:"ขอให้แสงแห่งปัญญานำทางคุณในทุกก้าวต่อจากนี้",loading:"เปิดประตูแห่งโชคชะตา",lantern:"แตะโคมเพื่อให้สว่างขึ้น",shareTitle:"Fortune",languageNames:{th:"ภาษาไทย",en:"English",zh:"简体中文"}
       },
       en: {
-        htmlLang:"en",title:"The Oracle of Fortune — Your Reading",description:"Reveal your fortune in a quiet digital experience inspired by a Chinese temple.",skip:"Skip to main content",brand:"THE ORACLE OF FORTUNE",companyLogos:"Company logos",soundOn:"Sound on",soundOff:"Sound off",soundOnAria:"Turn sound off",soundOffAria:"Turn sound on",languageLabel:"Choose language",
+        htmlLang:"en",title:"The Oracle of Fortune — Your Reading",description:"Reveal your fortune in a quiet digital experience inspired by a Chinese temple.",skip:"Skip to main content",brand:"THE ORACLE OF FORTUNE",companyLogos:"Company logos",languageLabel:"Choose language",
         scenes:{temple:"THE TEMPLE",number:"YOUR NUMBER",reveal:"THE REVEAL",result:"YOUR FORTUNE"},
         heroEyebrow:"A quiet moment with your own fortune",heroTitle:"Fortune",heroLineOne:"Some answers aren't found.",heroLineTwo:"They're waiting for you to uncover them.",heroNote:"Draw a real fortune stick, then enter its number here.",begin:"Enter your number",beginAria:"Enter the number from your real fortune-stick draw",
         numberEyebrow:"YOUR NUMBER FROM THE REAL DRAW",numberTitle:"Your fortune number",numberInstruction:"Enter only the number you drew in person.",numberLabel:"Enter your fortune number, from 1 to 30",numberCaption:"FORTUNE NUMBER · 1 — 30",numberRange:"Fortune numbers range from 1 to 30.",revealButton:"Reveal my fortune",errorEmpty:"Please enter the number you drew.",errorRange:"Choose a number from 1 to 30.",
@@ -588,7 +581,7 @@
         demo:"A sample reading is shown for this number.",again:"Draw again",save:"Save as image",share:"Share reading",saveDone:"Your fortune paper was saved as a PNG image.",saveFailed:"The image could not be saved. Please try again.",shareDone:"Your reading has been shared.",shareCopied:"Reading and link copied to your clipboard.",shareFailed:"Sharing isn't available here. You can save the reading instead.",footer:"May wisdom light the way for every step ahead.",loading:"Opening the gate of fortune",lantern:"Tap the lantern to light it",shareTitle:"Fortune",languageNames:{th:"Thai",en:"English",zh:"Simplified Chinese"}
       },
       zh: {
-        htmlLang:"zh-CN",title:"求签 · 为你揭晓签语",description:"在灵感源自中国寺庙的数字体验中，开启属于你的签语。",skip:"跳转到主要内容",brand:"签语 · 命运神谕",companyLogos:"公司标志",soundOn:"声音开启",soundOff:"声音关闭",soundOnAria:"关闭声音",soundOffAria:"开启声音",languageLabel:"选择语言",
+        htmlLang:"zh-CN",title:"求签 · 为你揭晓签语",description:"在灵感源自中国寺庙的数字体验中，开启属于你的签语。",skip:"跳转到主要内容",brand:"签语 · 命运神谕",companyLogos:"公司标志",languageLabel:"选择语言",
         scenes:{temple:"神殿",number:"输入签号",reveal:"揭晓",result:"你的签语"},
         heroEyebrow:"静下心来，聆听属于你的签语",heroTitle:"求签",heroLineOne:"有些答案，无须寻找。",heroLineTwo:"它一直在等你亲手揭开。",heroNote:"请先在线下求签，再输入签号。",begin:"输入签号",beginAria:"输入你在线下抽到的签号",
         numberEyebrow:"输入你抽到的签号",numberTitle:"你的签号",numberInstruction:"只需填写你在线下抽到的号码。",numberLabel:"请输入签号，范围为 1 到 30",numberCaption:"签号 · 1 — 30",numberRange:"签号范围为 1 至 30。",revealButton:"揭开签语",errorEmpty:"请输入你抽到的签号。",errorRange:"请输入 1 到 30 之间的号码。",
@@ -745,8 +738,6 @@
     const sceneElement = name => document.getElementById(`scene-${name}`);
     let selectedNumber = null;
     let resultStatusKey = "";
-    let soundEnabled = false;
-    let audioContext = null;
     let revealTimer = 0;
     const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -789,8 +780,6 @@
       document.getElementById("paperEmblem").setAttribute("aria-label",copy.emblem);
       document.querySelectorAll(".language-switch").forEach(switcher => switcher.setAttribute("aria-label",copy.languageLabel));
       document.getElementById("languageLegend").textContent = copy.languageLabel;
-      document.getElementById("soundLabel").textContent = soundEnabled ? copy.soundOn : copy.soundOff;
-      document.getElementById("soundToggle").setAttribute("aria-label",soundEnabled ? copy.soundOnAria : copy.soundOffAria);
       document.getElementById("sceneName").textContent = copy.scenes[stage.dataset.scene];
       document.getElementById("lanternOne").setAttribute("aria-label",copy.lantern);
       document.querySelectorAll(".language-button").forEach(button => {
@@ -1114,31 +1103,6 @@
     }
 
     /* =========================
-       INTERACTION SOUND (OFF BY DEFAULT)
-       ========================= */
-    function playSoftBell() {
-      if (!soundEnabled) return;
-      try {
-        audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
-        if (audioContext.state === "suspended") audioContext.resume();
-        const oscillator = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-        oscillator.type = "sine"; oscillator.frequency.setValueAtTime(560,audioContext.currentTime); oscillator.frequency.exponentialRampToValueAtTime(330,audioContext.currentTime+.12);
-        gain.gain.setValueAtTime(.0001,audioContext.currentTime); gain.gain.exponentialRampToValueAtTime(.04,audioContext.currentTime+.01); gain.gain.exponentialRampToValueAtTime(.0001,audioContext.currentTime+.2);
-        oscillator.connect(gain); gain.connect(audioContext.destination); oscillator.start(); oscillator.stop(audioContext.currentTime+.21);
-      } catch (_) { /* Audio is an optional enhancement; the ritual remains fully usable without it. */ }
-    }
-
-    function toggleSound() {
-      soundEnabled = !soundEnabled;
-      const button = document.getElementById("soundToggle");
-      button.setAttribute("aria-pressed",String(soundEnabled));
-      button.setAttribute("aria-label",soundEnabled ? translations[currentLanguage].soundOnAria : translations[currentLanguage].soundOffAria);
-      document.getElementById("soundLabel").textContent = soundEnabled ? translations[currentLanguage].soundOn : translations[currentLanguage].soundOff;
-      if (soundEnabled) playSoftBell();
-    }
-
-    /* =========================
        PARTICLES + SUBTLE PARALLAX
        ========================= */
     function createParticles() {
@@ -1189,11 +1153,10 @@
     document.getElementById("fortuneForm").addEventListener("submit",event => { event.preventDefault(); playReveal(); });
     numberInput.addEventListener("input",() => { numberError.textContent = ""; });
     document.querySelectorAll(".language-button").forEach(button => button.addEventListener("click",() => applyLanguage(button.dataset.language)));
-    document.getElementById("soundToggle").addEventListener("click",toggleSound);
     document.querySelectorAll(".lantern").forEach(lantern => {
       lantern.addEventListener("pointerenter",() => lantern.classList.add("is-hovered"));
       lantern.addEventListener("pointerleave",() => lantern.classList.remove("is-hovered"));
-      const toggleLantern = () => { const lit = lantern.classList.toggle("is-lit"); if (lantern.hasAttribute("aria-pressed")) lantern.setAttribute("aria-pressed",String(lit)); playSoftBell(); };
+      const toggleLantern = () => { const lit = lantern.classList.toggle("is-lit"); if (lantern.hasAttribute("aria-pressed")) lantern.setAttribute("aria-pressed",String(lit)); };
       lantern.addEventListener("click",toggleLantern);
       lantern.addEventListener("keydown",event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggleLantern(); } });
     });
