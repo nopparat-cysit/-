@@ -1,0 +1,1133 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#110d0b">
+  <meta name="description" content="ประสบการณ์เปิดคำทำนายเซียมซี ผ่านพิธีกรรมดิจิทัลในบรรยากาศศาลเจ้าจีน">
+  <title>เปิดชะตาเซียมซี — The Oracle of Fortune</title>
+  <style>
+    /* =========================
+       VISUAL SYSTEM
+       ========================= */
+    :root {
+      color-scheme: dark;
+      --red: #6d1015;
+      --dark-red: #35090c;
+      --black: #110d0b;
+      --ink: #21140e;
+      --gold: #c79b45;
+      --gold-light: #efd18a;
+      --burnt-gold: #8c652d;
+      --ivory: #efe0bc;
+      --paper: #ead9b3;
+      --smoke: rgba(230, 220, 200, .15);
+      --ease: cubic-bezier(.16, 1, .3, 1);
+      --px: 0px;
+      --py: 0px;
+      font-family: "Leelawadee UI", "Thonburi", "Noto Sans Thai", Tahoma, sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; min-height: 100%; margin: 0; }
+    body { overflow: hidden; background: var(--black); color: var(--ivory); }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, input:focus-visible, a:focus-visible {
+      outline: 2px solid var(--gold-light); outline-offset: 4px;
+    }
+    .skip-link {
+      position: fixed; z-index: 100; left: 12px; top: 10px; padding: 10px 14px;
+      background: var(--ivory); color: var(--ink); transform: translateY(-160%);
+    }
+    .skip-link:focus { transform: translateY(0); }
+    .visually-hidden { position: absolute!important; width: 1px!important; height: 1px!important; padding: 0!important; margin: -1px!important; overflow: hidden!important; clip: rect(0,0,0,0)!important; white-space: nowrap!important; border: 0!important; }
+    .stage { position: relative; width: 100%; min-height: 100svh; isolation: isolate; overflow: hidden; background: radial-gradient(ellipse at 50% 55%, #321714 0%, #1c100e 45%, #110d0b 100%); }
+    .stage::before, .stage::after { content: ""; pointer-events: none; position: absolute; z-index: 25; inset: 0; }
+    .stage::before { background: radial-gradient(ellipse at center, transparent 42%, rgba(8,5,4,.53) 100%); }
+    .stage::after { opacity: .13; mix-blend-mode: screen; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E"); }
+    .scene {
+      position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center;
+      padding: max(28px, env(safe-area-inset-top)) 22px max(30px, env(safe-area-inset-bottom));
+      opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(12px) scale(.995);
+      transition: opacity 850ms var(--ease), transform 1100ms var(--ease), visibility 0s linear 900ms;
+    }
+    .scene.is-active { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0) scale(1); transition-delay: 0s; }
+    .scene--result { align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; padding: 78px 20px max(36px, env(safe-area-inset-bottom)); scrollbar-color: var(--burnt-gold) transparent; }
+    .ambient { position: absolute; inset: -3%; z-index: -1; pointer-events: none; overflow: hidden; }
+    .temple-art { position: absolute; width: 110%; height: 108%; inset: -4% -5%; transform: translate3d(calc(var(--px) * -.35), calc(var(--py) * -.28), 0) scale(1.04); transition: transform 900ms var(--ease); }
+    .temple-art .mountains { transform: translate3d(calc(var(--px) * -.2), calc(var(--py) * -.1), 0); }
+    .temple-art .far-roof { transform: translate3d(calc(var(--px) * -.45), calc(var(--py) * -.18), 0); }
+    .temple-art .foreground { transform: translate3d(calc(var(--px) * .24), calc(var(--py) * .12), 0); }
+    .scene-content { position: relative; z-index: 4; width: min(100%, 760px); text-align: center; margin-top: 8vh; }
+    .eyebrow { color: var(--gold); font-size: .7rem; letter-spacing: .24em; text-transform: uppercase; }
+    .hero-title { margin: 13px 0 0; font-size: clamp(3.8rem, 15vw, 7.5rem); line-height: 1; font-weight: 500; letter-spacing: .08em; color: #f4dfb2; text-shadow: 0 2px 20px rgba(199,155,69,.22), 0 10px 45px #170906; }
+    .hero-subtitle { margin: 19px auto 0; max-width: 32ch; font-size: clamp(1rem, 3.7vw, 1.25rem); line-height: 1.9; color: #e4d0a6; text-shadow: 0 2px 18px #100806; }
+    .hero-note { display:inline-block; margin-top:10px; color:rgba(239,224,188,.68); font-size:.76em; letter-spacing:.02em; }
+    .seal-button {
+      appearance: none; position: relative; isolation: isolate; overflow: hidden; min-height: 58px; margin-top: 33px; padding: 0 31px;
+      border: 1px solid rgba(231,190,99,.82); background: linear-gradient(135deg,#841d1b,#4e0d11 60%,#721514); color: #f1d394;
+      letter-spacing: .08em; cursor: pointer; box-shadow: 0 0 0 4px rgba(199,155,69,.08), inset 0 0 0 3px rgba(199,155,69,.12), 0 14px 38px rgba(0,0,0,.4);
+      clip-path: polygon(0 8px,8px 8px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 8px) calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 8px),0 calc(100% - 8px));
+      transition: transform 350ms var(--ease), filter 350ms, box-shadow 350ms;
+    }
+    .seal-button::before { content: ""; position: absolute; z-index: -1; top: -70%; bottom: -70%; left: -50%; width: 30%; transform: rotate(18deg); background: linear-gradient(90deg,transparent,rgba(255,235,182,.45),transparent); transition: left 700ms var(--ease); }
+    .seal-button:hover { transform: scale(1.035); filter: brightness(1.14); box-shadow: 0 0 26px rgba(199,155,69,.24), inset 0 0 0 3px rgba(199,155,69,.16), 0 14px 38px rgba(0,0,0,.4); }
+    .seal-button:hover::before { left: 130%; }
+    .seal-button:active { transform: scale(.98); }
+    .corner-label { position: fixed; z-index: 30; top: max(18px, env(safe-area-inset-top)); left: max(20px, env(safe-area-inset-left)); display: flex; gap: 9px; align-items: center; color: rgba(239,224,188,.66); font-size: .72rem; letter-spacing: .1em; }
+    .corner-label::before { content:""; width: 20px; height: 20px; border: 1px solid var(--burnt-gold); transform: rotate(45deg); box-shadow: inset 0 0 0 4px var(--black); }
+    .language-switch { position:fixed; z-index:32; top:max(12px,env(safe-area-inset-top)); right:max(14px,env(safe-area-inset-right)); display:flex; gap:2px; padding:3px; border:1px solid rgba(199,155,69,.42); background:rgba(22,13,10,.72); backdrop-filter:blur(5px); }
+    .language-button { min-width:37px; min-height:34px; padding:0 7px; border:0; background:transparent; color:rgba(239,224,188,.67); cursor:pointer; font-size:.68rem; letter-spacing:.04em; transition:background 200ms,color 200ms; }
+    .language-button:hover { color:var(--ivory); }
+    .language-button.is-current { color:var(--gold-light); background:rgba(130,38,23,.58); box-shadow:inset 0 0 0 1px rgba(199,155,69,.35); }
+    .sound-toggle { position: fixed; z-index: 31; top: max(56px, calc(env(safe-area-inset-top, 0px) + 52px)); right: max(14px, env(safe-area-inset-right)); min-width: 92px; height: 38px; border: 1px solid rgba(199,155,69,.42); background: rgba(22,13,10,.58); color: #dec58e; cursor: pointer; letter-spacing: .06em; font-size: .7rem; backdrop-filter: blur(5px); }
+    .sound-toggle:hover { border-color: var(--gold); background: rgba(73,26,17,.72); }
+    .sound-icon { display: inline-block; margin-right: 7px; color: var(--gold); }
+    .scene-index { position: fixed; z-index: 30; left: max(20px, env(safe-area-inset-left)); bottom: max(18px, env(safe-area-inset-bottom)); color: rgba(239,224,188,.56); font-size: .62rem; letter-spacing: .2em; }
+    .scene-index strong { color: var(--gold-light); font-size: .76rem; font-weight: 400; margin-right: 7px; }
+
+    /* =========================
+       TEMPLE SCENE
+       ========================= */
+    #particles { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .67; }
+    .lantern { position: absolute; z-index: 3; width: clamp(76px, 13vw, 135px); height: auto; transform-origin: 50% -12px; animation: lantern-sway 7s ease-in-out infinite; filter: drop-shadow(0 8px 24px rgba(226,72,34,.2)); cursor: pointer; transition: filter 500ms; }
+    .lantern--one { right: 12%; top: 8%; }
+    .lantern--two { left: 9%; top: 20%; width: clamp(55px, 8vw, 92px); opacity: .76; animation-delay: -2.6s; }
+    .lantern.is-lit { filter: drop-shadow(0 0 29px rgba(255,160,68,.85)); }
+    .lantern.is-hovered { animation-duration: 2.5s; }
+    .incense { position: absolute; z-index: 2; width: 160px; height: 290px; bottom: 2%; left: 13%; opacity: .36; filter: blur(2px); }
+    .smoke-path { fill: none; stroke: #d9c5a0; stroke-width: 3; stroke-linecap: round; opacity: .44; animation: smoke-rise 8s ease-in-out infinite; }
+    .smoke-path:nth-child(2) { animation-delay: -3s; opacity: .25; }
+    .smoke-path:nth-child(3) { animation-delay: -5s; opacity: .2; }
+    .scene--temple.door-open .temple-art .gate-door { transform: perspective(900px) rotateY(62deg); transform-origin: 50% 78%; opacity: .15; transition: transform 900ms var(--ease), opacity 700ms; }
+    .temple-art .gate-door { transition: transform 900ms var(--ease), opacity 700ms; }
+    .temple-art .gate-door--left { transform-origin: 48% 78%; }
+    .temple-art .gate-door--right { transform-origin: 52% 78%; }
+    .temple-art .gate-door--right { transform: perspective(900px) rotateY(0deg); }
+    .scene--temple.door-open .temple-art .gate-door--left { transform: perspective(900px) rotateY(-65deg); }
+    .scene--temple.door-open .temple-art .gate-door--right { transform: perspective(900px) rotateY(65deg); }
+    .scene--temple.door-open .scene-content { transform: scale(.97); opacity: 0; transition: transform 600ms, opacity 450ms; }
+    @keyframes lantern-sway { 0%,100% { rotate: -2deg; } 50% { rotate: 2deg; } }
+    @keyframes smoke-rise { 0% { transform: translateY(20px) translateX(0) scale(.92); opacity: .05; } 45% { opacity: .43; } 100% { transform: translateY(-110px) translateX(16px) scale(1.12); opacity: .02; } }
+
+    /* =========================
+       NUMBER SELECTOR
+       ========================= */
+    .number-content { position: relative; z-index: 4; width: min(100%, 510px); text-align: center; margin-top: 4vh; }
+    .number-heading { margin: 10px 0 0; font-size: clamp(1.7rem, 7vw, 2.65rem); font-weight: 500; color: var(--ivory); letter-spacing: .06em; }
+    .number-instruction { margin: 5px auto 0; line-height: 1.9; color: #d9c89f; font-size: .95rem; }
+    .fortune-slip { position: relative; width: min(80vw, 345px); margin: 25px auto 18px; padding: 28px 18px 22px; color: var(--ink); background: linear-gradient(120deg,#f2e6c8,#e4d1a8 54%,#ebddb9); box-shadow: 0 18px 45px rgba(0,0,0,.38), inset 0 0 0 1px rgba(111,60,30,.35); transform: rotate(-.5deg); }
+    .fortune-slip::before { content:""; position:absolute; inset:7px; border:1px solid rgba(131,32,28,.64); pointer-events:none; }
+    .fortune-slip::after { content:""; position:absolute; inset:0; opacity:.23; pointer-events:none; background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(90,58,28,.11) 6px,transparent 7px 12px); mix-blend-mode:multiply; }
+    .slip-corner { position:absolute; width:14px; height:14px; border-color:var(--burnt-gold); border-style:solid; z-index:1; }
+    .slip-corner.a { left:11px;top:11px;border-width:1px 0 0 1px; }.slip-corner.b { right:11px;top:11px;border-width:1px 1px 0 0; }
+    .slip-corner.c { left:11px;bottom:11px;border-width:0 0 1px 1px; }.slip-corner.d { right:11px;bottom:11px;border-width:0 1px 1px 0; }
+    .number-readout { display:block; position:relative; z-index:2; width:100%; height:94px; border:0; background:transparent; color:#7f211b; text-align:center; font-size:clamp(3.5rem, 18vw, 5rem); font-weight:500; letter-spacing:.12em; outline:none; caret-color:var(--red); font-variant-numeric: lining-nums; }
+    .number-readout::placeholder { color:rgba(107,40,30,.34); letter-spacing:.13em; }
+    .number-readout:focus-visible { outline: 1px solid rgba(140,101,45,.65); outline-offset:0; }
+    .number-caption { position:relative; z-index:2; margin: 0; color:#664b30; font-size:.83rem; letter-spacing:.13em; }
+    .number-error { min-height:1.5em; color:#f0a578; font-size:.84rem; margin:0 auto; }
+    .number-error:empty { visibility:hidden; }
+    .number-content .seal-button { margin-top:13px; }
+    .number-range { margin-top:16px; color:rgba(239,224,188,.47); font-size:.7rem; letter-spacing:.1em; }
+
+    /* =========================
+       REVEAL RITUAL
+       ========================= */
+    .scene--reveal { background: radial-gradient(ellipse at center, #482113 0%, #1d100d 42%, #090706 100%); flex-direction:column; }
+    .reveal-aura { position:absolute; width:min(100vw,600px); aspect-ratio:1; border:1px solid rgba(199,155,69,.7); border-radius:50%; box-shadow:0 0 0 18px rgba(199,155,69,.035),0 0 90px rgba(199,155,69,.15),inset 0 0 60px rgba(199,155,69,.13); transform:scale(.2); opacity:0; }
+    .scene--reveal.is-active .reveal-aura { animation: circle-draw 1800ms var(--ease) forwards; }
+    .reveal-aura::before,.reveal-aura::after { content:""; position:absolute; inset:10%; border:1px solid rgba(199,155,69,.23); border-radius:50%; }
+    .reveal-aura::after { inset:20%; border-style:dashed; animation:slow-turn 28s linear infinite; }
+    .reveal-cloud { position:absolute; width:190px; height:100px; opacity:0; }
+    .reveal-cloud--left { left:calc(50% - 330px); top:45%; transform:translateX(80px); }
+    .reveal-cloud--right { right:calc(50% - 330px); top:45%; transform:translateX(-80px) scaleX(-1); }
+    .scene--reveal.is-active .reveal-cloud { animation: cloud-part 1300ms 800ms var(--ease) forwards; }
+    .reveal-paper { position:relative; z-index:2; width:min(84vw,410px); min-height:390px; padding:45px 25px 35px; margin-top:15px; text-align:center; color:var(--ink); background:linear-gradient(145deg,#f0e4c7,#e0cda3); border:1px solid var(--gold); box-shadow:0 15px 70px rgba(221,160,64,.23); clip-path:inset(100% 0 0 0); transform:translateY(180px) scale(.84); opacity:0; }
+    .scene--reveal.is-active .reveal-paper { animation: paper-rise 1450ms 950ms var(--ease) forwards; }
+    .reveal-paper::before { content:""; position:absolute; inset:10px; border:1px solid rgba(109,16,21,.55); }
+    .reveal-stamp { width:66px; height:66px; margin:0 auto 20px; display:grid; place-items:center; border:2px solid var(--red); outline:1px solid rgba(109,16,21,.5); outline-offset:4px; color:var(--red); font-family:serif; font-size:1.25rem; line-height:1.05; font-weight:bold; transform:scale(1.6) rotate(12deg); opacity:0; }
+    .scene--reveal.is-active .reveal-stamp { animation: stamp-in 450ms 1800ms var(--ease) forwards; }
+    .reveal-number { font-family:Georgia,serif; font-size:1rem; letter-spacing:.22em; color:#75481e; }
+    .reveal-number-th { display:block; font-size:clamp(2.4rem,10vw,3.2rem); color:#751a19; margin-top:14px; letter-spacing:.08em; }
+    .reveal-caption { margin-top:15px; color:#58432b; font-size:.92rem; }
+    .reveal-text { position:relative; z-index:2; margin-top:32px; color:var(--gold-light); letter-spacing:.25em; font-size:.8rem; opacity:0; }
+    .scene--reveal.is-active .reveal-text { animation: fade-in 850ms 1800ms forwards; }
+    @keyframes circle-draw { 0% { transform:scale(.2) rotate(-35deg); opacity:0; } 45% { opacity:.9; } 100% { transform:scale(1) rotate(0); opacity:.66; } }
+    @keyframes cloud-part { to { opacity:.5; transform:translateX(-30px); } }
+    @keyframes paper-rise { to { clip-path:inset(0 0 0 0); transform:translateY(0) scale(1); opacity:1; } }
+    @keyframes stamp-in { to { transform:scale(1) rotate(0); opacity:.9; } }
+    @keyframes fade-in { to { opacity:.9; } }
+    @keyframes slow-turn { to { transform:rotate(360deg); } }
+
+    /* =========================
+       FORTUNE RESULT
+       ========================= */
+    .scene--result::before { content:""; position:fixed; inset:0; z-index:-2; background:radial-gradient(ellipse at 50% 30%,#3a1b13,#140d0a 66%,#0c0907); }
+    .result-atmosphere { position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden; }
+    .result-moon { position:absolute; right:6%; top:10%; width:190px; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 35% 35%,rgba(224,183,106,.2),rgba(156,104,42,.05) 60%,transparent 70%); transform:translateY(calc(var(--scroll-y,0px) * -.1)); }
+    .result-mountain { position:absolute; bottom:0; left:-5%; width:110%; height:34%; opacity:.4; transform:translateY(calc(var(--scroll-y,0px) * -.04)); }
+    .result-layout { position:relative; width:min(100%,840px); margin:0 auto; text-align:center; }
+    .result-overline { color:var(--gold); font-size:.7rem; letter-spacing:.25em; }
+    .result-paper { position:relative; overflow:hidden; margin:19px auto 0; padding:clamp(30px,7vw,58px) clamp(21px,6vw,58px) 42px; color:#2c1b12; text-align:center; background:radial-gradient(ellipse at 12% 5%,rgba(255,255,255,.48),transparent 34%),linear-gradient(135deg,#f2e6c9,#e8d9b5 47%,#dfcba1); box-shadow:0 28px 90px rgba(0,0,0,.5),0 0 0 1px rgba(199,155,69,.65),0 0 0 8px rgba(199,155,69,.075); transform:rotate(-.25deg); }
+    .result-paper::before { content:""; position:absolute; inset:12px; border:1px solid rgba(109,16,21,.59); pointer-events:none; }
+    .result-paper::after { content:""; position:absolute; inset:0; opacity:.17; pointer-events:none; background:repeating-linear-gradient(4deg,transparent 0 7px,rgba(113,76,40,.14) 8px,transparent 9px 14px); mix-blend-mode:multiply; }
+    .paper-content { position:relative; z-index:1; }
+    .paper-emblem { position:relative; display:grid; place-items:center; width:64px; height:64px; margin:0 auto 17px; color:#821c18; border:2px solid #821c18; outline:1px solid rgba(130,28,24,.5); outline-offset:4px; transform:rotate(-4deg); animation: stamp-in 560ms var(--ease) both; }
+    .paper-emblem::before,.paper-emblem::after { content:""; position:absolute; background:#821c18; opacity:.75; }
+    .paper-emblem::before { width:1px; height:48px; }.paper-emblem::after { height:1px; width:48px; }
+    .paper-emblem span { background:#e9d9b4; padding:3px; font-family:serif; font-size:1.3rem; }
+    .fortune-number-en { color:#805d32; letter-spacing:.25em; font: .75rem Georgia,serif; }
+    .fortune-title { margin:8px 0 0; color:#701918; font-size:clamp(1.4rem,5vw,2.1rem); font-weight:500; }
+    .fortune-name { margin:4px 0 0; color:#754a2b; font-size:.9rem; letter-spacing:.08em; }
+    .ornament-line { display:flex; align-items:center; gap:13px; width:min(260px,80%); margin:23px auto; color:#9b783b; }
+    .ornament-line::before,.ornament-line::after { content:""; height:1px; flex:1; background:linear-gradient(90deg,transparent,#a27a3c); }
+    .ornament-line::after { transform:scaleX(-1); }
+    .ornament-line span { width:7px;height:7px;border:1px solid #987033;transform:rotate(45deg); }
+    .paper-section-label { margin:0; color:#855b2c; font-size:.82rem; letter-spacing:.2em; }
+    .fortune-poem { max-width:38ch; margin:12px auto 0; color:#352317; font-size:clamp(1.08rem,3.8vw,1.3rem); line-height:2; }
+    .fortune-meaning { max-width:52ch; margin:16px auto 0; color:#654c32; font-size:.92rem; line-height:1.9; }
+    .reading-list { display:grid; grid-template-columns:1fr 1fr; text-align:left; margin:28px 0 0; border-top:1px solid rgba(129,88,42,.4); }
+    .reading-item { position:relative; padding:18px 14px 16px 5px; border-bottom:1px solid rgba(129,88,42,.27); }
+    .reading-item:nth-child(odd) { border-right:1px solid rgba(129,88,42,.27); padding-right:17px; }
+    .reading-item:nth-child(even) { padding-left:17px; }
+    .reading-item h3 { display:flex; align-items:center; gap:8px; margin:0 0 8px; color:#741b19; font-size:.9rem; font-weight:600; }
+    .reading-item h3::before { content:""; width:6px;height:6px;border:1px solid #a47e43;transform:rotate(45deg); }
+    .reading-item p { margin:0; color:#483621; font-size:.86rem; line-height:1.85; }
+    .offer-note { margin:20px auto 0; padding:12px 15px; border-top:1px dashed rgba(125,69,34,.45); border-bottom:1px dashed rgba(125,69,34,.45); color:#61452a; font-size:.82rem; line-height:1.75; }
+    .offer-note strong { color:#751a18; font-size:.72rem; letter-spacing:.12em; margin-right:5px; }
+    .fortune-level { display:inline-flex; align-items:center; gap:9px; margin:23px 0 0; padding:8px 18px; border:1px solid #934c35; color:#7b211b; font-size:.84rem; transform:rotate(-1deg); box-shadow:inset 0 0 0 3px rgba(147,76,53,.1); }
+    .fortune-level::before,.fortune-level::after { content:"✦"; font-size:.7rem; color:#9c7134; }
+    .expand-button { display:inline-flex; align-items:center; gap:9px; margin:25px auto 0; border:0; background:transparent; color:#74522b; cursor:pointer; font-size:.84rem; padding:10px; }
+    .expand-button::after { content:"＋"; color:#8b642f; transition:transform 350ms; }
+    .expand-button[aria-expanded="true"]::after { transform:rotate(45deg); }
+    .meaning-panel { display:grid; grid-template-rows:0fr; opacity:0; transition:grid-template-rows 550ms var(--ease),opacity 350ms; text-align:left; }
+    .meaning-panel.is-open { grid-template-rows:1fr; opacity:1; }
+    .meaning-panel > div { overflow:hidden; }
+    .meaning-panel p { margin:0 auto; max-width:55ch; color:#55412a; font-size:.88rem; line-height:1.9; }
+    .result-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin:25px auto 0; }
+    .action-button { min-height:48px; padding:0 18px; border:1px solid rgba(199,155,69,.55); background:rgba(30,16,11,.65); color:#ead7ad; cursor:pointer; font-size:.82rem; transition:background 250ms,border-color 250ms,transform 250ms; }
+    .action-button:hover { background:rgba(94,34,23,.78); border-color:var(--gold); transform:translateY(-2px); }
+    .action-button--primary { background:#6d1718; border-color:#b38a43; }
+    .result-status { min-height:1.5em; margin:12px 0 0; color:#d9b76e; font-size:.8rem; }
+    .result-footer { margin:22px auto 0; color:rgba(239,224,188,.47); font-size:.69rem; letter-spacing:.08em; }
+    .scene--result .scene-index { position:fixed; }
+
+    /* =========================
+       LOADING SEAL
+       ========================= */
+    .loading-screen { position:fixed; inset:0; z-index:60; display:grid; place-items:center; background:radial-gradient(ellipse at center,#3a0e10,#100908 68%); transition:opacity 850ms var(--ease),visibility 0s linear 900ms; }
+    .loading-screen.is-hidden { opacity:0; visibility:hidden; }
+    .loading-inner { display:flex; flex-direction:column; align-items:center; gap:24px; color:#d6b76e; letter-spacing:.12em; font-size:.9rem; }
+    .loading-seal { display:grid; place-items:center; width:84px;height:84px;border:1px solid var(--gold);outline:1px solid rgba(199,155,69,.5);outline-offset:7px;color:var(--gold-light);font:1.8rem Georgia,serif; animation:loading-pulse 1.4s ease-in-out infinite; }
+    .loading-orbit { position:absolute; width:132px;height:132px;border:1px solid transparent;border-top-color:var(--gold);border-right-color:rgba(199,155,69,.2);border-radius:50%;animation:slow-turn 1.6s linear infinite; }
+    @keyframes loading-pulse { 50% { transform:scale(.94);opacity:.65; } }
+
+    @media (min-width: 800px) {
+      .scene { padding-left:40px;padding-right:40px; }
+      .scene-content { margin-top:5vh; }
+      .scene--temple .scene-content { margin-top:7vh; }
+      .scene--result { padding-top:88px; }
+    }
+    @media (max-width: 540px) {
+      .corner-label { top:max(17px,env(safe-area-inset-top));font-size:.61rem; }
+      .language-switch { top:max(10px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right)); }
+      .language-button { min-width:34px;min-height:32px;font-size:.63rem; }
+      .sound-toggle { min-width:76px;height:35px;font-size:.64rem;top:max(51px,calc(env(safe-area-inset-top, 0px) + 49px));right:max(12px,env(safe-area-inset-right)); }
+      .scene-content { margin-top:8vh; }
+      .hero-title { margin-top:18px; }
+      .hero-subtitle { margin-top:17px; }
+      .seal-button { min-height:54px; }
+      .lantern--one { right:5%;top:12%; }
+      .lantern--two { left:2%;top:27%; }
+      .incense { left:-3%;bottom:3%;opacity:.26; }
+      .number-content { margin-top:3vh; }
+      .fortune-slip { margin-top:22px; }
+      .scene--result { padding-left:14px;padding-right:14px;padding-top:72px; }
+      .reading-list { grid-template-columns:1fr; }
+      .reading-item,.reading-item:nth-child(odd),.reading-item:nth-child(even) { border-right:0;padding:15px 5px; }
+      .result-actions { gap:8px; }
+      .action-button { flex:1 1 42%;padding:0 10px; }
+    }
+    @media (max-height: 720px) and (min-width: 541px) {
+      .scene-content,.number-content { margin-top:1vh; }
+      .fortune-slip { margin-top:12px;margin-bottom:10px;padding-top:19px;padding-bottom:17px; }
+      .number-readout { height:76px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+      #particles { opacity:.22; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main" id="skipLink">ข้ามไปยังเนื้อหาหลัก</a>
+  <div class="stage" id="main" data-scene="temple">
+    <div class="corner-label" id="brandLabel" aria-hidden="true">THE ORACLE OF FORTUNE</div>
+    <div class="language-switch" role="group" aria-label="เลือกภาษา" id="languageSwitch">
+      <button class="language-button is-current" type="button" data-language="th" aria-label="ภาษาไทย" aria-pressed="true">TH</button>
+      <button class="language-button" type="button" data-language="en" aria-label="English" aria-pressed="false">EN</button>
+      <button class="language-button" type="button" data-language="zh" aria-label="简体中文" aria-pressed="false">中文</button>
+    </div>
+    <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="false" aria-label="เปิดเสียงประกอบ">
+      <span class="sound-icon" aria-hidden="true">◖</span><span id="soundLabel">เสียงปิด</span>
+    </button>
+    <div class="scene-index" aria-hidden="true"><strong id="sceneNumber">01</strong><span id="sceneName">THE TEMPLE</span></div>
+
+    <!-- Layered temple illustration: moon, mountains, tiled roofs, gate, beams and carved columns. -->
+    <svg class="temple-art" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#100b0a"/><stop offset=".54" stop-color="#29110f"/><stop offset="1" stop-color="#4b1c14"/></linearGradient>
+        <radialGradient id="moonGlow"><stop stop-color="#efd49a" stop-opacity=".34"/><stop offset="1" stop-color="#d59f4c" stop-opacity="0"/></radialGradient>
+        <linearGradient id="roof" x2="0" y2="1"><stop stop-color="#6b2720"/><stop offset="1" stop-color="#25100e"/></linearGradient>
+        <linearGradient id="pillar" x2="1"><stop stop-color="#42100f"/><stop offset=".48" stop-color="#74221a"/><stop offset="1" stop-color="#260e0c"/></linearGradient>
+        <linearGradient id="ground" x2="0" y2="1"><stop stop-color="#35150f"/><stop offset="1" stop-color="#100b09"/></linearGradient>
+        <filter id="softGlow"><feGaussianBlur stdDeviation="18"/></filter>
+      </defs>
+      <rect width="1440" height="900" fill="url(#sky)"/>
+      <circle cx="1050" cy="214" r="170" fill="url(#moonGlow)"/>
+      <circle cx="1050" cy="214" r="64" fill="#d8b36e" opacity=".38"/>
+      <circle cx="1030" cy="194" r="52" fill="#ecd39e" opacity=".32"/>
+      <g class="mountains" fill="#211310" opacity=".76">
+        <path d="M0 564 110 465l62 43 95-140 105 148 112-90 123 130 126-197 110 146 108-118 141 168 98-96 150 117v224H0z"/>
+        <path d="m0 630 156-101 120 54 133-111 99 99 180-81 98 79 171-115 124 101 127-54 232 106v192H0z" fill="#301711" opacity=".72"/>
+      </g>
+      <g class="far-roof" opacity=".82" fill="url(#roof)" stroke="#986333" stroke-opacity=".48" stroke-width="3">
+        <path d="M300 446q220-190 420-170 200-20 420 170l-85-14-31 27-22-35q-278-116-564 0l-24 35-31-27z"/>
+        <path d="M385 435q170-123 335-120 165-3 335 120l-41 5-32 25-18-29q-252-92-488 0l-18 29-32-25z" fill="#3a1713"/>
+        <path d="M528 434q95-71 192-71t192 71l-33 10-20 20-16-27q-129-44-246 0l-16 27-20-20z" fill="#4c2017"/>
+      </g>
+      <g opacity=".56" fill="#170d0b">
+        <path d="M575 490h290v248H575z"/><path d="M520 500q200-145 400 0l-27 10-29 19-18-29q-128-41-252 0l-18 29-29-19z" fill="#572119"/>
+        <path d="M625 560h72v178h-72zM744 560h72v178h-72z" fill="#32120f"/>
+      </g>
+      <g class="foreground">
+        <path d="M96 354Q720 44 1344 354l-68 7-48 45-37-48q-471-198-942 0l-37 48-48-45z" fill="#1c0c0b" stroke="#96622f" stroke-width="5"/>
+        <path d="M153 357Q720 115 1287 357l-69 13-41 32-30-42q-429-151-854 0l-30 42-41-32z" fill="url(#roof)" stroke="#c09143" stroke-opacity=".76" stroke-width="3"/>
+        <path d="M236 375Q720 197 1204 375l-54 12-31 27-25-33q-372-117-748 0l-25 33-31-27z" fill="#381713" stroke="#8d592f" stroke-width="2"/>
+        <path d="M313 393Q720 274 1127 393l-44 10-28 25-19-29q-317-91-632 0l-19 29-28-25z" fill="#5a2419" stroke="#9c6a36" stroke-width="2"/>
+        <g fill="#bd8e48">
+          <path d="M93 351q-34-6-43 20 27-8 53 3l27-20zM1347 351q34-6 43 20-27-8-53 3l-27-20z"/>
+          <circle cx="720" cy="329" r="8"/><path d="M711 321h18v-19h-18z"/>
+          <circle cx="287" cy="379" r="5"/><circle cx="1153" cy="379" r="5"/>
+        </g>
+        <g fill="none" stroke="#b98c4b" stroke-opacity=".8" stroke-width="2">
+          <path d="M224 359q496-203 992 0M300 384q420-158 840 0M398 411q322-112 644 0"/>
+          <path d="M720 280v51m-16-39 16 14 16-14M474 352l-25-17m517 17 25-17"/>
+        </g>
+        <!-- Gate lintel and elaborate fretwork -->
+        <path d="M377 438h686v36H377z" fill="#461512" stroke="#bd8d45" stroke-width="3"/>
+        <path d="M393 446h654v5H393zm0 15h654v3H393z" fill="#d0a458" opacity=".75"/>
+        <g fill="none" stroke="#bd9453" stroke-width="2" opacity=".85">
+          <path d="M431 453h38l12 10 12-10h38m24 0h38l12 10 12-10h38m24 0h38l12 10 12-10h38m24 0h38l12 10 12-10h38m24 0h38l12 10 12-10h38"/>
+          <path d="M520 441v27m100-27v27m100-27v27m100-27v27m100-27v27"/>
+        </g>
+        <!-- Side pillars with carved bases and capitals -->
+        <g>
+          <path d="M383 469h58v306h-58z" fill="url(#pillar)" stroke="#aa7138" stroke-width="3"/>
+          <path d="M999 469h58v306h-58z" fill="url(#pillar)" stroke="#aa7138" stroke-width="3"/>
+          <path d="M372 462h80v18h-80zm0 304h80v21h-80zm614-304h80v18h-80zm0 304h80v21h-80z" fill="#501713" stroke="#c09246" stroke-width="2"/>
+          <path d="M397 492h30v260h-30zm616 0h30v260h-30z" fill="none" stroke="#cf9d50" stroke-opacity=".43" stroke-width="2"/>
+          <path d="M386 493h52m-52 9h52m-52 240h52m-52 9h52m562-258h52m-52 9h52m-52 240h52m-52 9h52" stroke="#daa953" stroke-opacity=".6" stroke-width="2"/>
+          <path d="M398 540h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28" stroke="#d1a057" stroke-opacity=".28"/>
+          <path d="M1014 540h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28" stroke="#d1a057" stroke-opacity=".28"/>
+        </g>
+        <!-- Paired doors, latticed windows, brass rings -->
+        <g class="gate-door gate-door--left">
+          <path d="M466 477h244v294H466z" fill="#421310" stroke="#b4803c" stroke-width="3"/>
+          <path d="M480 491h216v267H480z" fill="#35110f" stroke="#835328" stroke-width="2"/>
+          <path d="M491 503h194v240H491z" fill="none" stroke="#bd8a42" stroke-width="2"/>
+          <g fill="none" stroke="#986c3b" stroke-width="3" opacity=".9">
+            <path d="M491 543h194M491 583h194M491 623h194M491 663h194M491 703h194M530 503v240m39-240v240m39-240v240m39-240v240"/>
+            <path d="m491 543 194 160m-194 0 194-160m-155-40 155 128m-194 0 155-128" opacity=".5"/>
+          </g>
+          <circle cx="687" cy="629" r="7" fill="#d2a24f"/><circle cx="687" cy="629" r="3" fill="#6e2717"/>
+        </g>
+        <g class="gate-door gate-door--right">
+          <path d="M730 477h244v294H730z" fill="#421310" stroke="#b4803c" stroke-width="3"/>
+          <path d="M744 491h216v267H744z" fill="#35110f" stroke="#835328" stroke-width="2"/>
+          <path d="M755 503h194v240H755z" fill="none" stroke="#bd8a42" stroke-width="2"/>
+          <g fill="none" stroke="#986c3b" stroke-width="3" opacity=".9">
+            <path d="M755 543h194M755 583h194M755 623h194M755 663h194M755 703h194M794 503v240m39-240v240m39-240v240m39-240v240"/>
+            <path d="m755 543 194 160m-194 0 194-160m-155-40 155 128m-194 0 155-128" opacity=".5"/>
+          </g>
+          <circle cx="757" cy="629" r="7" fill="#d2a24f"/><circle cx="757" cy="629" r="3" fill="#6e2717"/>
+        </g>
+        <path d="M342 787h756" stroke="#c09047" stroke-width="3" opacity=".65"/>
+        <path d="M0 786q720-65 1440 0v114H0z" fill="url(#ground)"/>
+        <path d="M118 825q602-76 1204 0M246 858q474-55 948 0" fill="none" stroke="#80512b" stroke-opacity=".28" stroke-width="2"/>
+      </g>
+    </svg>
+
+    <!-- Hand-drawn Chinese lanterns with cap, ribs, body highlight and tassel. -->
+    <svg class="lantern lantern--one" id="lanternOne" viewBox="0 0 130 210" role="button" tabindex="0" aria-label="แตะโคมเพื่อให้สว่างขึ้น" aria-pressed="false">
+      <defs><radialGradient id="lanternRed"><stop stop-color="#b63828"/><stop offset=".73" stop-color="#7b1715"/><stop offset="1" stop-color="#42100e"/></radialGradient></defs>
+      <path d="M65 0v16" stroke="#c99a4c" stroke-width="3"/><path d="M48 17q17-11 34 0l8 9H40z" fill="#a17335" stroke="#e2bd6e" stroke-width="2"/>
+      <path d="M38 27q-17 18-15 48t15 69q27 16 54 0 17-42 15-69T92 27z" fill="url(#lanternRed)" stroke="#d6a952" stroke-width="2"/>
+      <path d="M29 45q36 12 72 0M24 69q41 11 82 0M26 107q39-11 78 0M34 133q31-9 62 0" fill="none" stroke="#d7aa5b" stroke-width="2" opacity=".77"/>
+      <path d="M38 31q-8 51 0 108M53 28q-6 60 0 115M77 28q6 60 0 115M92 31q8 51 0 108" fill="none" stroke="#efc878" stroke-width="1.3" opacity=".6"/>
+      <path d="M39 144q26 17 52 0l-6 13q-20 9-40 0z" fill="#9e7134" stroke="#d5a652" stroke-width="2"/>
+      <path d="M65 157v25m0 0q-6 10-12 18m12-18q6 10 12 18" fill="none" stroke="#d2a24e" stroke-width="2"/><circle cx="65" cy="75" r="12" fill="none" stroke="#e1bd71" stroke-width="2"/><path d="M59 75h12m-6-6v12" stroke="#e1bd71" stroke-width="1.5"/>
+      <path d="M41 34q-10 40-2 77" fill="none" stroke="#f3dbab" stroke-width="4" opacity=".25"/>
+    </svg>
+    <svg class="lantern lantern--two" viewBox="0 0 130 210" aria-hidden="true">
+      <path d="M65 0v16" stroke="#c99a4c" stroke-width="3"/><path d="M48 17q17-11 34 0l8 9H40z" fill="#a17335" stroke="#e2bd6e" stroke-width="2"/><path d="M38 27q-17 18-15 48t15 69q27 16 54 0 17-42 15-69T92 27z" fill="#7b1715" stroke="#d6a952" stroke-width="2"/><path d="M29 55q36 12 72 0M25 95q40-11 80 0M38 32q-8 51 0 108m54-108q8 51 0 108" fill="none" stroke="#d7aa5b" stroke-width="2"/><path d="M39 144q26 17 52 0l-6 13q-20 9-40 0z" fill="#9e7134" stroke="#d5a652" stroke-width="2"/><path d="M65 157v38m0-13-12 17m12-17 12 17" fill="none" stroke="#d2a24e" stroke-width="2"/>
+    </svg>
+    <svg class="incense" viewBox="0 0 170 300" aria-hidden="true"><path class="smoke-path" d="M72 293C26 239 131 226 83 166S53 75 96 7"/><path class="smoke-path" d="M105 295c35-50-41-75 2-125S93 81 123 29"/><path class="smoke-path" d="M43 298C3 249 67 201 35 154S64 76 49 27"/></svg>
+    <canvas id="particles" aria-hidden="true"></canvas>
+
+    <main>
+      <!-- Scene 01: enter the temple -->
+      <section class="scene scene--temple is-active" id="scene-temple" aria-labelledby="heroTitle">
+        <div class="scene-content">
+          <div class="eyebrow" id="heroEyebrow">A quiet moment with your own fortune</div>
+          <h1 class="hero-title" id="heroTitle">เซียมซี</h1>
+          <p class="hero-subtitle"><span id="heroLineOne">บางคำตอบ ไม่ได้ถูกค้นพบ</span><br><span id="heroLineTwo">แต่กำลังรอให้คุณเปิดมัน</span><br><span class="hero-note" id="heroNote">เขย่าเซียมซีจริง แล้วนำเลขที่ได้มากรอกที่นี่</span></p>
+          <button class="seal-button" id="beginButton" type="button" aria-label="ไปกรอกหมายเลขเซียมซีที่ได้จากการเขย่าจริง">กรอกเลขเซียมซี</button>
+        </div>
+      </section>
+
+      <!-- Scene 02: enter only the number drawn from a real fortune-stick set -->
+      <section class="scene" id="scene-number" aria-labelledby="numberTitle" aria-hidden="true">
+        <div class="number-content">
+          <div class="eyebrow" id="numberEyebrow">Enter the number from your real draw</div>
+          <h2 class="number-heading" id="numberTitle">เลขเซียมซีของคุณ</h2>
+          <p class="number-instruction" id="numberInstruction">ใส่เฉพาะหมายเลขที่ได้จากการเขย่าเซียมซีจริง</p>
+          <form id="fortuneForm" novalidate>
+            <div class="fortune-slip">
+              <i class="slip-corner a" aria-hidden="true"></i><i class="slip-corner b" aria-hidden="true"></i><i class="slip-corner c" aria-hidden="true"></i><i class="slip-corner d" aria-hidden="true"></i>
+              <label class="visually-hidden" id="fortuneNumberLabel" for="fortuneNumber">กรอกหมายเลขเซียมซี ตั้งแต่ 1 ถึง 30</label>
+              <input class="number-readout" id="fortuneNumber" name="fortuneNumber" type="number" min="1" max="30" step="1" inputmode="numeric" autocomplete="off" placeholder="— —" aria-describedby="numberHelp numberError">
+              <p class="number-caption" id="numberHelp">กรอกหมายเลขเซียมซี · ๑ — ๓๐</p>
+            </div>
+            <p class="number-error" id="numberError" role="status" aria-live="polite"></p>
+            <button class="seal-button" id="revealButton" type="submit">เปิดคำทำนาย</button>
+            <p class="number-range" id="numberRange">หมายเลขเซียมซีมีตั้งแต่ ๑ ถึง ๓๐</p>
+          </form>
+        </div>
+      </section>
+
+      <!-- Scene 03: slow reveal ritual, held for a breath before the paper opens -->
+      <section class="scene scene--reveal" id="scene-reveal" aria-label="กำลังเปิดคำทำนาย" aria-hidden="true">
+        <div class="reveal-aura" aria-hidden="true"></div>
+        <svg class="reveal-cloud reveal-cloud--left" viewBox="0 0 200 110" aria-hidden="true"><path d="M12 89q4-24 28-22 5-39 43-28 19-36 50-7 43-8 45 30 18 12 6 31H21q-16-1-9-4z" fill="none" stroke="#c79b45" stroke-width="2"/><path d="M29 88q11-18 27-5 12-33 37-8 15-24 34-4" fill="none" stroke="#d9bb7a" stroke-width="1.4" opacity=".72"/></svg>
+        <svg class="reveal-cloud reveal-cloud--right" viewBox="0 0 200 110" aria-hidden="true"><path d="M12 89q4-24 28-22 5-39 43-28 19-36 50-7 43-8 45 30 18 12 6 31H21q-16-1-9-4z" fill="none" stroke="#c79b45" stroke-width="2"/><path d="M29 88q11-18 27-5 12-33 37-8 15-24 34-4" fill="none" stroke="#d9bb7a" stroke-width="1.4" opacity=".72"/></svg>
+        <div class="reveal-paper" aria-live="polite">
+          <div class="reveal-stamp" aria-hidden="true">吉<br>籤</div>
+          <div class="reveal-number" id="revealNumberEn">FORTUNE No. 01</div>
+          <strong class="reveal-number-th" id="revealNumberTh">หมายเลข ๐๑</strong>
+          <div class="reveal-caption" id="revealFortuneTitle">คำทำนายกำลังคลี่คลาย</div>
+        </div>
+        <p class="reveal-text" id="revealPrompt">คำตอบของคุณ</p>
+      </section>
+
+      <!-- Scene 04: the source-backed fortune is printed on an aged paper scroll -->
+      <section class="scene scene--result" id="scene-result" aria-labelledby="resultHeading" aria-hidden="true">
+        <div class="result-atmosphere" aria-hidden="true">
+          <div class="result-moon"></div>
+          <svg class="result-mountain" viewBox="0 0 1440 360" preserveAspectRatio="none"><path d="M0 242 126 151l95 49 109-127 129 154 121-105 137 132 108-185 129 164 111-98 127 125 144-92 134 91v101H0z" fill="#291310"/><path d="m0 282 185-101 129 62 148-105 129 110 173-78 124 83 166-124 131 105 136-64 219 99v91H0z" fill="#381910" opacity=".7"/></svg>
+        </div>
+        <div class="result-layout">
+          <div class="result-overline" id="resultOverline">THE ORACLE HAS SPOKEN</div>
+          <article class="result-paper" id="resultPaper">
+            <div class="paper-content">
+              <div class="paper-emblem" id="paperEmblem" aria-label="ตรามงคล"><span>吉</span></div>
+              <div class="fortune-number-en" id="resultNumberEn">FORTUNE No. 01</div>
+              <h1 class="fortune-title" id="resultHeading" tabindex="-1">ใบเปิดทาง</h1>
+              <p class="fortune-name" id="resultName">เซียมซีหมายเลข ๐๑</p>
+              <div class="ornament-line" aria-hidden="true"><span></span></div>
+              <p class="paper-section-label" id="paperSectionLabel">คำทำนาย</p>
+              <p class="fortune-poem" id="resultPoem"></p>
+              <p class="fortune-meaning" id="resultSummary"></p>
+              <div class="reading-list" id="readingList"></div>
+              <div class="offer-note" id="offerNote"></div>
+              <div class="fortune-level" id="fortuneLevel"></div>
+              <button class="expand-button" id="meaningToggle" type="button" aria-expanded="false" aria-controls="meaningPanel">เลขนี้หมายถึงอะไร?</button>
+              <div class="meaning-panel" id="meaningPanel"><div><p id="meaningText"></p></div></div>
+            </div>
+          </article>
+          <div class="result-actions">
+            <button class="action-button action-button--primary" id="againButton" type="button">เสี่ยงเซียมซีอีกครั้ง</button>
+            <button class="action-button" id="saveButton" type="button">บันทึกคำทำนาย</button>
+            <button class="action-button" id="shareButton" type="button">แชร์คำทำนาย</button>
+          </div>
+          <p class="result-status" id="resultStatus" role="status" aria-live="polite"></p>
+          <p class="result-footer" id="resultFooter">ขอให้แสงแห่งปัญญานำทางคุณในทุกก้าวต่อจากนี้</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="loading-screen" id="loadingScreen" aria-hidden="true">
+    <div class="loading-inner"><span class="loading-seal">籤</span><span class="loading-orbit" aria-hidden="true"></span><span id="loadingText">เปิดประตูแห่งโชคชะตา</span></div>
+  </div>
+
+  <script>
+    /* =========================
+       FORTUNE DATA
+       The source sheet provides 30 readings plus work, money, love and promotions.
+       This set has 30 numbers; add or replace entries here as needed.
+       ========================= */
+    const MAX_FORTUNE_NUMBER = 30;
+    const fortuneData = {"1":{"title":"ใบเปิดทาง","poem":"สิ่งที่เคยติดขัดกำลังจะเริ่มคลี่คลาย ประตูที่เคยปิดอาจมีช่องทางใหม่เปิดขึ้นมาในช่วงนี้ เรื่องที่รอคำตอบอาจได้รับข่าวหรือความคืบหน้า แม้จะยังไม่เป็นไปตามที่หวังทั้งหมด แต่ถือเป็นสัญญาณที่ดีว่าเส้นทางกำลังเดินหน้า","work":"มีเกณฑ์ได้รับมอบหมายงานใหม่ หรือมีคนเห็นความสามารถของคุณมากขึ้น หากกำลังรอโอกาสเลื่อนตำแหน่ง เปลี่ยนงาน หรือเริ่มโปรเจกต์ใหม่ มีโอกาสได้เริ่มต้น แต่ควรแสดงความสามารถอย่างเต็มที่ อย่ารอให้โอกาสเดินเข้ามาหาเพียงอย่างเดียว","money":"การเงินเริ่มมีสัญญาณที่ดีขึ้น รายรับอาจมาจากช่องทางที่ไม่ได้คาดหวังไว้แต่ยังไม่ควรใช้จ่ายเกินตัว หากมีเงินก้อนเข้ามา ควรแบ่งเก็บไว้ก่อนส่วนหนึ่ง","love":"คนโสดมีโอกาสได้รู้จักคนใหม่ผ่านงาน เพื่อน หรือกิจกรรมบางอย่าง ส่วนคนมีคู่ หากมีเรื่องที่ค้างคาใจ ควรเปิดใจพูดคุยกัน เพราะการสื่อสารจะช่วยให้ความสัมพันธ์ดีขึ้น","health":"ให้เวลากับการพักผ่อนและฟื้นพลัง อย่าปล่อยให้ความเร่งรีบกลบสัญญาณจากร่างกาย","luck":"โชคมักมาในรูปของโอกาสและผู้คน ลองเปิดรับคำชวนที่สอดคล้องกับเป้าหมายของคุณ","promotion":"รับส่วนลดสำหรับใช้ใน Rich Walk มูลค่า 50 บาท","level":"มหามงคล"},"2":{"title":"ใบแห่งโอกาส","poem":"ช่วงนี้มีเกณฑ์ได้รับโอกาสใหม่จากคนรอบตัว บางสิ่งอาจมาในรูปแบบของคำชวน งานใหม่ หรือข้อเสนอที่ตอนแรกคุณยังลังเล อย่ารีบปฏิเสธเพียงเพราะไม่คุ้นเคย เพราะสิ่งที่ดูเล็กในวันนี้อาจกลายเป็นโอกาสสำคัญในอนาคต","work":"เหมาะกับการเริ่มสิ่งใหม่ การเสนอไอเดีย หรือการแสดงความสามารถต่อผู้ใหญ่ มีโอกาสได้ทำงานที่ไม่เคยทำมาก่อนและได้เรียนรู้ทักษะใหม่","money":"มีช่องทางสร้างรายได้เพิ่มเติม หากมีความคิดเรื่องอาชีพเสริมหรือธุรกิจเล็ก ๆ สามารถเริ่มศึกษาหรือลองทำในขนาดที่เหมาะสมก่อน","love":"คนโสดมีโอกาสพบคนที่น่าสนใจจากวงสังคมใหม่ ๆ คนมีคู่ควรสนับสนุนกันเรื่องเป้าหมายและอนาคต","health":"เริ่มดูแลตัวเองจากกิจวัตรเล็ก ๆ ที่ทำได้สม่ำเสมอ ความสมดุลจะช่วยให้ใจปลอดโปร่ง","luck":"ลาภเล็ก ๆ อาจเกิดจากสิ่งที่ลงมือทำไว้ก่อนหน้า ใช้สติพิจารณาก่อนตัดสินใจ","promotion":"จองวันนี้ รับส่วนลดคอนโด ทันที 100,000 บาท","level":"มงคล"},"3":{"title":"ใบสมหวัง","poem":"สิ่งที่ตั้งใจไว้มีเกณฑ์ได้รับความคืบหน้า ความสำเร็จอาจไม่ได้มาในทันที แต่สิ่งที่คุณทำมาตลอดกำลังสะสมเป็นผลลัพธ์ ขอเพียงอย่าหยุดกลางทางโดยเฉพาะเรื่องที่ต้องใช้เวลาและความอดทน","work":"งานที่กำลังรับผิดชอบมีโอกาสสำเร็จตามเป้าหมาย หากกำลังรอการอนุมัติ การเซ็นสัญญา หรือการตอบรับ มีโอกาสได้รับข่าวที่ดี","money":"มีแนวโน้มมั่นคงขึ้น เงินที่เคยติดขัดจะเริ่มบริหารได้ง่ายกว่าเดิม เหมาะกับการวางแผนเก็บเงินระยะยาว","love":"ความสัมพันธ์ที่กำลังพัฒนา มีโอกาสชัดเจนขึ้น คนมีคู่มีเกณฑ์พูดคุยเรื่องอนาคตร่วมกัน","health":"ลดภาระที่ไม่จำเป็นและแบ่งเวลาพักให้ชัดเจน การค่อย ๆ ไปจะช่วยให้มีแรงต่อเนื่อง","luck":"จังหวะดีจะชัดขึ้นเมื่อเตรียมตัวพร้อม สังเกตข่าวสารและความช่วยเหลือรอบตัว","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 90,000 บาท","level":"มหามงคล"},"4":{"title":"ใบมั่งคั่ง","poem":"ดวงด้านทรัพย์สินและการเงินเริ่มมีความเคลื่อนไหว สิ่งที่ลงทุนลงแรงไว้มีโอกาสสร้างผลตอบแทน การเงินไม่ได้มาแบบฟลุกเพียงอย่างเดียวแต่เกิดจากความสามารถและการวางแผนของคุณเอง","work":"มีโอกาสได้งานเพิ่ม โปรเจกต์ใหม่ หรืองานที่สร้างรายได้มากขึ้น หากทำธุรกิจ มีโอกาสได้ลูกค้าหรือช่องทางใหม่","money":"มีโอกาสได้เงินก้อนหรือรายรับพิเศษ แต่ควรแบ่งเงินเป็นส่วนๆ ทั้งใช้ เก็บและลงทุน อย่าปล่อยให้รายได้เพิ่มแล้วรายจ่ายเพิ่มตามทั้งหมด","love":"คนมีคู่ควรช่วยกันวางแผนเรื่องการเงินและอนาคต จะทำให้ความสัมพันธ์มั่นคงมากขึ้น","health":"ให้เวลากับการพักผ่อนและฟื้นพลัง อย่าปล่อยให้ความเร่งรีบกลบสัญญาณจากร่างกาย","luck":"โชคมักมาในรูปของโอกาสและผู้คน ลองเปิดรับคำชวนที่สอดคล้องกับเป้าหมายของคุณ","promotion":"รับส่วนลดสำหรับใช้ใน Rich Walk มูลค่า 50 บาท","level":"มหามงคล"},"5":{"title":"ใบคนอุปถัมภ์","poem":"ในช่วงที่กำลังเจอเรื่องยาก จะมีคนเข้ามาช่วยเหลือหรือให้คำแนะนำ อาจเป็นผู้ใหญ่ เจ้านาย เพื่อน หรือคนที่คุณไม่คิดว่าจะยื่นมือเข้ามาให้ความช่วยเหลือ","work":"ผู้ใหญ่มีโอกาสสนับสนุน หากมีเรื่องที่ต้องตัดสินใจ อย่าเก็บไว้คิดคนเดียว การขอคำปรึกษาจากผู้มีประสบการณ์จะช่วยให้เห็นทางออกมากขึ้น","money":"มีโอกาสได้รับความช่วยเหลือหรือได้รับโอกาสสร้างรายได้จากคนรู้จัก","love":"คนโสดอาจมีคนแนะนำให้รู้จักใครบางคน ส่วนคนมีคู่ ครอบครัวทั้งสองฝ่ายมีแนวโน้มสนับสนุนความสัมพันธ์","health":"เริ่มดูแลตัวเองจากกิจวัตรเล็ก ๆ ที่ทำได้สม่ำเสมอ ความสมดุลจะช่วยให้ใจปลอดโปร่ง","luck":"ลาภเล็ก ๆ อาจเกิดจากสิ่งที่ลงมือทำไว้ก่อนหน้า ใช้สติพิจารณาก่อนตัดสินใจ","promotion":"จองวันนี้ การันตีผู้เช่า 2 ปี","level":"มงคล"},"6":{"title":"ใบเดินทาง","poem":"มีเกณฑ์เกิดการเปลี่ยนแปลง ไม่ว่าจะเป็นการเดินทาง ย้ายสถานที่ เปลี่ยนงาน หรือพบสังคมใหม่ การออกจากพื้นที่เดิมจะทำให้คุณได้พบสิ่งที่ไม่เคยเห็นและอาจนำโอกาสใหม่เข้ามา","work":"งานที่เกี่ยวข้องกับการเดินทาง การพบลูกค้า หรือการสร้างคอนเนกชันจะส่งผลดี","money":"มีรายจ่ายเกี่ยวกับการเดินทางหรือการเริ่มต้นบางอย่าง แต่เป็นรายจ่ายที่มีโอกาสนำผลตอบแทนกลับมาในอนาคต","love":"คนโสดมีโอกาสพบคนใหม่ระหว่างเดินทางหรือผ่านสังคมใหม่ คนมีคู่มีเกณฑ์เดินทางหรือสร้างความทรงจำร่วมกัน","health":"ลดภาระที่ไม่จำเป็นและแบ่งเวลาพักให้ชัดเจน การค่อย ๆ ไปจะช่วยให้มีแรงต่อเนื่อง","luck":"จังหวะดีจะชัดขึ้นเมื่อเตรียมตัวพร้อม สังเกตข่าวสารและความช่วยเหลือรอบตัว","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 70,000 บาท","level":"กลาง"},"7":{"title":"ใบข่าวดี","poem":"เรื่องที่กำลังรอคอยมีเกณฑ์ได้รับความคืบหน้า โดยเฉพาะเรื่องการสมัครงาน การติดต่อธุรกิจ การเจรจา หรือการรอคำตอบจากใครบางคน ช่วงนี้ควรเปิดโทรศัพท์และเปิดใจรับข่าวใหม่ ๆ","work":"มีโอกาสได้รับการตอบรับหรือข่าวที่ทำให้รู้สึกโล่งใจ งานที่ค้างจะเริ่มเดินหน้า","money":"มีเกณฑ์ได้รับเงินที่รออยู่ หรือมีรายรับใหม่เข้ามาช่วยให้สถานการณ์ดีขึ้น","love":"คนที่กำลังรอการติดต่อมีโอกาสได้รับข่าว คนมีคู่จะได้รับข่าวดีร่วมกัน","health":"ให้เวลากับการพักผ่อนและฟื้นพลัง อย่าปล่อยให้ความเร่งรีบกลบสัญญาณจากร่างกาย","luck":"โชคมักมาในรูปของโอกาสและผู้คน ลองเปิดรับคำชวนที่สอดคล้องกับเป้าหมายของคุณ","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 100,000. บาท","level":"มงคล"},"8":{"title":"ใบรักผลิบาน","poem":"ความรักกำลังเข้าสู่ช่วงที่มีความเคลื่อนไหว คนโสดมีโอกาสพบคนที่ทำให้หัวใจเต้นแรง ส่วนคนมีคู่ ความสัมพันธ์จะกลับมาอบอุ่นขึ้นหากใช้เวลาให้กันมากกว่าเดิม","work":"การทำงานร่วมกับผู้อื่นจะราบรื่น มีคนให้ความร่วมมือและสนับสนุน","money":"การเงินโดยรวมไม่มีเรื่องน่ากังวล แต่ควรระวังการใช้เงินกับความสุขส่วนตัวมากเกินไป","love":"คนโสดมีโอกาสเริ่มต้นความสัมพันธ์ใหม่ คนมีคู่เหมาะกับการพูดคุยเรื่องอนาคตและสร้างความทรงจำร่วมกัน","health":"เริ่มดูแลตัวเองจากกิจวัตรเล็ก ๆ ที่ทำได้สม่ำเสมอ ความสมดุลจะช่วยให้ใจปลอดโปร่ง","luck":"ลาภเล็ก ๆ อาจเกิดจากสิ่งที่ลงมือทำไว้ก่อนหน้า ใช้สติพิจารณาก่อนตัดสินใจ","promotion":"จองวันนี้ การันตีผู้เช่า 2 ปี","level":"มหามงคล"},"9":{"title":"ใบก้าวหน้า","poem":"ดวงแห่งความก้าวหน้าเด่นชัด สิ่งที่คุณทำมีโอกาสได้รับการมองเห็นมากขึ้น หากกำลังคิดว่าจะอยู่กับที่หรือก้าวไปอีกขั้น ใบนี้เป็นสัญญาณให้เตรียมตัวรับความเปลี่ยนแปลง","work":"มีโอกาสได้รับหน้าที่ใหม่ โปรเจกต์ใหญ่ หรือความไว้วางใจจากผู้ใหญ่ เป็นช่วงที่ควรแสดงศักยภาพอย่างเต็มที่","money":"รายได้มีโอกาสเพิ่มตามความรับผิดชอบ หากมีเป้าหมายทางการเงินควรเริ่มวางแผนอย่างจริงจัง","love":"ความสัมพันธ์มีโอกาสพัฒนาไปอีกระดับ คนโสดอาจพบคนที่มีเป้าหมายชีวิตคล้ายกัน","health":"ลดภาระที่ไม่จำเป็นและแบ่งเวลาพักให้ชัดเจน การค่อย ๆ ไปจะช่วยให้มีแรงต่อเนื่อง","luck":"จังหวะดีจะชัดขึ้นเมื่อเตรียมตัวพร้อม สังเกตข่าวสารและความช่วยเหลือรอบตัว","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 80,000 บาท","level":"มงคล"},"10":{"title":"ใบทรัพย์เพิ่มพูน","poem":"เป็นใบที่เด่นเรื่องการสร้างฐานะและการสะสมทรัพย์ สิ่งที่เริ่มต้นจากเล็ก ๆ มีโอกาสขยายตัว หากกำลังวางแผนซื้อบ้าน คอนโด ที่ดิน หรือทรัพย์สิน ควรเริ่มศึกษาข้อมูลอย่างจริงจัง","work":"มีโอกาสสร้างรายได้จากความสามารถเฉพาะตัว งานเสริมหรือธุรกิจที่เริ่มทำควบคู่กับงานประจำอาจเริ่มเห็นผล","money":"มีเกณฑ์เก็บเงินได้มากขึ้น เหมาะกับการสร้างเงินสำรองและวางแผนทรัพย์สินระยะยาว","love":"คนมีคู่มีเกณฑ์วางแผนสร้างอนาคตร่วมกัน คนโสดควรเลือกคนที่มีทัศนคติเรื่องอนาคตสอดคล้องกัน","health":"ให้เวลากับการพักผ่อนและฟื้นพลัง อย่าปล่อยให้ความเร่งรีบกลบสัญญาณจากร่างกาย","luck":"โชคมักมาในรูปของโอกาสและผู้คน ลองเปิดรับคำชวนที่สอดคล้องกับเป้าหมายของคุณ","promotion":"รับส่วนลดสำหรับใช้ใน Rich Walk มูลค่า 50 บาท","level":"มหามงคล"},"11":{"title":"ใบเริ่มต้นใหม่","poem":"สิ่งเก่ากำลังจะจบลงเพื่อเปิดพื้นที่ให้สิ่งใหม่เข้ามา บางเรื่องที่เคยเสียใจหรือผิดหวังอาจเป็นเหตุผลที่ทำให้คุณได้เริ่มต้นเส้นทางที่เหมาะกับตัวเองมากกว่าเดิม ช่วงนี้อย่ากลัวการเปลี่ยนแปลง เพราะการเริ่มต้นครั้งใหม่อาจนำไปสู่สิ่งที่ดีกว่าที่คิด","work":"เหมาะกับการเริ่มโปรเจกต์ใหม่ เปลี่ยนงาน หรือเรียนรู้ทักษะใหม่ หากมีความคิดที่เก็บไว้นาน ควรเริ่มลงมือ","money":"มีโอกาสสร้างรายได้จากสิ่งใหม่ แต่ช่วงแรกอาจต้องลงทุนทั้งเวลาและทรัพยากร ควรวางแผนก่อนใช้เงินก้อน","love":"คนโสดมีโอกาสเริ่มต้นความสัมพันธ์ใหม่ คนมีคู่ที่เคยมีปัญหาจะมีโอกาสเริ่มต้นความเข้าใจกันอีกครั้ง","health":"เริ่มดูแลตัวเองจากกิจวัตรเล็ก ๆ ที่ทำได้สม่ำเสมอ ความสมดุลจะช่วยให้ใจปลอดโปร่ง","luck":"ลาภเล็ก ๆ อาจเกิดจากสิ่งที่ลงมือทำไว้ก่อนหน้า ใช้สติพิจารณาก่อนตัดสินใจ","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 100,000 บาท","level":"มงคล"},"12":{"title":"ใบอดทนแล้วได้ดี","poem":"ช่วงนี้อาจรู้สึกว่าทำหลายอย่างแต่ผลลัพธ์ยังไม่ชัดเจน ขอให้อดทนอีกระยะ เพราะสิ่งที่กำลังสร้างต้องใช้เวลาเหมือนต้นไม้ที่ต้องค่อย ๆ เติบโต อย่าเปลี่ยนแผนเพียงเพราะยังไม่เห็นผลในทันที","work":"งานมีความก้าวหน้าแบบช้า ๆ แต่มั่นคง ผู้ใหญ่กำลังจับตามองผลงาน","money":"ยังไม่ใช่ช่วงใช้จ่ายฟุ่มเฟือย ควรเก็บเงินและวางแผนระยะยาว","love":"ความสัมพันธ์ต้องใช้เวลาเรียนรู้กัน อย่ารีบตัดสินจากเหตุการณ์เพียงครั้งเดียว","health":"ลดภาระที่ไม่จำเป็นและแบ่งเวลาพักให้ชัดเจน การค่อย ๆ ไปจะช่วยให้มีแรงต่อเนื่อง","luck":"จังหวะดีจะชัดขึ้นเมื่อเตรียมตัวพร้อม สังเกตข่าวสารและความช่วยเหลือรอบตัว","promotion":"จองวันนี้ ทำการตลาด การันตีผู้เช่า 2 ปี","level":"กลาง"},"13":{"title":"ใบโชคเล็กๆ","poem":"จะมีเรื่องดีเล็ก ๆ เข้ามาแบบไม่ทันตั้งตัว อาจเป็นข่าวดี ของขวัญ เงินพิเศษ หรือโอกาสที่ดูเหมือนเล็ก แต่สามารถต่อยอดเป็นเรื่องใหญ่ได้","work":"มีคนเห็นผลงานและอาจมอบโอกาสเพิ่มเติม","money":"มีรายรับพิเศษเข้ามา ควรเก็บไว้บางส่วนแทนการใช้ทั้งหมด","love":"มีโอกาสได้รับความสนใจจากคนที่คุณไม่คาดคิด","health":"ให้เวลากับการพักผ่อนและฟื้นพลัง อย่าปล่อยให้ความเร่งรีบกลบสัญญาณจากร่างกาย","luck":"โชคมักมาในรูปของโอกาสและผู้คน ลองเปิดรับคำชวนที่สอดคล้องกับเป้าหมายของคุณ","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 100,000 บาท","level":"มงคล"},"14":{"title":"ใบคู่มิตร","poem":"คนรอบตัวคือกุญแจสำคัญในช่วงนี้ มีโอกาสได้รับความช่วยเหลือ ได้รู้จักคนใหม่ หรือพบพันธมิตรที่ช่วยผลักดันคุณไปข้างหน้า","work":"เหมาะกับการทำงานเป็นทีม การร่วมมือหรือสร้างคอนเนกชันใหม่","money":"มีโอกาสได้รายได้จากการร่วมงานกับผู้อื่น","love":"คนโสดอาจพบคนถูกใจผ่านเพื่อน ส่วนคนมีคู่ควรใช้เวลาทำกิจกรรมร่วมกัน","health":"เริ่มดูแลตัวเองจากกิจวัตรเล็ก ๆ ที่ทำได้สม่ำเสมอ ความสมดุลจะช่วยให้ใจปลอดโปร่ง","luck":"ลาภเล็ก ๆ อาจเกิดจากสิ่งที่ลงมือทำไว้ก่อนหน้า ใช้สติพิจารณาก่อนตัดสินใจ","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 50,000 บาท","level":"มงคล"},"15":{"title":"ใบเปลี่ยนแปลง","poem":"ชีวิตกำลังเข้าสู่ช่วงเปลี่ยนผ่าน บางอย่างอาจไม่ได้เป็นไปตามแผน แต่การเปลี่ยนแปลงครั้งนี้จะทำให้คุณได้เห็นทางเลือกใหม่ที่ไม่เคยมองมาก่อน","work":"มีเกณฑ์เปลี่ยนหน้าที่ เปลี่ยนทีม หรือได้รับงานใหม่","money":"ควรเตรียมเงินสำรองไว้ เพราะอาจมีค่าใช้จ่ายที่ไม่ได้คาดการณ์","love":"ความสัมพันธ์จะเปลี่ยนไปในทางใดทางหนึ่ง ต้องพูดคุยกันอย่างตรงไปตรงมา","health":"ลดภาระที่ไม่จำเป็นและแบ่งเวลาพักให้ชัดเจน การค่อย ๆ ไปจะช่วยให้มีแรงต่อเนื่อง","luck":"จังหวะดีจะชัดขึ้นเมื่อเตรียมตัวพร้อม สังเกตข่าวสารและความช่วยเหลือรอบตัว","promotion":"รับส่วนลดสำหรับใช้ใน Rich Walk มูลค่า 50 บาท","level":"กลาง"},"16":{"title":"ใบปลดล็อก","poem":"ปัญหาที่ค้างคามานานกำลังจะมีทางออก เรื่องที่เคยคิดว่าแก้ไม่ได้อาจมีคนหรือข้อมูลใหม่เข้ามาช่วยให้มองเห็นคำตอบ","work":"งานที่ติดขัดจะเริ่มเดินหน้า","money":"ปัญหาด้านการเงินเริ่มคลี่คลาย มีโอกาสได้เงินที่รออยู่","love":"เรื่องที่ไม่เข้าใจกันมีโอกาสได้รับคำอธิบาย","health":"ให้เวลากับการพักผ่อนและฟื้นพลัง อย่าปล่อยให้ความเร่งรีบกลบสัญญาณจากร่างกาย","luck":"โชคมักมาในรูปของโอกาสและผู้คน ลองเปิดรับคำชวนที่สอดคล้องกับเป้าหมายของคุณ","promotion":"จองวันนี้ ทำการตลาด การันตีผู้เช่า 2 ปี","level":"มหามงคล"},"17":{"title":"ใบเสน่ห์","poem":"ช่วงนี้คุณมีพลังดึงดูดผู้คน มีคนสนใจและอยากรู้จักมากขึ้น เหมาะกับการสร้างคอนเนกชันและเปิดโอกาสให้ตัวเองได้พบผู้คนใหม่ ๆ","work":"เหมาะกับการพรีเซนต์ การขาย การเจรจา และงานที่ต้องพบปะผู้คน","money":"มีโอกาสสร้างรายได้จากการพูด การขาย หรือการสร้างความสัมพันธ์","love":"คนโสดมีเกณฑ์พบคนถูกใจ คนมีคู่ควรเติมความหวานให้กัน","health":"เริ่มดูแลตัวเองจากกิจวัตรเล็ก ๆ ที่ทำได้สม่ำเสมอ ความสมดุลจะช่วยให้ใจปลอดโปร่ง","luck":"ลาภเล็ก ๆ อาจเกิดจากสิ่งที่ลงมือทำไว้ก่อนหน้า ใช้สติพิจารณาก่อนตัดสินใจ","promotion":"จองวันนี้ รับส่วนลดทันที 90,000 บาท","level":"มงคล"},"18":{"title":"ใบเงินทอง","poem":"มีเกณฑ์เกี่ยวข้องกับเงินก้อน รายได้พิเศษ หรือผลตอบแทนจากสิ่งที่ลงทุนลงแรงไว้ การเงินจะดีขึ้นหากบริหารอย่างมีระบบ","work":"มีโอกาสได้รับงานที่ให้ผลตอบแทนสูงขึ้น","money":"มีโอกาสได้เงินก้อน แต่ควรวางแผนก่อนใช้","love":"ควรพูดคุยเรื่องการเงินอย่างเปิดใจ โดยเฉพาะคนที่วางแผนอนาคตร่วมกัน","health":"ลดภาระที่ไม่จำเป็นและแบ่งเวลาพักให้ชัดเจน การค่อย ๆ ไปจะช่วยให้มีแรงต่อเนื่อง","luck":"จังหวะดีจะชัดขึ้นเมื่อเตรียมตัวพร้อม สังเกตข่าวสารและความช่วยเหลือรอบตัว","promotion":"จองวันนี้รับส่วนลดคอนโด ทันที 90,000 บาท","level":"มหามงคล"},"19":{"title":"ใบสำเร็จ","poem":"เป้าหมายที่ตั้งใจไว้มีแนวโน้มสำเร็จ สิ่งที่ทำมานานกำลังเข้าใกล้เส้นชัย เป็นช่วงเวลาที่ควรเร่งมือและอย่าหยุดเพราะความเหนื่อย","work":"มีโอกาสได้รับคำชม ความสำเร็จ หรือการยอมรับ","money":"ผลตอบแทนจากความพยายามเริ่มเห็นชัด","love":"ความสัมพันธ์มีความมั่นคงขึ้น","health":"ให้เวลากับการพักผ่อนและฟื้นพลัง อย่าปล่อยให้ความเร่งรีบกลบสัญญาณจากร่างกาย","luck":"โชคมักมาในรูปของโอกาสและผู้คน ลองเปิดรับคำชวนที่สอดคล้องกับเป้าหมายของคุณ","promotion":"จองวันนี้ ทำการตลาด การันตีผู้เช่า 2 ปี","level":"มหามงคล"},"20":{"title":"ใบตั้งหลัก","poem":"เป็นช่วงเวลาแห่งการจัดระเบียบชีวิต ทั้งงาน เงิน และความสัมพันธ์ หากรู้สึกว่าชีวิตวุ่นวาย ให้หยุดแล้วจัดลำดับสิ่งสำคัญใหม่ เมื่อฐานแข็งแรง สิ่งที่จะสร้างต่อไปจะมั่นคง","work":"เหมาะกับการวางระบบและแผนงาน","money":"ควรจัดบัญชีรายรับรายจ่ายและสร้างเงินสำรอง","love":"ความชัดเจนจะเกิดขึ้นเมื่อรู้ว่าตัวเองต้องการอะไร","health":"เริ่มดูแลตัวเองจากกิจวัตรเล็ก ๆ ที่ทำได้สม่ำเสมอ ความสมดุลจะช่วยให้ใจปลอดโปร่ง","luck":"ลาภเล็ก ๆ อาจเกิดจากสิ่งที่ลงมือทำไว้ก่อนหน้า ใช้สติพิจารณาก่อนตัดสินใจ","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 100,000 บาท","level":"มงคล"},"21":{"title":"ใบโชคจากคนไกล","poem":"ข่าวดีอาจมาจากคนที่อยู่ไกล ต่างจังหวัด หรือต่างประเทศ มีโอกาสเกี่ยวข้องกับงาน การเดินทาง หรือธุรกิจ","work":"เหมาะกับการขยายตลาดและสร้างคอนเนกชันใหม่","money":"มีช่องทางรายได้จากกลุ่มลูกค้าหรือพื้นที่ใหม่","love":"คนโสดมีโอกาสพบคนต่างถิ่น ส่วนคนมีคู่ควรหาเวลาเดินทางด้วยกัน","health":"ลดภาระที่ไม่จำเป็นและแบ่งเวลาพักให้ชัดเจน การค่อย ๆ ไปจะช่วยให้มีแรงต่อเนื่อง","luck":"จังหวะดีจะชัดขึ้นเมื่อเตรียมตัวพร้อม สังเกตข่าวสารและความช่วยเหลือรอบตัว","promotion":"รับส่วนลดสำหรับใช้ใน Rich Walk มูลค่า 50 บาท","level":"กลาง"},"22":{"title":"ใบทรัพย์จากงาน","poem":"ความขยันกำลังเปลี่ยนเป็นผลตอบแทน มีโอกาสสร้างรายได้เพิ่มจากงานหลัก งานเสริม หรือความสามารถพิเศษ","work":"เหมาะกับการรับโปรเจกต์ใหม่หรือขยายงาน","money":"รายรับมีแนวโน้มเพิ่ม แต่ต้องระวังรายจ่ายตามใจ","love":"คนรักหรือคนใกล้ตัวจะสนับสนุนเรื่องงาน","health":"ให้เวลากับการพักผ่อนและฟื้นพลัง อย่าปล่อยให้ความเร่งรีบกลบสัญญาณจากร่างกาย","luck":"โชคมักมาในรูปของโอกาสและผู้คน ลองเปิดรับคำชวนที่สอดคล้องกับเป้าหมายของคุณ","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 95,000 บาท","level":"มหามงคล"},"23":{"title":"ใบรักชัดเจน","poem":"เรื่องความสัมพันธ์ที่เคยคลุมเครือจะเริ่มมีคำตอบ คนที่กำลังรอใครบางคนจะได้เห็นท่าทีชัดขึ้น","work":"การร่วมงานกับคนที่ไว้ใจกันจะทำให้ผลงานดีขึ้น","money":"ไม่มีเรื่องน่ากังวล แต่ควรวางแผนร่วมกันหากมีค่าใช้จ่ายก้อนใหญ่","love":"คนโสดมีเกณฑ์พบคนที่จริงจัง คนมีคู่มีโอกาสคุยเรื่องอนาคต","health":"เริ่มดูแลตัวเองจากกิจวัตรเล็ก ๆ ที่ทำได้สม่ำเสมอ ความสมดุลจะช่วยให้ใจปลอดโปร่ง","luck":"ลาภเล็ก ๆ อาจเกิดจากสิ่งที่ลงมือทำไว้ก่อนหน้า ใช้สติพิจารณาก่อนตัดสินใจ","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 100,000 บาท","level":"มหามงคล"},"24":{"title":"ใบเจรจาสำเร็จ","poem":"เรื่องที่ต้องพูดคุย ต่อรอง หรือหาข้อตกลง มีแนวโน้มไปในทางที่ดี หากคุณเตรียมข้อมูลให้พร้อมและเลือกใช้คำพูดอย่างเหมาะสม","work":"เด่นเรื่องการเจรจาธุรกิจ การขาย และการนำเสนอ","money":"มีโอกาสต่อรองราคา เงินเดือน หรือผลตอบแทนได้ดี","love":"อย่าเก็บความรู้สึกไว้คนเดียว การพูดกันตรง ๆ จะช่วยให้เข้าใจกัน","health":"ลดภาระที่ไม่จำเป็นและแบ่งเวลาพักให้ชัดเจน การค่อย ๆ ไปจะช่วยให้มีแรงต่อเนื่อง","luck":"จังหวะดีจะชัดขึ้นเมื่อเตรียมตัวพร้อม สังเกตข่าวสารและความช่วยเหลือรอบตัว","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 100,000 บาท","level":"มงคล"},"25":{"title":"ใบผู้ใหญ่เมตตา","poem":"มีผู้ใหญ่ให้การสนับสนุนหรือเห็นศักยภาพของคุณ หากกำลังมองหาคนให้คำปรึกษา ช่วงนี้มีโอกาสพบคนที่มีประสบการณ์และพร้อมชี้ทาง","work":"เหมาะกับการเสนอผลงานหรือขอโอกาสใหม่","money":"มีโอกาสได้รับคำแนะนำที่ช่วยลดความเสี่ยงทางการเงิน","love":"ความสัมพันธ์ได้รับการยอมรับจากครอบครัวมากขึ้น","health":"ให้เวลากับการพักผ่อนและฟื้นพลัง อย่าปล่อยให้ความเร่งรีบกลบสัญญาณจากร่างกาย","luck":"โชคมักมาในรูปของโอกาสและผู้คน ลองเปิดรับคำชวนที่สอดคล้องกับเป้าหมายของคุณ","promotion":"จองวันนี้การันตีผู้เช่า 2 ปี","level":"มงคล"},"26":{"title":"ใบเก็บเกี่ยว","poem":"ถึงเวลาที่ผลจากสิ่งที่ทำมานานเริ่มปรากฏ เหมาะกับการเก็บเกี่ยวผลลัพธ์และต่อยอดสิ่งที่ทำได้ดีอยู่แล้ว","work":"ผลงานมีโอกาสได้รับการยอมรับ","money":"มีโอกาสได้รับผลตอบแทนจากสิ่งที่ลงทุนไว้","love":"ความสัมพันธ์ที่ดูแลกันมานานจะยิ่งมั่นคง","health":"เริ่มดูแลตัวเองจากกิจวัตรเล็ก ๆ ที่ทำได้สม่ำเสมอ ความสมดุลจะช่วยให้ใจปลอดโปร่ง","luck":"ลาภเล็ก ๆ อาจเกิดจากสิ่งที่ลงมือทำไว้ก่อนหน้า ใช้สติพิจารณาก่อนตัดสินใจ","promotion":"รับส่วนลดสำหรับใช้ใน Rich Walk มูลค่า 50 บาท","level":"มหามงคล"},"27":{"title":"ใบระวังคำพูด","poem":"ดวงโดยรวมยังดี แต่สิ่งที่ต้องระวังคือการสื่อสาร อย่าพูดเร็วเพราะอารมณ์ และอย่าตัดสินใครจากข้อมูลเพียงด้านเดียว","work":"ระวังความเข้าใจผิดกับเพื่อนร่วมงาน","money":"ก่อนเซ็นเอกสารหรือทำข้อตกลง ควรอ่านรายละเอียดให้ครบ","love":"คำพูดเล็ก ๆ อาจกลายเป็นเรื่องใหญ่ หากมีเรื่องไม่สบายใจควรคุยกันด้วยเหตุผล","health":"ลดภาระที่ไม่จำเป็นและแบ่งเวลาพักให้ชัดเจน การค่อย ๆ ไปจะช่วยให้มีแรงต่อเนื่อง","luck":"จังหวะดีจะชัดขึ้นเมื่อเตรียมตัวพร้อม สังเกตข่าวสารและความช่วยเหลือรอบตัว","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 60,000 บาท","level":"ควรระวัง"},"28":{"title":"ใบคืนดี","poem":"ความสัมพันธ์ที่เคยห่างเหินหรือมีความเข้าใจผิด มีโอกาสกลับมาพูดคุยกันอีกครั้ง หากคุณลดทิฐิลง เรื่องที่ค้างอยู่ในใจอาจได้รับการคลี่คลาย","work":"มีโอกาสกลับมาร่วมงานกับคนที่เคยห่างกัน","money":"เรื่องเงินที่ติดค้างมีโอกาสได้รับการสะสาง","love":"เหมาะกับการเปิดใจและให้อภัย คนโสดอาจมีคนจากอดีตกลับมา","health":"ให้เวลากับการพักผ่อนและฟื้นพลัง อย่าปล่อยให้ความเร่งรีบกลบสัญญาณจากร่างกาย","luck":"โชคมักมาในรูปของโอกาสและผู้คน ลองเปิดรับคำชวนที่สอดคล้องกับเป้าหมายของคุณ","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 80,000 บาท","level":"มงคล"},"29":{"title":"ใบความฝัน","poem":"ความฝันที่เคยคิดว่าไกลเกินเอื้อมเริ่มมีโอกาสเป็นจริงแต่ต้องเปลี่ยนจากการคิดเป็นการลงมือทำ อย่ารอวันที่พร้อม 100% เพราะไม่มีวันนั้น","work":"เหมาะกับการเริ่มทำสิ่งที่อยากทำนาน","money":"ควรเริ่มวางแผนการเงินเพื่อเป้าหมายระยะยาว","love":"มีโอกาสพบคนที่สนับสนุนความฝันของคุณ","health":"เริ่มดูแลตัวเองจากกิจวัตรเล็ก ๆ ที่ทำได้สม่ำเสมอ ความสมดุลจะช่วยให้ใจปลอดโปร่ง","luck":"ลาภเล็ก ๆ อาจเกิดจากสิ่งที่ลงมือทำไว้ก่อนหน้า ใช้สติพิจารณาก่อนตัดสินใจ","promotion":"จองวันนี้รับส่วนลดคอนโดทันที 90,000 บาท","level":"มหามงคล"},"30":{"title":"ใบก้าวสู่ความสำเร็จ","poem":"เป็นใบแห่งความก้าวหน้าและการต่อยอด สิ่งที่เริ่มต้นไว้มีโอกาสเติบโตอย่างต่อเนื่อง ช่วงนี้เหมาะกับการขยับขยาย วางแผนอนาคต และสร้างสิ่งที่มั่นคงให้ตัวเอง","work":"มีโอกาสได้รับความไว้วางใจ งานใหญ่ หรือบทบาทที่สำคัญขึ้น","money":"มีแนวโน้มสร้างรายได้เพิ่มและเริ่มเห็นความมั่นคง เหมาะกับการวางแผนทรัพย์สินระยะยาว","love":"คนมีคู่มีเกณฑ์วางแผนอนาคตร่วมกัน คนโสดมีโอกาสพบคนที่เข้ามาพร้อมความจริงจัง","health":"ลดภาระที่ไม่จำเป็นและแบ่งเวลาพักให้ชัดเจน การค่อย ๆ ไปจะช่วยให้มีแรงต่อเนื่อง","luck":"จังหวะดีจะชัดขึ้นเมื่อเตรียมตัวพร้อม สังเกตข่าวสารและความช่วยเหลือรอบตัว","promotion":"รับส่วนลดสำหรับใช้ใน Rich Walk มูลค่า 50 บาท","level":"มหามงคล"}};
+    const fortuneLevels = ["มหามงคล","มงคล","มหามงคล","มหามงคล","มงคล","กลาง","มงคล","มหามงคล","มงคล","มหามงคล","มงคล","กลาง","มงคล","มงคล","กลาง","มหามงคล","มงคล","มหามงคล","มหามงคล","มงคล","กลาง","มหามงคล","มหามงคล","มงคล","มงคล","มหามงคล","ควรระวัง","มงคล","มหามงคล","มหามงคล"];
+    const translations = {
+      th: {
+        htmlLang:"th", title:"เปิดชะตาเซียมซี — คำทำนายของคุณ", description:"เปิดคำทำนายเซียมซีในประสบการณ์ดิจิทัลที่ได้รับแรงบันดาลใจจากศาลเจ้าจีน", skip:"ข้ามไปยังเนื้อหาหลัก", brand:"เปิดชะตาเซียมซี", soundOn:"เสียงเปิด", soundOff:"เสียงปิด", soundOnAria:"ปิดเสียงประกอบ", soundOffAria:"เปิดเสียงประกอบ", languageLabel:"เลือกภาษา",
+        scenes:{temple:"ศาลเจ้า",number:"หมายเลขของคุณ",reveal:"เปิดคำทำนาย",result:"คำทำนายของคุณ"},
+        heroEyebrow:"ช่วงเวลาเงียบสงบกับคำทำนายของคุณ",heroTitle:"เซียมซี",heroLineOne:"บางคำตอบ ไม่ได้ถูกค้นพบ",heroLineTwo:"แต่กำลังรอให้คุณเปิดมัน",heroNote:"เขย่าเซียมซีจริง แล้วนำเลขที่ได้มากรอกที่นี่",begin:"กรอกเลขเซียมซี",beginAria:"ไปกรอกหมายเลขเซียมซีที่ได้จากการเขย่าจริง",
+        numberEyebrow:"หมายเลขจากเซียมซีจริง",numberTitle:"เลขเซียมซีของคุณ",numberInstruction:"ใส่เฉพาะหมายเลขที่ได้จากการเขย่าเซียมซีจริง",numberLabel:"กรอกหมายเลขเซียมซี ตั้งแต่ 1 ถึง 30",numberCaption:"กรอกหมายเลขเซียมซี · ๑ — ๓๐",numberRange:"หมายเลขเซียมซีมีตั้งแต่ ๑ ถึง ๓๐",revealButton:"เปิดคำทำนาย",errorEmpty:"โปรดกรอกหมายเลขที่คุณได้รับ",errorRange:"กรุณาเลือกหมายเลขตั้งแต่ 1 ถึง 30",
+        revealAria:"กำลังเปิดคำทำนาย",revealPrompt:"คำตอบของคุณ",numberPrefix:"หมายเลข",fortuneNo:"เซียมซีหมายเลข",resultOverline:"คำทำนายปรากฏแล้ว",emblem:"ตรามงคล",section:"คำทำนาย",offerLabel:"สิทธิพิเศษจากใบนี้",levelPrefix:"ระดับคำทำนาย",levelNames:{"มหามงคล":"มหามงคล","มงคล":"มงคล","กลาง":"กลาง","ควรระวัง":"ควรระวัง"},
+        categories:{work:"การงาน",money:"การเงิน",love:"ความรัก",health:"สุขภาพ",luck:"โชคลาภ"},meaningToggle:"เลขนี้หมายถึงอะไร?",meaningCollapse:"ซ่อนรายละเอียด",meaningSummary:"ลองรับฟังถ้อยคำจากใบนี้ แล้วเลือกก้าวต่อไปให้สอดคล้องกับความตั้งใจของคุณ",meaningDetail:"ลองถามใจตัวเองว่า สิ่งใดในคำทำนายนี้เชื่อมโยงกับชีวิตตอนนี้ และก้าวเล็ก ๆ แบบไหนที่คุณเลือกทำได้ คำทำนายเป็นเพียงแนวทางชวนคิด ไม่ใช่คำตัดสินอนาคต",
+        demo:"หมายเลขนี้ยังไม่มีข้อมูลเฉพาะ จึงแสดงคำทำนายตัวอย่าง",again:"เสี่ยงเซียมซีอีกครั้ง",save:"บันทึกเป็นภาพ",share:"แชร์คำทำนาย",saveDone:"บันทึกใบคำทำนายเป็นภาพ PNG แล้ว",saveFailed:"บันทึกภาพไม่สำเร็จ ลองอีกครั้ง",shareDone:"ส่งต่อคำทำนายแล้ว",shareCopied:"คัดลอกคำทำนายและลิงก์ไว้ในคลิปบอร์ดแล้ว",shareFailed:"ไม่สามารถแชร์ได้ในเบราว์เซอร์นี้ ลองบันทึกคำทำนายแทน",footer:"ขอให้แสงแห่งปัญญานำทางคุณในทุกก้าวต่อจากนี้",loading:"เปิดประตูแห่งโชคชะตา",lantern:"แตะโคมเพื่อให้สว่างขึ้น",shareTitle:"Fortune",languageNames:{th:"ภาษาไทย",en:"English",zh:"简体中文"}
+      },
+      en: {
+        htmlLang:"en",title:"The Oracle of Fortune — Your Reading",description:"Reveal your fortune in a quiet digital experience inspired by a Chinese temple.",skip:"Skip to main content",brand:"THE ORACLE OF FORTUNE",soundOn:"Sound on",soundOff:"Sound off",soundOnAria:"Turn sound off",soundOffAria:"Turn sound on",languageLabel:"Choose language",
+        scenes:{temple:"THE TEMPLE",number:"YOUR NUMBER",reveal:"THE REVEAL",result:"YOUR FORTUNE"},
+        heroEyebrow:"A quiet moment with your own fortune",heroTitle:"Fortune",heroLineOne:"Some answers aren't found.",heroLineTwo:"They're waiting for you to uncover them.",heroNote:"Draw a real fortune stick, then enter its number here.",begin:"Enter your number",beginAria:"Enter the number from your real fortune-stick draw",
+        numberEyebrow:"YOUR NUMBER FROM THE REAL DRAW",numberTitle:"Your fortune number",numberInstruction:"Enter only the number you drew in person.",numberLabel:"Enter your fortune number, from 1 to 30",numberCaption:"FORTUNE NUMBER · 1 — 30",numberRange:"Fortune numbers range from 1 to 30.",revealButton:"Reveal my fortune",errorEmpty:"Please enter the number you drew.",errorRange:"Choose a number from 1 to 30.",
+        revealAria:"Revealing your fortune",revealPrompt:"Your answer awaits",numberPrefix:"Fortune No.",fortuneNo:"FORTUNE No.",resultOverline:"THE ORACLE HAS SPOKEN",emblem:"Fortune seal",section:"Your reading",offerLabel:"A special offer with this fortune",levelPrefix:"Fortune level",levelNames:{"มหามงคล":"Great blessing","มงคล":"Favorable","กลาง":"Neutral","ควรระวัง":"Take care"},
+        categories:{work:"Work",money:"Money",love:"Love",health:"Wellbeing",luck:"Good fortune"},meaningToggle:"What does this number mean?",meaningCollapse:"Hide details",meaningSummary:"Take these words as a prompt, and choose a next step that feels true to your intentions.",meaningDetail:"Ask yourself which part of this reading resonates with your life today, and what small step you can choose to take. A fortune is a reflection prompt, not a verdict on your future.",
+        demo:"A sample reading is shown for this number.",again:"Draw again",save:"Save as image",share:"Share reading",saveDone:"Your fortune paper was saved as a PNG image.",saveFailed:"The image could not be saved. Please try again.",shareDone:"Your reading has been shared.",shareCopied:"Reading and link copied to your clipboard.",shareFailed:"Sharing isn't available here. You can save the reading instead.",footer:"May wisdom light the way for every step ahead.",loading:"Opening the gate of fortune",lantern:"Tap the lantern to light it",shareTitle:"Fortune",languageNames:{th:"Thai",en:"English",zh:"Simplified Chinese"}
+      },
+      zh: {
+        htmlLang:"zh-CN",title:"求签 · 为你揭晓签语",description:"在灵感源自中国寺庙的数字体验中，开启属于你的签语。",skip:"跳转到主要内容",brand:"签语 · 命运神谕",soundOn:"声音开启",soundOff:"声音关闭",soundOnAria:"关闭声音",soundOffAria:"开启声音",languageLabel:"选择语言",
+        scenes:{temple:"神殿",number:"输入签号",reveal:"揭晓",result:"你的签语"},
+        heroEyebrow:"静下心来，聆听属于你的签语",heroTitle:"求签",heroLineOne:"有些答案，无须寻找。",heroLineTwo:"它一直在等你亲手揭开。",heroNote:"请先在线下求签，再输入签号。",begin:"输入签号",beginAria:"输入你在线下抽到的签号",
+        numberEyebrow:"输入你抽到的签号",numberTitle:"你的签号",numberInstruction:"只需填写你在线下抽到的号码。",numberLabel:"请输入签号，范围为 1 到 30",numberCaption:"签号 · 1 — 30",numberRange:"签号范围为 1 至 30。",revealButton:"揭开签语",errorEmpty:"请输入你抽到的签号。",errorRange:"请输入 1 到 30 之间的号码。",
+        revealAria:"正在揭晓签语",revealPrompt:"属于你的答案",numberPrefix:"签号",fortuneNo:"签号",resultOverline:"神谕已至",emblem:"吉祥印章",section:"签语",offerLabel:"本签附赠优惠",levelPrefix:"签运",levelNames:{"มหามงคล":"大吉","มงคล":"吉","กลาง":"平","ควรระวัง":"谨慎"},
+        categories:{work:"事业",money:"财运",love:"感情",health:"身心",luck:"好运"},meaningToggle:"这个签号意味着什么？",meaningCollapse:"收起详情",meaningSummary:"把这段话当作一个提醒，选择与你内心愿望相契合的下一步。",meaningDetail:"不妨想一想，签语中的哪句话与你当下的生活相呼应，以及你愿意采取怎样的小行动。签语是启发思考的提示，并非对未来的定论。",
+        demo:"该签号暂无专属内容，当前显示示例签语。",again:"再求一次签",save:"保存为图片",share:"分享签语",saveDone:"签语纸已保存为 PNG 图片。",saveFailed:"图片保存失败，请再试一次。",shareDone:"签语已分享。",shareCopied:"签语和链接已复制到剪贴板。",shareFailed:"当前浏览器无法分享，你可以保存签语。",footer:"愿智慧的光，照亮你接下来的每一步。",loading:"正在开启命运之门",lantern:"轻触灯笼，让它亮起来",shareTitle:"签语",languageNames:{th:"泰语",en:"英语",zh:"简体中文"}
+      }
+    };
+    const fortuneLocale = {
+      en: {
+        titles:["The Way Opens","A Door of Opportunity","Wish Fulfilled","Abundance","A Helping Hand","A New Journey","Good News","Love in Bloom","Steady Progress","Growing Prosperity","A Fresh Beginning","Patience Bears Fruit","A Little Good Luck","A Trusted Ally","A Turning Point","Release and Renewal","A Magnetic Presence","Golden Fortune","Achievement","A Strong Foundation","Fortune from Afar","Rewards from Work","Love Made Clear","Successful Negotiation","A Benevolent Guide","Gather and Grow","Choose Your Words","A Kind Return","A Dream Takes Shape","Rise to Success"],
+        poems:[
+          "Old obstacles are beginning to ease. A new opening may appear, and news you have been waiting for could finally move forward.",
+          "A new offer, invitation, or role may arrive. Stay open: something that seems small now could become important later.",
+          "Your steady effort is gathering into results. Progress may take time, so keep going and see your plans through.",
+          "The effort and planning you have invested may begin to pay off. Build prosperity through skill and thoughtful choices.",
+          "Help or useful advice may come from an unexpected person. Accept support and listen to someone with experience.",
+          "Travel, a move, a new workplace, or a new circle may bring fresh opportunities into view.",
+          "News about an application, business contact, or long-awaited reply may arrive. Stay attentive and ready to respond.",
+          "Affection is stirring. Singles may meet someone new; couples can renew their warmth by making time for each other.",
+          "Your progress is becoming visible. A larger responsibility or next step may be close; prepare to show your strengths.",
+          "Small beginnings can grow into lasting assets. Research property plans carefully and build long-term savings.",
+          "An ending can clear space for a better-fitting beginning. Release what has passed and take one new step.",
+          "Progress is slow but steady. Keep a long view, and do not abandon a sound plan just because results take time.",
+          "A small surprise, gift, or extra income may bring joy. Save a little or turn the moment into a new opportunity.",
+          "Friends, family, and new connections may become the key to useful help or a promising partnership.",
+          "A change is approaching. Flexibility will help you see the new path and make the most of the transition.",
+          "A blockage is beginning to clear. A fresh perspective or a timely conversation may reveal a way forward.",
+          "Your charm and connections are especially bright. Speak openly and let people see your genuine self.",
+          "A stronger financial rhythm may emerge. An opportunity to earn, save, or build something valuable is near.",
+          "Your efforts may reach an important milestone. Approval, recognition, or a completed agreement is within reach.",
+          "Build a secure foundation one thoughtful choice at a time. Long-term planning will bring greater peace of mind.",
+          "A useful opportunity or welcome news may come from far away, a new circle, or an unexpected contact.",
+          "Work you have put in may bring extra income or a valuable project. Plan how to use any gains wisely.",
+          "A relationship is becoming clearer. A sincere conversation can help love move toward a more stable stage.",
+          "Clear, patient communication can lead to a favorable agreement. Review the details before making a decision.",
+          "A kind or senior person may offer support. Seek advice when a decision feels too large to carry alone.",
+          "Keep building steadily and protect what you have gathered. Patience now prepares the way for security later.",
+          "Choose your words with care. If a misunderstanding appears, pause, clarify, and listen before replying.",
+          "A past kindness or relationship may return with better understanding. Forgiveness can open a gentler path.",
+          "A long-held idea may become real when you give it a practical plan and take the first step.",
+          "Progress and achievement are close. Your steady work can open the way to a larger opportunity."
+        ]
+      },
+      zh: {
+        titles:["道路渐开","机缘之门","心愿渐成","丰盛之运","贵人相助","新的旅程","好消息","花开有情","稳步向前","财运渐增","重新开始","耐心终有回报","小小好运","知心伙伴","转机将至","卸下旧事","魅力绽放","金玉之运","功成有望","稳固根基","远方来运","事业有成","感情明朗","洽谈顺利","仁厚长者","积累成长","谨慎言语","善意归来","梦想成形","迈向成功"],
+        poems:[
+          "曾经受阻的事情开始松动，新的通路可能出现，等待已久的消息也有望向前推进。",
+          "新的邀请、工作或提议可能到来。先别急着拒绝，眼前的小机会日后或会变得重要。",
+          "持续付出的努力正在累积成果。进展也许需要时间，请坚持完成已经开始的计划。",
+          "过去投入的心力与规划有望带来回报。凭借能力与审慎选择，逐步积累财富。",
+          "意想不到的人可能带来帮助或建议。适时接受支持，也听听有经验之人的意见。",
+          "旅行、搬迁、换工作或认识新朋友，都可能让新的机会进入视野。",
+          "求职、合作或等待中的回复可能传来进展。保持留意，也准备好及时回应。",
+          "感情开始有新的动静。单身者可能认识新人；伴侣若多花时间相处，关系会更温暖。",
+          "你的努力正逐渐被看见，新的职责或更进一步的机会可能临近，准备好展现实力。",
+          "从小处开始也能累积长久的资产。若考虑房产计划，宜仔细研究并做好长期储蓄。",
+          "一段结束会为更适合的新开始腾出空间。放下过去，先迈出小小的一步。",
+          "进展虽慢却稳。保持长远眼光，不要只因暂时未见成果就轻易改变计划。",
+          "意外的小惊喜、礼物或额外收入可能带来喜悦。留下一部分，也可把握新的机会。",
+          "朋友、家人或新结识的人，可能成为重要助力，带来合作或支持。",
+          "变化正在靠近。保持灵活，便能看见新的方向，并顺势把握转机。",
+          "受阻的局面开始松开。换个角度思考或及时沟通，或许就能找到出路。",
+          "你的魅力与人缘正在提升。坦诚表达，让别人看见真实的你。",
+          "财务节奏有望改善，新的收入、储蓄或创造价值的机会可能出现。",
+          "努力有望迎来重要成果，审批、认可或合作完成都值得期待。",
+          "一步一步打好基础。审慎的长期规划会让未来更安稳。",
+          "有用的机会或好消息，可能来自远方、新圈子或意料之外的联系。",
+          "工作付出可能带来额外收入或重要项目。获得回报后，记得妥善规划。",
+          "一段关系正逐渐明朗。真诚的交流能让感情走向更稳定的阶段。",
+          "清晰而耐心的沟通有助于达成理想的共识，决定前请仔细核对细节。",
+          "善良的长者或有经验的人可能愿意相助。遇到大事时，不妨主动请教。",
+          "持续积累，也好好守住已有成果。现在的耐心会为日后的安定铺路。",
+          "说话前多一分斟酌。若有误会，先停一停、说明白，也认真听对方表达。",
+          "过去的善意或关系可能带着新的理解回到身边。宽恕能为彼此开启温和的道路。",
+          "心中的想法有机会落地，先拟好实际计划，再踏出第一步。",
+          "进步与成果已不远。持续努力有望为你打开更大的机会。"
+        ]
+      }
+    };
+    const detailThemes = ["opening","chance","achievement","prosperity","support","journey","chance","love","achievement","prosperity","fresh","patience","chance","support","journey","opening","love","prosperity","achievement","patience","chance","prosperity","love","negotiation","support","patience","care","love","fresh","achievement"];
+    const localizedDetails = {
+      en: {
+        opening:{work:"A stalled task may begin moving again. Show your ability and follow up on opportunities.",money:"Cash flow may improve; keep part of any unexpected income in reserve.",love:"A new connection may appear. Honest conversation helps an existing bond grow."},
+        chance:{work:"Be ready to pitch an idea, try a new role, or learn a useful skill.",money:"A side income or small new venture may be worth exploring at a sensible scale.",love:"A new circle may bring an interesting person; share plans openly with a partner."},
+        achievement:{work:"Your contribution may be noticed, with a chance to take on a larger role.",money:"Income can grow with responsibility. Set a clear savings goal before spending more.",love:"Shared plans can bring a relationship closer; look for values and goals you both respect."},
+        prosperity:{work:"A new project or customer may reward the strengths you have built.",money:"An extra payment or better saving rhythm is possible; divide money between needs and reserves.",love:"Talk together about shared priorities and the future you want to build."},
+        support:{work:"A mentor or experienced colleague may help you see the next step. Ask for advice.",money:"A contact may lead to helpful support or a new source of income.",love:"Kindness from friends or family can strengthen a relationship; singles may meet someone through an introduction."},
+        journey:{work:"Meetings, travel, or a new environment can bring useful contacts and fresh ideas.",money:"A planned change may bring extra costs; budget first and consider the longer-term value.",love:"A new setting can lead to a meaningful meeting; couples may enjoy making memories together."},
+        love:{work:"Cooperation improves when you make room for other people’s ideas.",money:"Keep a balance between enjoyment and saving; avoid spending just to lift a passing mood.",love:"Warmth grows through time, clear communication, and shared plans."},
+        negotiation:{work:"Prepare your facts and clarify expectations before agreeing to a new arrangement.",money:"Compare the terms carefully; a patient review can protect your interests.",love:"Listen to each other’s needs and look for a fair, clear understanding."},
+        fresh:{work:"A new project or skill can open a better-fitting direction. Start with one practical step.",money:"A new source of income may take time to grow; plan before committing a large sum.",love:"A fresh conversation can help a relationship begin again with more understanding."},
+        patience:{work:"Steady, careful work is building trust. Keep going and make progress visible.",money:"Choose a long-term plan and avoid unnecessary spending while it takes shape.",love:"Give each other time to learn and understand; do not judge everything by one moment."},
+        care:{work:"Read details carefully and clarify expectations before agreeing or replying.",money:"Be cautious with commitments and check the terms before spending or investing.",love:"Choose gentle, clear words. Listening first can prevent a small misunderstanding from growing."}
+      },
+      zh: {
+        opening:{work:"停滞的工作有望重新推进。主动展现能力，并及时跟进新的机会。",money:"收支状况可能好转，意外收入不妨先留一部分备用。",love:"可能遇见新缘分；已有关系则适合用坦诚交流慢慢加深。"},
+        chance:{work:"准备好提出想法、尝试新职责，或学习一项实用技能。",money:"可以适度了解副业或小型新计划，先从可承受的规模开始。",love:"新的社交圈可能带来心动的人；与伴侣坦诚交流未来计划。"},
+        achievement:{work:"你的贡献有望获得看见，也可能迎来承担更大职责的机会。",money:"收入可能随着责任增加而提升，先设定储蓄目标再考虑增加开支。",love:"共同规划能让关系更亲近，也留意彼此珍视的目标与价值观。"},
+        prosperity:{work:"新项目或新客户可能让你累积的能力得到回报。",money:"额外收入或更好的储蓄节奏值得期待，可合理分配收入与备用金。",love:"适合一起谈谈共同的优先事项，以及想要建立的未来。"},
+        support:{work:"导师或有经验的同事可能帮你理清下一步，不妨主动请教。",money:"熟人可能带来支持，或介绍新的收入机会。",love:"亲友的善意支持有助于感情稳定；单身者可能经人介绍认识新人。"},
+        journey:{work:"出行、会面或进入新环境，可能带来有用的人脉与新想法。",money:"计划中的变化可能增加开销，先做好预算，再评估长远价值。",love:"新的环境可能带来缘分；伴侣适合一起创造美好回忆。"},
+        love:{work:"给他人的想法留出空间，合作会更加顺利。",money:"在享受与储蓄之间保持平衡，避免因一时情绪而消费。",love:"相处的时间、清晰的沟通与共同计划，会让感情更温暖。"},
+        negotiation:{work:"准备好事实并说清双方期待，再决定是否接受新的安排。",money:"仔细比较相关条件，耐心核对能更好地维护自身利益。",love:"认真倾听彼此的需要，寻找公平而清晰的共识。"},
+        fresh:{work:"新的项目或技能可能带你走向更适合的方向，先落实一个小步骤。",money:"新的收入来源需要时间成长，大额投入前先做好计划。",love:"重新开始一次坦诚的交流，有助于双方带着理解继续相处。"},
+        patience:{work:"稳扎稳打的成果正在建立信任，继续坚持，也让进度清晰可见。",money:"选择适合长期执行的计划，在逐步累积时减少不必要的花费。",love:"给彼此时间去认识和理解，不要仅凭一时的情况作出判断。"},
+        care:{work:"仔细阅读细节，并在答应或回复前先确认双方的期待。",money:"谨慎处理承诺，消费或投资前先核对相关条件。",love:"用温和清楚的方式表达，先倾听能避免小误会扩大。"}
+      }
+    };
+    const localizedHealth = {
+      en:["Make room for rest and recovery; notice what your body is telling you.","Build small, consistent routines that support balance and a clear mind.","Set aside time to pause so you can keep a steady pace."],
+      zh:["留出休息与恢复的时间，留意身体发出的信号。","从容易坚持的小习惯开始，照顾身心平衡。","安排时间停下来休息，才能保持稳定的步伐。"]
+    };
+    const localizedLuck = {
+      en:["Good fortune may arrive through people and opportunities; stay open to useful invitations.","A small gain may grow from earlier effort. Consider choices carefully.","Preparation helps you notice a timely message or a helping hand."],
+      zh:["好运可能来自人际与机会，不妨留意合适的邀约。","小小的收获或许源自此前的努力，做决定时保持审慎。","准备充分，便更容易看见及时的消息与援手。"]
+    };
+    let currentLanguage = "th";
+    const healthGuidance = [
+      "ให้เวลากับการพักผ่อนและฟื้นพลัง อย่าปล่อยให้ความเร่งรีบกลบสัญญาณจากร่างกาย",
+      "เริ่มดูแลตัวเองจากกิจวัตรเล็ก ๆ ที่ทำได้สม่ำเสมอ ความสมดุลจะช่วยให้ใจปลอดโปร่ง",
+      "ลดภาระที่ไม่จำเป็นและแบ่งเวลาพักให้ชัดเจน การค่อย ๆ ไปจะช่วยให้มีแรงต่อเนื่อง"
+    ];
+    const luckGuidance = [
+      "โชคมักมาในรูปของโอกาสและผู้คน ลองเปิดรับคำชวนที่สอดคล้องกับเป้าหมายของคุณ",
+      "ลาภเล็ก ๆ อาจเกิดจากสิ่งที่ลงมือทำไว้ก่อนหน้า ใช้สติพิจารณาก่อนตัดสินใจ",
+      "จังหวะดีจะชัดขึ้นเมื่อเตรียมตัวพร้อม สังเกตข่าวสารและความช่วยเหลือรอบตัว"
+    ];
+    const numberNames = ["หนึ่ง","สอง","สาม","สี่","ห้า","หก","เจ็ด","แปด","เก้า","สิบ"];
+    const toThaiNumber = value => String(value).replace(/[0-9]/g, digit => "๐๑๒๓๔๕๖๗๘๙"[Number(digit)]);
+    const byNumber = number => fortuneData[number] || {
+      title: `ใบแห่งจังหวะที่ ${numberNames[(number - 1) % numberNames.length]}`,
+      poem: "ทุกเส้นทางมีจังหวะของตัวเอง สิ่งที่คุณกำลังรออาจยังต้องใช้เวลา แต่ก้าวเล็ก ๆ ที่ทำวันนี้กำลังพาคุณเข้าใกล้คำตอบ",
+      meaning: "หมายเลขนี้ยังไม่มีคำทำนายเฉพาะในชุดข้อมูล จึงเปิดเป็นคำทำนายตัวอย่างเพื่อให้คุณใช้ทบทวนความตั้งใจของตัวเอง",
+      work: "ค่อย ๆ จัดลำดับสิ่งสำคัญ แล้วเริ่มจากงานที่อยู่ตรงหน้า ความสม่ำเสมอจะทำให้ทิศทางชัดขึ้น",
+      money: "วางแผนรายรับรายจ่ายให้รอบคอบ และเก็บสำรองไว้ก่อนตัดสินใจเรื่องใหญ่",
+      love: "รับฟังกันด้วยความใจเย็น ความชัดเจนมักเริ่มจากบทสนทนาที่จริงใจ",
+      health: healthGuidance[number % healthGuidance.length],
+      luck: luckGuidance[number % luckGuidance.length],
+      promotion: "—",
+      level: "กลาง",
+      isDemo: true
+    };
+
+    /* =========================
+       SCENE FLOW + ACCESSIBLE STATE
+       ========================= */
+    const stage = document.querySelector(".stage");
+    const scenes = [...document.querySelectorAll(".scene")];
+    const sceneName = document.getElementById("sceneName");
+    const sceneNumber = document.getElementById("sceneNumber");
+    const numberInput = document.getElementById("fortuneNumber");
+    const numberError = document.getElementById("numberError");
+    const sceneElement = name => document.getElementById(`scene-${name}`);
+    let selectedNumber = null;
+    let resultStatusKey = "";
+    let soundEnabled = false;
+    let audioContext = null;
+    let revealTimer = 0;
+    const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+    function goToScene(name) {
+      scenes.forEach(scene => {
+        const active = scene.id === `scene-${name}`;
+        scene.classList.toggle("is-active", active);
+        scene.setAttribute("aria-hidden", String(!active));
+      });
+      stage.dataset.scene = name;
+      sceneNumber.textContent = ({temple:"01",number:"02",reveal:"03",result:"04"})[name];
+      sceneName.textContent = translations[currentLanguage].scenes[name];
+      if (name === "result") {
+        document.getElementById("resultHeading").focus({preventScroll:true});
+        document.querySelector(".scene--result").scrollTop = 0;
+      }
+    }
+
+    function applyLanguage(language) {
+      currentLanguage = translations[language] ? language : "th";
+      const copy = translations[currentLanguage];
+      const wasExpanded = document.getElementById("meaningToggle").getAttribute("aria-expanded") === "true";
+      document.documentElement.lang = copy.htmlLang;
+      document.title = copy.title;
+      document.querySelector('meta[name="description"]').setAttribute("content",copy.description);
+      const labels = {
+        skipLink:copy.skip, brandLabel:copy.brand, heroEyebrow:copy.heroEyebrow, heroTitle:copy.heroTitle,
+        heroLineOne:copy.heroLineOne, heroLineTwo:copy.heroLineTwo, heroNote:copy.heroNote, beginButton:copy.begin,
+        numberEyebrow:copy.numberEyebrow, numberTitle:copy.numberTitle, numberInstruction:copy.numberInstruction,
+        fortuneNumberLabel:copy.numberLabel, numberHelp:copy.numberCaption, numberRange:copy.numberRange,
+        revealButton:copy.revealButton, revealPrompt:copy.revealPrompt, resultOverline:copy.resultOverline,
+        paperSectionLabel:copy.section, againButton:copy.again, saveButton:copy.save, shareButton:copy.share,
+        resultFooter:copy.footer, loadingText:copy.loading
+      };
+      Object.entries(labels).forEach(([id,value]) => { document.getElementById(id).textContent = value; });
+      document.getElementById("beginButton").setAttribute("aria-label",copy.beginAria);
+      document.getElementById("fortuneNumber").setAttribute("aria-label",copy.numberLabel);
+      document.getElementById("scene-reveal").setAttribute("aria-label",copy.revealAria);
+      document.getElementById("paperEmblem").setAttribute("aria-label",copy.emblem);
+      document.getElementById("languageSwitch").setAttribute("aria-label",copy.languageLabel);
+      document.getElementById("soundLabel").textContent = soundEnabled ? copy.soundOn : copy.soundOff;
+      document.getElementById("soundToggle").setAttribute("aria-label",soundEnabled ? copy.soundOnAria : copy.soundOffAria);
+      document.getElementById("sceneName").textContent = copy.scenes[stage.dataset.scene];
+      document.getElementById("lanternOne").setAttribute("aria-label",copy.lantern);
+      document.querySelectorAll(".language-button").forEach(button => {
+        const active = button.dataset.language === currentLanguage;
+        button.classList.toggle("is-current",active);
+        button.setAttribute("aria-pressed",String(active));
+        button.setAttribute("aria-label",copy.languageNames[button.dataset.language]);
+      });
+      const meaningToggle = document.getElementById("meaningToggle");
+      meaningToggle.textContent = wasExpanded ? copy.meaningCollapse : copy.meaningToggle;
+      const hadNumberError = Boolean(numberError.textContent);
+      numberError.textContent = hadNumberError ? (numberInput.value ? copy.errorRange : copy.errorEmpty) : "";
+      try { localStorage.setItem("oracleLanguage",currentLanguage); } catch (_) { /* Language selection still works for this visit. */ }
+      if (selectedNumber != null) {
+        renderReveal(selectedNumber);
+        if (stage.dataset.scene === "result") renderFortuneResult(selectedNumber);
+      }
+    }
+
+    function setResultStatus(key) {
+      resultStatusKey = key;
+      document.getElementById("resultStatus").textContent = key ? translations[currentLanguage][key] : "";
+    }
+
+    function localizedNumber(number) {
+      const padded = String(number).padStart(2,"0");
+      return currentLanguage === "th" ? toThaiNumber(padded) : padded;
+    }
+
+    function localizePromotion(text, language) {
+      if (!text || text === "—" || language === "th") return text;
+      const normalized = text.replace(/\s+/g," ").trim();
+      const amount = normalized.match(/([\d,]+)\s*\.?\s*บาท/)?.[1] || "50";
+      if (/Rich Walk/i.test(normalized)) return language === "en" ? `THB ${amount} credit for use at Rich Walk.` : `Rich Walk 可使用 ${amount} 泰铢优惠。`;
+      if (/ผู้เช่า/.test(normalized)) {
+        const marketing = /การตลาด/.test(normalized);
+        return language === "en" ? (marketing ? "Book today for marketing support and a 2-year tenant guarantee." : "Book today with a 2-year tenant guarantee.") : (marketing ? "今日预订，即享营销支持及两年租客保障。" : "今日预订，即享两年租客保障。");
+      }
+      if (/คอนโด/.test(normalized) && amount) return language === "en" ? `Book today and receive THB ${amount} off a condo.` : `今日预订公寓，即可立减 ${amount} 泰铢。`;
+      return language === "en" ? "A special offer is available with this fortune." : "本签附有特别优惠。";
+    }
+
+    function getLocalizedFortune(number) {
+      const base = byNumber(number);
+      if (currentLanguage === "th") return base;
+      const lang = fortuneLocale[currentLanguage];
+      const detail = localizedDetails[currentLanguage][detailThemes[number - 1] || "opening"];
+      const level = translations[currentLanguage].levelNames[base.level] || translations[currentLanguage].levelNames["มงคล"];
+      return {
+        ...base,
+        title:lang.titles[number - 1] || base.title,
+        poem:lang.poems[number - 1] || base.poem,
+        meaning:translations[currentLanguage].meaningSummary,
+        meaningDetail:translations[currentLanguage].meaningDetail,
+        work:detail.work,money:detail.money,love:detail.love,
+        health:localizedHealth[currentLanguage][(number - 1) % 3],
+        luck:localizedLuck[currentLanguage][(number - 1) % 3],
+        promotion:localizePromotion(base.promotion,currentLanguage),
+        level
+      };
+    }
+
+    function renderReveal(number) {
+      const copy = translations[currentLanguage];
+      const fortune = getLocalizedFortune(number);
+      const shownNumber = localizedNumber(number);
+      document.getElementById("revealNumberEn").textContent = `${copy.fortuneNo} ${String(number).padStart(2,"0")}`;
+      document.getElementById("revealNumberTh").textContent = `${copy.numberPrefix} ${shownNumber}`;
+      document.getElementById("revealFortuneTitle").textContent = fortune.title;
+    }
+
+    function formatFortuneSummary(fortune, number) {
+      const copy = translations[currentLanguage];
+      const shownNumber = localizedNumber(number);
+      return `${copy.numberPrefix} ${shownNumber} · ${fortune.title}\n\n${copy.section}\n${fortune.poem}\n\n${copy.categories.work}\n${fortune.work}\n\n${copy.categories.money}\n${fortune.money}\n\n${copy.categories.love}\n${fortune.love}\n\n${copy.categories.health}\n${fortune.health}\n\n${copy.categories.luck}\n${fortune.luck}${fortune.promotion && fortune.promotion !== "—" ? `\n\n${copy.offerLabel}\n${fortune.promotion}` : ""}`;
+    }
+
+    function wrapPaperText(ctx,text,maxWidth,font,language) {
+      const value = String(text || "").replace(/\s+/g," ").trim();
+      if (!value) return [];
+      ctx.font = font;
+      const locale = language === "th" ? "th-TH" : language === "zh" ? "zh-CN" : "en-US";
+      let units;
+      try {
+        const granularity = language === "zh" ? "grapheme" : "word";
+        units = [...new Intl.Segmenter(locale,{granularity}).segment(value)].map(part => part.segment);
+      } catch (_) {
+        units = language === "en" ? (value.match(/\S+\s*/g) || [value]) : Array.from(value);
+      }
+      const lines = [];
+      let line = "";
+      for (const unit of units) {
+        const candidate = line + unit;
+        if (!line || ctx.measureText(candidate).width <= maxWidth) {
+          if (ctx.measureText(candidate).width <= maxWidth) { line = candidate; continue; }
+        }
+        if (line.trim()) lines.push(line.trimEnd());
+        let next = unit.trimStart();
+        line = "";
+        for (const character of Array.from(next)) {
+          if (line && ctx.measureText(line + character).width > maxWidth) { lines.push(line); line = character; }
+          else line += character;
+        }
+      }
+      if (line.trim()) lines.push(line.trimEnd());
+      return lines;
+    }
+
+    function saveFortunePaperImage(number) {
+      const width = 1000, workHeight = 3000;
+      const savedLanguage = currentLanguage;
+      const paper = document.createElement("canvas");
+      paper.width = width; paper.height = workHeight;
+      const ctx = paper.getContext("2d");
+      if (!ctx) throw new Error("Canvas is unavailable");
+      const thai = currentLanguage === "th";
+      const chinese = currentLanguage === "zh";
+      const fontFamily = thai ? 'Tahoma,"Noto Sans Thai",sans-serif' : chinese ? '"Microsoft YaHei","Noto Sans CJK SC",sans-serif' : 'Georgia,"Times New Roman",serif';
+      const ink = "#352317", red = "#741b19", muted = "#654c32", gold = "#9a7440";
+      const title = document.getElementById("resultHeading").textContent.trim();
+      const numberLabel = document.getElementById("resultNumberEn").textContent.trim();
+      const name = document.getElementById("resultName").textContent.trim();
+      const section = document.getElementById("paperSectionLabel").textContent.trim();
+      const poem = document.getElementById("resultPoem").textContent.trim();
+      const summary = document.getElementById("resultSummary").textContent.trim();
+      const readings = [...document.querySelectorAll("#readingList .reading-item")].map(item => ({
+        heading:item.querySelector("h3")?.textContent.trim() || "",
+        text:item.querySelector("p")?.textContent.trim() || ""
+      }));
+      const offerElement = document.getElementById("offerNote");
+      const offerLabel = offerElement.querySelector("strong")?.textContent.trim() || "";
+      const offerText = [...offerElement.childNodes].filter(node => node.nodeType === Node.TEXT_NODE).map(node => node.textContent.trim()).join(" ").trim();
+      const level = document.getElementById("fortuneLevel").textContent.trim();
+      const expanded = document.getElementById("meaningToggle").getAttribute("aria-expanded") === "true";
+      const meaningLabel = document.getElementById("meaningToggle").textContent.trim();
+      const meaningText = document.getElementById("meaningText").textContent.trim();
+
+      const wash = ctx.createLinearGradient(0,0,width,workHeight);
+      wash.addColorStop(0,"#f4e9cf"); wash.addColorStop(.48,"#ecdfbf"); wash.addColorStop(1,"#e3d1a8");
+      ctx.fillStyle = wash; ctx.fillRect(0,0,width,workHeight);
+      const glow = ctx.createRadialGradient(105,90,10,260,240,1050);
+      glow.addColorStop(0,"rgba(255,255,255,.46)"); glow.addColorStop(1,"rgba(255,255,255,0)");
+      ctx.fillStyle = glow; ctx.fillRect(0,0,width,workHeight);
+      for (let y = 20; y < workHeight; y += 23) {
+        ctx.strokeStyle = "rgba(113,76,40,.055)"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(25,y); ctx.lineTo(width-25,y+Math.sin(y*.03)*2); ctx.stroke();
+      }
+
+      let y = 100;
+      ctx.save(); ctx.translate(width/2,y+34); ctx.rotate(-Math.PI/72);
+      ctx.strokeStyle = red; ctx.lineWidth = 2.5; ctx.strokeRect(-35,-35,70,70);
+      ctx.strokeStyle = "rgba(116,27,25,.48)"; ctx.lineWidth = 1; ctx.strokeRect(-41,-41,82,82);
+      ctx.strokeStyle = "rgba(116,27,25,.52)"; ctx.beginPath(); ctx.moveTo(-27,0); ctx.lineTo(27,0); ctx.moveTo(0,-27); ctx.lineTo(0,27); ctx.stroke();
+      ctx.fillStyle = red; ctx.font = `600 30px ${fontFamily}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(document.querySelector("#paperEmblem span")?.textContent.trim() || "吉",0,0);
+      ctx.restore();
+      y += 105;
+
+      const drawBlock = (text,x,top,maxWidth,font,color,lineHeight,align="left") => {
+        const lines = wrapPaperText(ctx,text,maxWidth,font,currentLanguage);
+        ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = "alphabetic";
+        const drawX = align === "center" ? x + maxWidth/2 : x;
+        lines.forEach((line,index) => ctx.fillText(line,drawX,top + index*lineHeight,maxWidth));
+        return top + lines.length*lineHeight;
+      };
+      const drawRule = (top) => {
+        ctx.strokeStyle = "rgba(129,88,42,.43)"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(95,top); ctx.lineTo(width-95,top); ctx.stroke();
+        ctx.fillStyle = gold; ctx.save(); ctx.translate(width/2,top); ctx.rotate(Math.PI/4); ctx.fillRect(-4,-4,8,8); ctx.restore();
+      };
+
+      y = drawBlock(numberLabel,width/2,y,800,`600 18px ${fontFamily}`,gold,26,"center") + 10;
+      y = drawBlock(title,width/2,y,820,`600 ${chinese ? 34 : 36}px ${fontFamily}`,red,chinese ? 48 : 50,"center") + 3;
+      y = drawBlock(name,width/2,y,800,`400 19px ${fontFamily}`,muted,30,"center") + 27;
+      drawRule(y); y += 31;
+      y = drawBlock(section,width/2,y,800,`600 19px ${fontFamily}`,gold,30,"center") + 13;
+      y = drawBlock(poem,width/2,y,800,`400 ${chinese ? 23 : 24}px ${fontFamily}`,ink,43,"center") + 16;
+      y = drawBlock(summary,width/2,y,790,`400 19px ${fontFamily}`,muted,34,"center") + 28;
+
+      const gridX = 83, gridWidth = width-166, gap = 35, columnWidth = (gridWidth-gap)/2;
+      for (let index=0; index<readings.length; index+=2) {
+        const pair = [readings[index],readings[index+1]].filter(Boolean);
+        const rowTop = y + 15;
+        const prepared = pair.map((item,column) => {
+          const x = gridX + column*(columnWidth+gap);
+          const headingFont = `600 18px ${fontFamily}`;
+          const bodyFont = `400 17px ${fontFamily}`;
+          const headingLines = wrapPaperText(ctx,item.heading,columnWidth,headingFont,currentLanguage);
+          const bodyLines = wrapPaperText(ctx,item.text,columnWidth,bodyFont,currentLanguage);
+          ctx.font = headingFont; ctx.fillStyle = red; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+          headingLines.forEach((line,lineIndex) => ctx.fillText(`◇ ${line}`,x,rowTop+26+lineIndex*25,columnWidth));
+          ctx.font = bodyFont; ctx.fillStyle = ink;
+          bodyLines.forEach((line,lineIndex) => ctx.fillText(line,x+2,rowTop+59+headingLines.length*25+lineIndex*31,columnWidth));
+          return {headingLines:headingLines.length,bodyLines:bodyLines.length};
+        });
+        const rowHeight = Math.max(...prepared.map(cell => 72 + cell.headingLines*25 + cell.bodyLines*31),86);
+        ctx.strokeStyle = "rgba(129,88,42,.3)"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(gridX,rowTop+rowHeight); ctx.lineTo(width-gridX,rowTop+rowHeight); ctx.stroke();
+        if (pair.length > 1) { ctx.beginPath(); ctx.moveTo(width/2,rowTop); ctx.lineTo(width/2,rowTop+rowHeight); ctx.stroke(); }
+        y = rowTop + rowHeight;
+      }
+
+      if (!offerElement.hidden && (offerLabel || offerText)) {
+        y += 28;
+        ctx.setLineDash([5,5]); ctx.strokeStyle = "rgba(125,69,34,.5)"; ctx.beginPath(); ctx.moveTo(90,y); ctx.lineTo(width-90,y); ctx.stroke(); ctx.setLineDash([]);
+        y += 30;
+        y = drawBlock(`${offerLabel}${offerLabel && offerText ? "  " : ""}${offerText}`,width/2,y,810,`400 18px ${fontFamily}`,muted,32,"center") + 19;
+        ctx.setLineDash([5,5]); ctx.beginPath(); ctx.moveTo(90,y); ctx.lineTo(width-90,y); ctx.stroke(); ctx.setLineDash([]);
+      }
+
+      y += 26;
+      const badgeWidth = Math.min(650,Math.max(280,ctx.measureText(level).width+95));
+      ctx.fillStyle = "rgba(147,76,53,.08)"; ctx.fillRect((width-badgeWidth)/2,y-27,badgeWidth,54);
+      ctx.strokeStyle = "#934c35"; ctx.lineWidth = 1; ctx.strokeRect((width-badgeWidth)/2,y-27,badgeWidth,54);
+      ctx.fillStyle = gold; ctx.font = `600 17px ${fontFamily}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(`✦   ${level}   ✦`,width/2,y);
+      y += 55;
+
+      y += 22; drawRule(y); y += 28;
+      y = drawBlock(meaningLabel,width/2,y,800,`600 18px ${fontFamily}`,red,30,"center") + 8;
+      if (expanded && meaningText) {
+        y = drawBlock(meaningText,width/2,y,790,`400 18px ${fontFamily}`,muted,32,"center") + 6;
+      }
+      y += 64;
+      const imageHeight = Math.ceil(y+35);
+      ctx.strokeStyle = "rgba(109,16,21,.72)"; ctx.lineWidth = 1.5; ctx.strokeRect(17,17,width-34,imageHeight-34);
+      ctx.strokeStyle = "rgba(154,116,64,.75)"; ctx.lineWidth = 1; ctx.strokeRect(24,24,width-48,imageHeight-48);
+      const corner = (x,top,sx,sy) => {
+        ctx.strokeStyle = "rgba(116,27,25,.62)"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x,top+sy*36); ctx.lineTo(x,top); ctx.lineTo(x+sx*36,top); ctx.stroke();
+        ctx.fillStyle = gold; ctx.save(); ctx.translate(x+sx*10,top+sy*10); ctx.rotate(Math.PI/4); ctx.fillRect(-3,-3,6,6); ctx.restore();
+      };
+      corner(36,36,1,1); corner(width-36,36,-1,1); corner(36,imageHeight-36,1,-1); corner(width-36,imageHeight-36,-1,-1);
+
+      const output = document.createElement("canvas");
+      output.width = width*2; output.height = imageHeight*2;
+      const outputContext = output.getContext("2d");
+      if (!outputContext) throw new Error("Canvas export is unavailable");
+      outputContext.scale(2,2);
+      outputContext.drawImage(paper,0,0,width,imageHeight,0,0,width,imageHeight);
+      output.toBlob(blob => {
+        if (!blob) { setResultStatus("saveFailed"); return; }
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `siamsee-${String(number).padStart(2,"0")}-${savedLanguage}.png`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(link.href),1000);
+        setResultStatus("saveDone");
+      },"image/png");
+    }
+
+    function renderFortuneResult(number) {
+      const copy = translations[currentLanguage];
+      const fortune = getLocalizedFortune(number);
+      const shownNumber = localizedNumber(number);
+      document.getElementById("resultNumberEn").textContent = `${copy.fortuneNo} ${String(number).padStart(2,"0")}`;
+      document.getElementById("resultHeading").textContent = fortune.title;
+      document.getElementById("resultName").textContent = `${copy.numberPrefix} ${shownNumber}`;
+      document.getElementById("resultPoem").textContent = fortune.poem;
+      document.getElementById("resultSummary").textContent = fortune.meaning || copy.meaningSummary;
+      const readings = [[copy.categories.work,fortune.work],[copy.categories.money,fortune.money],[copy.categories.love,fortune.love],[copy.categories.health,fortune.health || localizedHealth[currentLanguage]?.[(number - 1) % 3] || healthGuidance[number % healthGuidance.length]],[copy.categories.luck,fortune.luck || localizedLuck[currentLanguage]?.[(number - 1) % 3] || luckGuidance[number % luckGuidance.length]]];
+      document.getElementById("readingList").replaceChildren(...readings.map(([label,text]) => {
+        const item = document.createElement("section"); item.className = "reading-item";
+        const heading = document.createElement("h3"); heading.textContent = label;
+        const paragraph = document.createElement("p"); paragraph.textContent = text;
+        item.append(heading,paragraph); return item;
+      }));
+      const offer = document.getElementById("offerNote");
+      if (fortune.promotion && fortune.promotion !== "—") {
+        offer.hidden = false; offer.replaceChildren();
+        const label = document.createElement("strong"); label.textContent = copy.offerLabel;
+        offer.append(label,document.createTextNode(fortune.promotion));
+      } else { offer.hidden = true; }
+      document.getElementById("fortuneLevel").textContent = `${copy.levelPrefix} · ${fortune.level || copy.levelNames["มงคล"]}`;
+      document.getElementById("meaningText").textContent = fortune.meaningDetail || copy.meaningDetail;
+      document.getElementById("resultStatus").textContent = resultStatusKey ? copy[resultStatusKey] : (fortune.isDemo ? copy.demo : "");
+    }
+
+    function showFortune(number) {
+      selectedNumber = number;
+      resultStatusKey = "";
+      document.getElementById("meaningToggle").setAttribute("aria-expanded","false");
+      document.getElementById("meaningToggle").textContent = translations[currentLanguage].meaningToggle;
+      document.getElementById("meaningPanel").classList.remove("is-open");
+      renderReveal(number);
+      renderFortuneResult(number);
+      goToScene("result");
+    }
+
+    function playReveal() {
+      const number = Number(numberInput.value);
+      numberError.textContent = "";
+      if (!Number.isInteger(number) || number < 1 || number > MAX_FORTUNE_NUMBER) {
+        numberError.textContent = numberInput.value ? translations[currentLanguage].errorRange : translations[currentLanguage].errorEmpty;
+        numberInput.focus(); return;
+      }
+      selectedNumber = number;
+      renderReveal(number);
+      goToScene("reveal");
+      clearTimeout(revealTimer);
+      revealTimer = setTimeout(() => showFortune(number), prefersReducedMotion.matches ? 80 : 2900);
+    }
+
+    function resetFortune() {
+      clearTimeout(revealTimer);
+      selectedNumber = null;
+      numberInput.value = "";
+      numberError.textContent = "";
+      document.getElementById("resultStatus").textContent = "";
+      resultStatusKey = "";
+      sceneElement("temple").classList.remove("door-open");
+      goToScene("temple");
+    }
+
+    /* =========================
+       INTERACTION SOUND (OFF BY DEFAULT)
+       ========================= */
+    function playSoftBell() {
+      if (!soundEnabled) return;
+      try {
+        audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+        if (audioContext.state === "suspended") audioContext.resume();
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        oscillator.type = "sine"; oscillator.frequency.setValueAtTime(560,audioContext.currentTime); oscillator.frequency.exponentialRampToValueAtTime(330,audioContext.currentTime+.12);
+        gain.gain.setValueAtTime(.0001,audioContext.currentTime); gain.gain.exponentialRampToValueAtTime(.04,audioContext.currentTime+.01); gain.gain.exponentialRampToValueAtTime(.0001,audioContext.currentTime+.2);
+        oscillator.connect(gain); gain.connect(audioContext.destination); oscillator.start(); oscillator.stop(audioContext.currentTime+.21);
+      } catch (_) { /* Audio is an optional enhancement; the ritual remains fully usable without it. */ }
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const button = document.getElementById("soundToggle");
+      button.setAttribute("aria-pressed",String(soundEnabled));
+      button.setAttribute("aria-label",soundEnabled ? translations[currentLanguage].soundOnAria : translations[currentLanguage].soundOffAria);
+      document.getElementById("soundLabel").textContent = soundEnabled ? translations[currentLanguage].soundOn : translations[currentLanguage].soundOff;
+      if (soundEnabled) playSoftBell();
+    }
+
+    /* =========================
+       PARTICLES + SUBTLE PARALLAX
+       ========================= */
+    function createParticles() {
+      const canvas = document.getElementById("particles");
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      let width = 0, height = 0, frame = 0;
+      const motes = [];
+      function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1,1.5);
+        width = canvas.clientWidth; height = canvas.clientHeight;
+        canvas.width = Math.round(width*dpr); canvas.height = Math.round(height*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
+        motes.length = 0;
+        for (let i=0;i<28;i++) motes.push({x:Math.random()*width,y:Math.random()*height,r:.5+Math.random()*1.35,a:.12+Math.random()*.38,v:.08+Math.random()*.22,phase:Math.random()*6.28});
+      }
+      function draw() {
+        cancelAnimationFrame(frame);
+        if (document.hidden) return;
+        ctx.clearRect(0,0,width,height);
+        for (const p of motes) {
+          const shimmer = .65 + Math.sin(performance.now()*.0007+p.phase)*.35;
+          ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle = `rgba(226,184,103,${p.a*shimmer})`; ctx.fill();
+          if (!prefersReducedMotion.matches && !numberInput.value) { p.y -= p.v; p.x += Math.sin(performance.now()*.00025+p.phase)*.08; if (p.y < -3) { p.y = height+3; p.x = Math.random()*width; } }
+        }
+        frame = requestAnimationFrame(draw);
+      }
+      resize(); draw();
+      window.addEventListener("resize",resize,{passive:true});
+      document.addEventListener("visibilitychange",() => { if (document.hidden) cancelAnimationFrame(frame); else draw(); });
+    }
+
+    stage.addEventListener("pointermove",event => {
+      if (prefersReducedMotion.matches || event.pointerType === "touch") return;
+      const bounds = stage.getBoundingClientRect();
+      const x = (event.clientX-bounds.left)/bounds.width-.5, y = (event.clientY-bounds.top)/bounds.height-.5;
+      stage.style.setProperty("--px",`${Math.round(x*22)}px`); stage.style.setProperty("--py",`${Math.round(y*18)}px`);
+    },{passive:true});
+    document.querySelector(".scene--result").addEventListener("scroll",event => document.documentElement.style.setProperty("--scroll-y",`${event.currentTarget.scrollTop}px`),{passive:true});
+
+    /* =========================
+       EVENT WIRING
+       ========================= */
+    document.getElementById("beginButton").addEventListener("click",() => {
+      const temple = sceneElement("temple");
+      temple.classList.add("door-open");
+      setTimeout(() => { goToScene("number"); numberInput.focus({preventScroll:true}); },prefersReducedMotion.matches ? 60 : 650);
+    });
+    document.getElementById("fortuneForm").addEventListener("submit",event => { event.preventDefault(); playReveal(); });
+    numberInput.addEventListener("input",() => { numberError.textContent = ""; });
+    document.querySelectorAll(".language-button").forEach(button => button.addEventListener("click",() => applyLanguage(button.dataset.language)));
+    document.getElementById("soundToggle").addEventListener("click",toggleSound);
+    document.querySelectorAll(".lantern").forEach(lantern => {
+      lantern.addEventListener("pointerenter",() => lantern.classList.add("is-hovered"));
+      lantern.addEventListener("pointerleave",() => lantern.classList.remove("is-hovered"));
+      const toggleLantern = () => { const lit = lantern.classList.toggle("is-lit"); if (lantern.hasAttribute("aria-pressed")) lantern.setAttribute("aria-pressed",String(lit)); playSoftBell(); };
+      lantern.addEventListener("click",toggleLantern);
+      lantern.addEventListener("keydown",event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggleLantern(); } });
+    });
+    document.getElementById("meaningToggle").addEventListener("click",event => {
+      const open = event.currentTarget.getAttribute("aria-expanded") !== "true";
+      event.currentTarget.setAttribute("aria-expanded",String(open));
+      document.getElementById("meaningPanel").classList.toggle("is-open",open);
+      event.currentTarget.textContent = open ? translations[currentLanguage].meaningCollapse : translations[currentLanguage].meaningToggle;
+    });
+    document.getElementById("againButton").addEventListener("click",resetFortune);
+    document.getElementById("saveButton").addEventListener("click",() => {
+      if (selectedNumber == null) return;
+      const fortune = getLocalizedFortune(selectedNumber);
+      try { const saved = JSON.parse(localStorage.getItem("oracleSavedFortunes") || "[]"); saved.unshift({number:selectedNumber,title:fortune.title,at:new Date().toISOString()}); localStorage.setItem("oracleSavedFortunes",JSON.stringify(saved.slice(0,50))); } catch (_) { /* Download still works when storage is unavailable. */ }
+      try { saveFortunePaperImage(selectedNumber); } catch (_) { setResultStatus("saveFailed"); }
+    });
+    document.getElementById("shareButton").addEventListener("click",async () => {
+      if (selectedNumber == null) return;
+      const fortune = getLocalizedFortune(selectedNumber); const text = formatFortuneSummary(fortune,selectedNumber); const url = new URL(location.href); url.hash = `fortune-${selectedNumber}`;
+      try {
+        if (navigator.share) { await navigator.share({title:`${translations[currentLanguage].shareTitle} ${localizedNumber(selectedNumber)} · ${fortune.title}`,text,url:url.href}); setResultStatus("shareDone"); }
+        else {
+          const shareText = `${text}\n\n${url.href}`;
+          if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(shareText);
+          else {
+            const copyField = document.createElement("textarea"); copyField.value = shareText; copyField.className = "visually-hidden"; document.body.append(copyField); copyField.select();
+            const copied = document.execCommand("copy"); copyField.remove(); if (!copied) throw new Error("Clipboard unavailable");
+          }
+          setResultStatus("shareCopied");
+        }
+      } catch (error) { if (error?.name !== "AbortError") setResultStatus("shareFailed"); }
+    });
+
+    function init() {
+      createParticles();
+      document.getElementById("loadingScreen").classList.add("is-hidden");
+    }
+    try { currentLanguage = localStorage.getItem("oracleLanguage") || "th"; } catch (_) { currentLanguage = "th"; }
+    applyLanguage(currentLanguage);
+    setTimeout(init,950);
+  </script>
+</body>
+</html>
