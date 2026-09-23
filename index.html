@@ -96,8 +96,10 @@
     .seal-button:hover { transform: scale(1.035); filter: brightness(1.14); box-shadow: 0 0 26px rgba(199,155,69,.24), inset 0 0 0 3px rgba(199,155,69,.16), 0 14px 38px rgba(0,0,0,.4); }
     .seal-button:hover::before { left: 130%; }
     .seal-button:active { transform: scale(.98); }
-    .corner-label { position: fixed; z-index: 30; top: max(18px, env(safe-area-inset-top)); left: max(20px, env(safe-area-inset-left)); display: flex; gap: 11px; align-items: center; color: #f0dfb8; font-size: .82rem; font-weight:500; letter-spacing: .08em; text-shadow:0 1px 5px #080504; }
-    .corner-label::before { content:""; width: 20px; height: 20px; border: 1px solid var(--burnt-gold); transform: rotate(45deg); box-shadow: inset 0 0 0 4px var(--black); }
+    .corner-label { position: fixed; z-index: 30; top: max(12px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); display: flex; align-items: center; }
+    .company-logos { display:flex; align-items:center; gap:7px; }
+    .company-logo { display:block; width:128px; height:58px; padding:3px 5px; object-fit:contain; background:#fff; border:1px solid rgba(199,155,69,.42); border-radius:3px; box-shadow:0 3px 12px rgba(0,0,0,.22); }
+    .company-logo--capital-one { width:112px; }
     .language-switch { position:fixed; z-index:32; top:max(12px,env(safe-area-inset-top)); right:max(14px,env(safe-area-inset-right)); display:flex; gap:3px; padding:4px; border:1px solid rgba(199,155,69,.58); background:rgba(16,10,8,.92); backdrop-filter:blur(7px); }
     .language-button { min-width:44px; min-height:40px; padding:0 8px; border:0; background:transparent; color:#f0dfb8; cursor:pointer; font-size:.82rem; font-weight:500; letter-spacing:.03em; transition:background 200ms,color 200ms; }
     .language-button:hover { color:var(--ivory); }
@@ -260,7 +262,10 @@
       .scene--result { padding-top:88px; }
     }
     @media (max-width: 540px) {
-      .corner-label { top:max(17px,env(safe-area-inset-top));font-size:.7rem; }
+      .corner-label { top:max(10px,env(safe-area-inset-top));left:max(10px,env(safe-area-inset-left)); }
+      .company-logos { gap:5px; }
+      .company-logo { width:82px;height:40px;padding:2px 4px; }
+      .company-logo--capital-one { width:72px; }
       .language-switch { top:max(10px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right)); }
       .language-button { min-width:40px;min-height:44px;font-size:.76rem; }
       .sound-toggle { min-width:104px;height:44px;font-size:.78rem;top:max(60px,calc(env(safe-area-inset-top, 0px) + 58px));right:max(12px,env(safe-area-inset-right)); }
@@ -298,7 +303,10 @@
       .reading-item,.reading-item:nth-child(odd),.reading-item:nth-child(even) { padding-left:2px;padding-right:2px; }
       .result-actions { flex-direction:column;align-items:stretch; }
       .action-button { flex:none;width:100%;min-height:48px; }
-      .corner-label { display:none; }
+      .corner-label { display:flex;top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left)); }
+      .company-logos { gap:4px; }
+      .company-logo { width:70px;height:34px;padding:2px 3px; }
+      .company-logo--capital-one { width:62px; }
       .scene .number-content { padding-left:8px;padding-right:8px; }
       .fortune-slip { width:100%; }
       #scene-number { padding-top:max(132px,calc(env(safe-area-inset-top, 0px) + 120px));padding-bottom:28px; }
@@ -338,7 +346,13 @@
 <body>
   <a class="skip-link" href="#main" id="skipLink">ข้ามไปยังเนื้อหาหลัก</a>
   <div class="stage" id="main" data-scene="temple">
-    <div class="corner-label" id="brandLabel" aria-hidden="true">THE ORACLE OF FORTUNE</div>
+    <div class="corner-label" id="companyBrand" role="group" aria-label="โลโก้บริษัท">
+      <span class="visually-hidden" id="brandLabel">THE ORACLE OF FORTUNE</span>
+      <div class="company-logos">
+        <img class="company-logo company-logo--kw" src="assets/keller-williams-thailand.png" alt="Keller Williams Thailand" decoding="async">
+        <img class="company-logo company-logo--capital-one" src="assets/capital-one-real-estate-thailand.webp" alt="Capital One Real Estate Thailand" decoding="async">
+      </div>
+    </div>
     <div class="language-switch language-switch--utility" role="group" aria-label="เลือกภาษา" id="languageSwitchUtility">
       <button class="language-button is-current" type="button" data-language="th" aria-label="ภาษาไทย" aria-pressed="true">TH</button>
       <button class="language-button" type="button" data-language="en" aria-label="English" aria-pressed="false">EN</button>
@@ -556,7 +570,7 @@
     const fortuneLevels = ["มหามงคล","มงคล","มหามงคล","มหามงคล","มงคล","กลาง","มงคล","มหามงคล","มงคล","มหามงคล","มงคล","กลาง","มงคล","มงคล","กลาง","มหามงคล","มงคล","มหามงคล","มหามงคล","มงคล","กลาง","มหามงคล","มหามงคล","มงคล","มงคล","มหามงคล","ควรระวัง","มงคล","มหามงคล","มหามงคล"];
     const translations = {
       th: {
-        htmlLang:"th", title:"เปิดชะตาเซียมซี — คำทำนายของคุณ", description:"เปิดคำทำนายเซียมซีในประสบการณ์ดิจิทัลที่ได้รับแรงบันดาลใจจากศาลเจ้าจีน", skip:"ข้ามไปยังเนื้อหาหลัก", brand:"เปิดชะตาเซียมซี", soundOn:"เสียงเปิด", soundOff:"เสียงปิด", soundOnAria:"ปิดเสียงประกอบ", soundOffAria:"เปิดเสียงประกอบ", languageLabel:"เลือกภาษา",
+        htmlLang:"th", title:"เปิดชะตาเซียมซี — คำทำนายของคุณ", description:"เปิดคำทำนายเซียมซีในประสบการณ์ดิจิทัลที่ได้รับแรงบันดาลใจจากศาลเจ้าจีน", skip:"ข้ามไปยังเนื้อหาหลัก", brand:"เปิดชะตาเซียมซี", companyLogos:"โลโก้บริษัท", soundOn:"เสียงเปิด", soundOff:"เสียงปิด", soundOnAria:"ปิดเสียงประกอบ", soundOffAria:"เปิดเสียงประกอบ", languageLabel:"เลือกภาษา",
         scenes:{temple:"ศาลเจ้า",number:"หมายเลขของคุณ",reveal:"เปิดคำทำนาย",result:"คำทำนายของคุณ"},
         heroEyebrow:"ช่วงเวลาเงียบสงบกับคำทำนายของคุณ",heroTitle:"เซียมซี",heroLineOne:"บางคำตอบ ไม่ได้ถูกค้นพบ",heroLineTwo:"แต่กำลังรอให้คุณเปิดมัน",heroNote:"เขย่าเซียมซีจริง แล้วนำเลขที่ได้มากรอกที่นี่",begin:"กรอกเลขเซียมซี",beginAria:"ไปกรอกหมายเลขเซียมซีที่ได้จากการเขย่าจริง",
         numberEyebrow:"หมายเลขจากเซียมซีจริง",numberTitle:"เลขเซียมซีของคุณ",numberInstruction:"ใส่เฉพาะหมายเลขที่ได้จากการเขย่าเซียมซีจริง",numberLabel:"กรอกหมายเลขเซียมซี ตั้งแต่ 1 ถึง 30",numberCaption:"กรอกหมายเลขเซียมซี · ๑ — ๓๐",numberRange:"หมายเลขเซียมซีมีตั้งแต่ ๑ ถึง ๓๐",revealButton:"เปิดคำทำนาย",errorEmpty:"โปรดกรอกหมายเลขที่คุณได้รับ",errorRange:"กรุณาเลือกหมายเลขตั้งแต่ 1 ถึง 30",
@@ -565,7 +579,7 @@
         demo:"หมายเลขนี้ยังไม่มีข้อมูลเฉพาะ จึงแสดงคำทำนายตัวอย่าง",again:"เสี่ยงเซียมซีอีกครั้ง",save:"บันทึกเป็นภาพ",share:"แชร์คำทำนาย",saveDone:"บันทึกใบคำทำนายเป็นภาพ PNG แล้ว",saveFailed:"บันทึกภาพไม่สำเร็จ ลองอีกครั้ง",shareDone:"ส่งต่อคำทำนายแล้ว",shareCopied:"คัดลอกคำทำนายและลิงก์ไว้ในคลิปบอร์ดแล้ว",shareFailed:"ไม่สามารถแชร์ได้ในเบราว์เซอร์นี้ ลองบันทึกคำทำนายแทน",footer:"ขอให้แสงแห่งปัญญานำทางคุณในทุกก้าวต่อจากนี้",loading:"เปิดประตูแห่งโชคชะตา",lantern:"แตะโคมเพื่อให้สว่างขึ้น",shareTitle:"Fortune",languageNames:{th:"ภาษาไทย",en:"English",zh:"简体中文"}
       },
       en: {
-        htmlLang:"en",title:"The Oracle of Fortune — Your Reading",description:"Reveal your fortune in a quiet digital experience inspired by a Chinese temple.",skip:"Skip to main content",brand:"THE ORACLE OF FORTUNE",soundOn:"Sound on",soundOff:"Sound off",soundOnAria:"Turn sound off",soundOffAria:"Turn sound on",languageLabel:"Choose language",
+        htmlLang:"en",title:"The Oracle of Fortune — Your Reading",description:"Reveal your fortune in a quiet digital experience inspired by a Chinese temple.",skip:"Skip to main content",brand:"THE ORACLE OF FORTUNE",companyLogos:"Company logos",soundOn:"Sound on",soundOff:"Sound off",soundOnAria:"Turn sound off",soundOffAria:"Turn sound on",languageLabel:"Choose language",
         scenes:{temple:"THE TEMPLE",number:"YOUR NUMBER",reveal:"THE REVEAL",result:"YOUR FORTUNE"},
         heroEyebrow:"A quiet moment with your own fortune",heroTitle:"Fortune",heroLineOne:"Some answers aren't found.",heroLineTwo:"They're waiting for you to uncover them.",heroNote:"Draw a real fortune stick, then enter its number here.",begin:"Enter your number",beginAria:"Enter the number from your real fortune-stick draw",
         numberEyebrow:"YOUR NUMBER FROM THE REAL DRAW",numberTitle:"Your fortune number",numberInstruction:"Enter only the number you drew in person.",numberLabel:"Enter your fortune number, from 1 to 30",numberCaption:"FORTUNE NUMBER · 1 — 30",numberRange:"Fortune numbers range from 1 to 30.",revealButton:"Reveal my fortune",errorEmpty:"Please enter the number you drew.",errorRange:"Choose a number from 1 to 30.",
@@ -574,7 +588,7 @@
         demo:"A sample reading is shown for this number.",again:"Draw again",save:"Save as image",share:"Share reading",saveDone:"Your fortune paper was saved as a PNG image.",saveFailed:"The image could not be saved. Please try again.",shareDone:"Your reading has been shared.",shareCopied:"Reading and link copied to your clipboard.",shareFailed:"Sharing isn't available here. You can save the reading instead.",footer:"May wisdom light the way for every step ahead.",loading:"Opening the gate of fortune",lantern:"Tap the lantern to light it",shareTitle:"Fortune",languageNames:{th:"Thai",en:"English",zh:"Simplified Chinese"}
       },
       zh: {
-        htmlLang:"zh-CN",title:"求签 · 为你揭晓签语",description:"在灵感源自中国寺庙的数字体验中，开启属于你的签语。",skip:"跳转到主要内容",brand:"签语 · 命运神谕",soundOn:"声音开启",soundOff:"声音关闭",soundOnAria:"关闭声音",soundOffAria:"开启声音",languageLabel:"选择语言",
+        htmlLang:"zh-CN",title:"求签 · 为你揭晓签语",description:"在灵感源自中国寺庙的数字体验中，开启属于你的签语。",skip:"跳转到主要内容",brand:"签语 · 命运神谕",companyLogos:"公司标志",soundOn:"声音开启",soundOff:"声音关闭",soundOnAria:"关闭声音",soundOffAria:"开启声音",languageLabel:"选择语言",
         scenes:{temple:"神殿",number:"输入签号",reveal:"揭晓",result:"你的签语"},
         heroEyebrow:"静下心来，聆听属于你的签语",heroTitle:"求签",heroLineOne:"有些答案，无须寻找。",heroLineTwo:"它一直在等你亲手揭开。",heroNote:"请先在线下求签，再输入签号。",begin:"输入签号",beginAria:"输入你在线下抽到的签号",
         numberEyebrow:"输入你抽到的签号",numberTitle:"你的签号",numberInstruction:"只需填写你在线下抽到的号码。",numberLabel:"请输入签号，范围为 1 到 30",numberCaption:"签号 · 1 — 30",numberRange:"签号范围为 1 至 30。",revealButton:"揭开签语",errorEmpty:"请输入你抽到的签号。",errorRange:"请输入 1 到 30 之间的号码。",
@@ -756,6 +770,7 @@
       const copy = translations[currentLanguage];
       const wasExpanded = document.getElementById("meaningToggle").getAttribute("aria-expanded") === "true";
       document.documentElement.lang = copy.htmlLang;
+      document.getElementById("companyBrand").setAttribute("aria-label",copy.companyLogos);
       document.title = copy.title;
       document.querySelector('meta[name="description"]').setAttribute("content",copy.description);
       const labels = {
@@ -891,6 +906,10 @@
 
     async function saveFortunePaperImage(number) {
       if (document.fonts?.ready) await document.fonts.ready;
+      const companyLogoImages = (await Promise.all([...document.querySelectorAll(".company-logo")].map(async image => {
+        try { if (image.decode) await image.decode(); return image.naturalWidth ? image : null; }
+        catch (_) { return null; }
+      }))).filter(Boolean);
       const width = 1000, workHeight = 3000;
       const savedLanguage = currentLanguage;
       const paper = document.createElement("canvas");
@@ -1008,7 +1027,21 @@
       ctx.fillStyle = gold; ctx.font = `600 17px ${fontFamily}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText(`✦   ${level}   ✦`,width/2,y);
       y += 55;
-      y += 64;
+      y += 24;
+      if (companyLogoImages.length) {
+        const boxWidth = companyLogoImages.length > 1 ? 218 : 230, boxHeight = 74, gap = 16;
+        const rowWidth = companyLogoImages.length*boxWidth + (companyLogoImages.length-1)*gap;
+        const logoTop = y;
+        companyLogoImages.forEach((logo,index) => {
+          const boxX = (width-rowWidth)/2 + index*(boxWidth+gap);
+          ctx.fillStyle = "#fff"; ctx.fillRect(boxX,logoTop,boxWidth,boxHeight);
+          ctx.strokeStyle = "rgba(154,116,64,.42)"; ctx.lineWidth = 1; ctx.strokeRect(boxX+.5,logoTop+.5,boxWidth-1,boxHeight-1);
+          const scale = Math.min((boxWidth-16)/logo.naturalWidth,(boxHeight-12)/logo.naturalHeight);
+          const logoWidth = logo.naturalWidth*scale, logoHeight = logo.naturalHeight*scale;
+          ctx.drawImage(logo,boxX+(boxWidth-logoWidth)/2,logoTop+(boxHeight-logoHeight)/2,logoWidth,logoHeight);
+        });
+        y += boxHeight + 22;
+      } else y += 38;
       const imageHeight = Math.ceil(y+35);
       ctx.strokeStyle = "rgba(109,16,21,.72)"; ctx.lineWidth = 1.5; ctx.strokeRect(17,17,width-34,imageHeight-34);
       ctx.strokeStyle = "rgba(154,116,64,.75)"; ctx.lineWidth = 1; ctx.strokeRect(24,24,width-48,imageHeight-48);
