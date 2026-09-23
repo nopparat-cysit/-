@@ -974,7 +974,7 @@
         if (!blob) { setResultStatus("saveFailed"); return; }
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = `siamsee-${String(number).padStart(2,"0")}-${savedLanguage}.png`;
+        link.download = `siamsee-${String(number).padStart(2,"0")}-${savedLanguage}-paper.png`;
         link.click();
         setTimeout(() => URL.revokeObjectURL(link.href),1000);
         setResultStatus("saveDone");
