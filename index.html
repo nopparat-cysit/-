@@ -117,23 +117,24 @@
     /* =========================
        NUMBER SELECTOR
        ========================= */
-    .number-content { position: relative; z-index: 4; width: min(100%, 510px); text-align: center; margin-top: 4vh; }
-    .number-heading { margin: 10px 0 0; font-size: clamp(1.7rem, 7vw, 2.65rem); font-weight: 500; color: var(--ivory); letter-spacing: .06em; }
-    .number-instruction { margin: 5px auto 0; line-height: 1.8; color: #f1dfb7; font-size: 1.08rem; }
-    .fortune-slip { position: relative; width: min(80vw, 345px); margin: 25px auto 18px; padding: 28px 18px 22px; color: var(--ink); background: linear-gradient(120deg,#f2e6c8,#e4d1a8 54%,#ebddb9); box-shadow: 0 18px 45px rgba(0,0,0,.38), inset 0 0 0 1px rgba(111,60,30,.35); transform: rotate(-.5deg); }
+    .number-content { position: relative; z-index: 4; isolation:isolate; width: min(100%, 570px); padding:clamp(18px,3vw,30px); text-align: center; margin-top: 4vh; }
+    .number-content::before { content:""; position:absolute; z-index:-1; inset:-14px 0; border:1px solid rgba(199,155,69,.2); border-radius:50%; background:radial-gradient(ellipse,rgba(13,8,7,.94) 0%,rgba(13,8,7,.82) 54%,rgba(13,8,7,.42) 78%,transparent 100%); box-shadow:0 18px 60px rgba(0,0,0,.3); filter:blur(2px); pointer-events:none; }
+    .number-heading { margin: 10px 0 0; font-size: clamp(1.9rem, 7vw, 3rem); line-height:1.45; font-weight: 600; color: #fff0c8; letter-spacing: .04em; text-shadow:0 2px 4px #080504,0 0 20px rgba(0,0,0,.8); }
+    .number-instruction { max-width:34ch; margin: 8px auto 0; line-height: 1.8; color: #fff0cc; font-size: clamp(1.08rem,2vw,1.22rem); font-weight:500; text-shadow:0 2px 4px #080504,0 0 16px #080504; }
+    .fortune-slip { position: relative; width: min(84vw, 390px); margin: 27px auto 18px; padding: 32px 22px 25px; color: var(--ink); background: linear-gradient(120deg,#f5ebd2,#eadbb9 54%,#f0e2c2); box-shadow: 0 22px 55px rgba(0,0,0,.48), inset 0 0 0 1px rgba(111,60,30,.42); transform: rotate(-.35deg); }
     .fortune-slip::before { content:""; position:absolute; inset:7px; border:1px solid rgba(131,32,28,.64); pointer-events:none; }
-    .fortune-slip::after { content:""; position:absolute; inset:0; opacity:.23; pointer-events:none; background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(90,58,28,.11) 6px,transparent 7px 12px); mix-blend-mode:multiply; }
+    .fortune-slip::after { content:""; position:absolute; inset:0; opacity:.12; pointer-events:none; background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(90,58,28,.11) 6px,transparent 7px 12px); mix-blend-mode:multiply; }
     .slip-corner { position:absolute; width:14px; height:14px; border-color:var(--burnt-gold); border-style:solid; z-index:1; }
     .slip-corner.a { left:11px;top:11px;border-width:1px 0 0 1px; }.slip-corner.b { right:11px;top:11px;border-width:1px 1px 0 0; }
     .slip-corner.c { left:11px;bottom:11px;border-width:0 0 1px 1px; }.slip-corner.d { right:11px;bottom:11px;border-width:0 1px 1px 0; }
-    .number-readout { display:block; position:relative; z-index:2; width:100%; height:94px; border:0; background:transparent; color:#7f211b; text-align:center; font-size:clamp(3.5rem, 18vw, 5rem); font-weight:500; letter-spacing:.12em; outline:none; caret-color:var(--red); font-variant-numeric: lining-nums; }
+    .number-readout { display:block; position:relative; z-index:2; width:100%; height:108px; border:0; background:transparent; color:#751814; text-align:center; font-size:clamp(4rem, 18vw, 5.5rem); font-weight:600; letter-spacing:.1em; outline:none; caret-color:var(--red); font-variant-numeric: lining-nums; }
     .number-readout::placeholder { color:rgba(107,40,30,.34); letter-spacing:.13em; }
     .number-readout:focus-visible { outline: 1px solid rgba(140,101,45,.65); outline-offset:0; }
     .number-caption { position:relative; z-index:2; margin: 0; color:#563b22; font-size:1rem; letter-spacing:.05em; }
-    .number-error { min-height:1.5em; color:#f0a578; font-size:.84rem; margin:0 auto; }
+    .number-error { min-height:1.5em; color:#ffc29e; font-size:1rem; font-weight:600; text-shadow:0 1px 4px #080504; margin:0 auto; }
     .number-error:empty { visibility:hidden; }
     .number-content .seal-button { margin-top:13px; }
-    .number-range { margin-top:16px; color:#f0dfb8; font-size:.9rem; letter-spacing:.05em; text-shadow:0 1px 5px #080504; }
+    .number-range { margin-top:16px; color:#fff0cc; font-size:1rem; font-weight:500; letter-spacing:.03em; text-shadow:0 1px 5px #080504; }
 
     /* =========================
        REVEAL RITUAL
@@ -246,8 +247,10 @@
       .lantern--one { right:5%;top:12%; }
       .lantern--two { left:2%;top:27%; }
       .incense { left:-3%;bottom:3%;opacity:.26; }
-      .number-content { margin-top:3vh; }
-      .fortune-slip { margin-top:22px; }
+      .number-content { margin-top:3vh;padding:16px 13px; }
+      .number-content::before { inset:-14px -2px; }
+      .number-instruction { font-size:1.05rem; }
+      .fortune-slip { width:min(88vw,390px);margin-top:22px;padding:27px 18px 23px; }
       .scene--result { padding-left:14px;padding-right:14px;padding-top:72px; }
       .reading-list { grid-template-columns:1fr; }
       .reading-item,.reading-item:nth-child(odd),.reading-item:nth-child(even) { border-right:0;padding:15px 5px; }
@@ -257,7 +260,7 @@
     @media (max-height: 720px) and (min-width: 541px) {
       .scene-content,.number-content { margin-top:1vh; }
       .fortune-slip { margin-top:12px;margin-bottom:10px;padding-top:19px;padding-bottom:17px; }
-      .number-readout { height:76px; }
+      .number-readout { height:88px; }
     }
     @media (prefers-reduced-motion: reduce) {
       *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
