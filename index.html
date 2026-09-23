@@ -907,15 +907,19 @@
 
     async function saveFortunePaperImage(number) {
       if (document.fonts?.ready) await document.fonts.ready;
-      const logoImages = await Promise.all([...document.querySelectorAll(".company-logo")].map(async image => {
-        if (!image.complete) {
+      const logoImages = await Promise.all([
+        "assets/fortune-download-capital-one.png",
+        "assets/fortune-download-keller-williams.png"
+      ].map(async source => {
+        const image = new Image();
+        image.src = source;
+        if (typeof image.decode === "function") {
+          try { await image.decode(); } catch { if (!image.naturalWidth) throw new Error("A company logo could not be loaded"); }
+        } else if (!image.complete) {
           await new Promise((resolve,reject) => {
             image.addEventListener("load",resolve,{once:true});
             image.addEventListener("error",reject,{once:true});
           });
-        }
-        if (typeof image.decode === "function") {
-          try { await image.decode(); } catch { if (!image.naturalWidth) throw new Error("A company logo could not be loaded"); }
         }
         if (!image.naturalWidth || !image.naturalHeight) throw new Error("A company logo could not be loaded");
         return image;
@@ -1038,8 +1042,8 @@
       ctx.fillText(`✦   ${level}   ✦`,width/2,y);
       y += 55;
       y += 16;
-      const logoGap = 34, logoBoxHeight = 190;
-      const logoBoxWidths = [340,300];
+      const logoGap = 28, logoBoxHeight = 160;
+      const logoBoxWidths = [290,255];
       const logoRowWidth = logoBoxWidths.reduce((sum,value) => sum+value,0)+logoGap;
       let logoX = (width-logoRowWidth)/2;
       logoImages.forEach((image,index) => {
