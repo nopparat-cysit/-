@@ -96,7 +96,8 @@
     .seal-button:hover { transform: scale(1.035); filter: brightness(1.14); box-shadow: 0 0 26px rgba(199,155,69,.24), inset 0 0 0 3px rgba(199,155,69,.16), 0 14px 38px rgba(0,0,0,.4); }
     .seal-button:hover::before { left: 130%; }
     .seal-button:active { transform: scale(.98); }
-    .corner-label { position: fixed; z-index: 30; top: max(12px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); display: flex; align-items: center; }
+    .corner-label { position: fixed; z-index: 30; top: max(12px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); display: flex; align-items: center; transition:opacity 180ms ease,visibility 0s; }
+    .stage.is-content-scrolled .corner-label { opacity:0;visibility:hidden;pointer-events:none;transition:opacity 180ms ease,visibility 0s linear 180ms; }
     .company-logos { display:flex; align-items:center; gap:7px; }
     .company-logo { display:block; width:132px; height:62px; padding:0; object-fit:contain; background:transparent; border:0; border-radius:0; box-shadow:none; }
     .company-logo--capital-one { width:132px; }
@@ -259,13 +260,12 @@
       .scene--result { padding-top:88px; }
     }
     @media (max-width: 540px) {
-      .corner-label { top:max(10px,env(safe-area-inset-top));left:max(10px,env(safe-area-inset-left)); }
-      .company-logos { gap:5px; }
-      .company-logo { width:86px;height:40px;padding:0; }
-      .company-logo--capital-one { width:86px; }
+      .corner-label { top:max(72px,calc(env(safe-area-inset-top, 0px) + 64px));left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));width:auto;justify-content:center; }
+      .company-logos { width:min(100%,380px);justify-content:space-evenly;gap:5px; }
+      .company-logo,.company-logo--capital-one { flex:0 1 calc(50% - 5px);width:calc(50% - 5px);height:auto;max-height:78px;padding:0; }
       .language-switch { top:max(10px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right)); }
       .language-button { min-width:40px;min-height:44px;font-size:.76rem; }
-      .scene { justify-content:flex-start; overflow-y:auto; padding-top:max(82px,calc(env(safe-area-inset-top, 0px) + 72px)); padding-bottom:max(56px,calc(env(safe-area-inset-bottom, 0px) + 40px)); scrollbar-width:none; }
+      .scene { justify-content:flex-start; overflow-y:auto; padding-top:max(166px,calc(env(safe-area-inset-top, 0px) + 156px)); padding-bottom:max(56px,calc(env(safe-area-inset-bottom, 0px) + 40px)); scrollbar-width:none; }
       .scene::-webkit-scrollbar { display:none;width:0;height:0; }
       .scene--temple .scene-content,#scene-number .number-content,.scene--reveal .reveal-paper { margin-top:auto; margin-bottom:auto; }
       .scene-content { margin-top:auto; }
@@ -280,7 +280,7 @@
       .number-content::before { inset:-14px -2px; }
       .number-instruction { font-size:1.05rem; }
       .fortune-slip { width:100%;margin-top:22px;padding:27px 18px 23px; }
-      .scene.scene--result { padding-left:14px;padding-right:14px;padding-top:88px!important; }
+      .scene.scene--result { padding-left:14px;padding-right:14px;padding-top:max(166px,calc(env(safe-area-inset-top, 0px) + 156px))!important; }
       .scene--result .result-overline { display:none; }
       .reading-list { grid-template-columns:1fr; }
       .reading-item,.reading-item:nth-child(odd),.reading-item:nth-child(even) { border-right:0;padding:15px 5px; }
@@ -299,13 +299,10 @@
       .reading-item,.reading-item:nth-child(odd),.reading-item:nth-child(even) { padding-left:2px;padding-right:2px; }
       .result-actions { flex-direction:column;align-items:stretch; }
       .action-button { flex:none;width:100%;min-height:48px; }
-      .corner-label { display:flex;top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left)); }
-      .company-logos { gap:4px; }
-      .company-logo { width:70px;height:34px;padding:0; }
-      .company-logo--capital-one { width:70px; }
+      .corner-label { display:flex; }
       .scene .number-content { padding-left:8px;padding-right:8px; }
       .fortune-slip { width:100%; }
-      #scene-number { padding-top:max(86px,calc(env(safe-area-inset-top, 0px) + 74px));padding-bottom:28px; }
+      #scene-number { padding-top:max(166px,calc(env(safe-area-inset-top, 0px) + 156px));padding-bottom:28px; }
       #scene-number .number-content { margin:0 auto;padding:0 8px; }
       #scene-number .number-heading { margin-top:6px;font-size:clamp(1.75rem,8vw,2.2rem);line-height:1.28; }
       #scene-number .number-instruction { margin-top:4px;font-size:.98rem;line-height:1.5; }
@@ -317,8 +314,10 @@
       #scene-number .number-range { margin-top:8px;font-size:.86rem; }
     }
     @media (max-width: 760px) and (orientation: landscape) {
-      .scene { padding-top:max(72px,calc(env(safe-area-inset-top, 0px) + 62px));padding-bottom:34px; }
-      .scene.scene--result { padding-top:82px!important; }
+      .corner-label { top:max(70px,calc(env(safe-area-inset-top, 0px) + 62px)); }
+      .company-logo,.company-logo--capital-one { max-height:58px; }
+      .scene { padding-top:max(140px,calc(env(safe-area-inset-top, 0px) + 130px));padding-bottom:34px; }
+      .scene.scene--result { padding-top:max(140px,calc(env(safe-area-inset-top, 0px) + 130px))!important; }
       .hero-title { font-size:clamp(3rem,10vh,4.5rem);margin-top:8px; }
       .hero-subtitle { margin-top:8px;line-height:1.55;font-size:1rem; }
       .hero-note { margin-top:4px;padding:2px 6px; }
@@ -735,11 +734,22 @@
     const sceneNumber = document.getElementById("sceneNumber");
     const numberInput = document.getElementById("fortuneNumber");
     const numberError = document.getElementById("numberError");
+    const companyBrand = document.getElementById("companyBrand");
     const sceneElement = name => document.getElementById(`scene-${name}`);
     let selectedNumber = null;
     let resultStatusKey = "";
     let revealTimer = 0;
     const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+    function syncMobileBrandVisibility() {
+      const activeScene = scenes.find(scene => scene.classList.contains("is-active"));
+      const hideBrand = matchMedia("(max-width: 540px)").matches && Boolean(activeScene && activeScene.scrollTop > 12);
+      stage.classList.toggle("is-content-scrolled",hideBrand);
+    }
+    scenes.forEach(scene => scene.addEventListener("scroll",() => {
+      if (scene.classList.contains("is-active")) syncMobileBrandVisibility();
+    },{passive:true}));
+    window.addEventListener("resize",syncMobileBrandVisibility,{passive:true});
 
     function goToScene(name) {
       scenes.forEach(scene => {
@@ -754,6 +764,7 @@
         document.getElementById("resultHeading").focus({preventScroll:true});
         document.querySelector(".scene--result").scrollTop = 0;
       }
+      syncMobileBrandVisibility();
     }
 
     function applyLanguage(language) {
@@ -895,6 +906,19 @@
 
     async function saveFortunePaperImage(number) {
       if (document.fonts?.ready) await document.fonts.ready;
+      const logoImages = await Promise.all([...document.querySelectorAll(".company-logo")].map(async image => {
+        if (!image.complete) {
+          await new Promise((resolve,reject) => {
+            image.addEventListener("load",resolve,{once:true});
+            image.addEventListener("error",reject,{once:true});
+          });
+        }
+        if (typeof image.decode === "function") {
+          try { await image.decode(); } catch { if (!image.naturalWidth) throw new Error("A company logo could not be loaded"); }
+        }
+        if (!image.naturalWidth || !image.naturalHeight) throw new Error("A company logo could not be loaded");
+        return image;
+      }));
       const width = 1000, workHeight = 3000;
       const savedLanguage = currentLanguage;
       const paper = document.createElement("canvas");
@@ -1012,7 +1036,19 @@
       ctx.fillStyle = gold; ctx.font = `600 17px ${fontFamily}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText(`✦   ${level}   ✦`,width/2,y);
       y += 55;
-      y += 64;
+      y += 16;
+      const logoGap = 34, logoBoxHeight = 190;
+      const logoBoxWidths = [340,300];
+      const logoRowWidth = logoBoxWidths.reduce((sum,value) => sum+value,0)+logoGap;
+      let logoX = (width-logoRowWidth)/2;
+      logoImages.forEach((image,index) => {
+        const boxWidth = logoBoxWidths[index] || 300;
+        const scale = Math.min(boxWidth/image.naturalWidth,logoBoxHeight/image.naturalHeight);
+        const drawWidth = image.naturalWidth*scale, drawHeight = image.naturalHeight*scale;
+        ctx.drawImage(image,logoX+(boxWidth-drawWidth)/2,y+(logoBoxHeight-drawHeight)/2,drawWidth,drawHeight);
+        logoX += boxWidth+logoGap;
+      });
+      y += logoBoxHeight+20;
       const imageHeight = Math.ceil(y+35);
       ctx.strokeStyle = "rgba(109,16,21,.72)"; ctx.lineWidth = 1.5; ctx.strokeRect(17,17,width-34,imageHeight-34);
       ctx.strokeStyle = "rgba(154,116,64,.75)"; ctx.lineWidth = 1; ctx.strokeRect(24,24,width-48,imageHeight-48);
