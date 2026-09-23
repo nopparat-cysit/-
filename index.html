@@ -853,9 +853,6 @@
       const offerLabel = offerElement.querySelector("strong")?.textContent.trim() || "";
       const offerText = [...offerElement.childNodes].filter(node => node.nodeType === Node.TEXT_NODE).map(node => node.textContent.trim()).join(" ").trim();
       const level = document.getElementById("fortuneLevel").textContent.trim();
-      const expanded = document.getElementById("meaningToggle").getAttribute("aria-expanded") === "true";
-      const meaningLabel = document.getElementById("meaningToggle").textContent.trim();
-      const meaningText = document.getElementById("meaningText").textContent.trim();
 
       const wash = ctx.createLinearGradient(0,0,width,workHeight);
       wash.addColorStop(0,"#f4e9cf"); wash.addColorStop(.48,"#ecdfbf"); wash.addColorStop(1,"#e3d1a8");
@@ -948,12 +945,6 @@
       ctx.fillStyle = gold; ctx.font = `600 17px ${fontFamily}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText(`✦   ${level}   ✦`,width/2,y);
       y += 55;
-
-      y += 22; drawRule(y); y += 28;
-      y = drawBlock(meaningLabel,width/2,y,800,`600 18px ${fontFamily}`,red,30,"center") + 8;
-      if (expanded && meaningText) {
-        y = drawBlock(meaningText,width/2,y,790,`400 18px ${fontFamily}`,muted,32,"center") + 6;
-      }
       y += 64;
       const imageHeight = Math.ceil(y+35);
       ctx.strokeStyle = "rgba(109,16,21,.72)"; ctx.lineWidth = 1.5; ctx.strokeRect(17,17,width-34,imageHeight-34);
