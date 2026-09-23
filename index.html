@@ -86,10 +86,10 @@
     .language-button.is-current { color:var(--gold-light); background:rgba(130,38,23,.58); box-shadow:inset 0 0 0 1px rgba(199,155,69,.35); }
     .stage[data-scene="temple"] .language-switch--utility { display:none; }
     .stage:not([data-scene="temple"]) .language-switch--home { display:none; }
-    .stage .language-switch--home { position:relative; z-index:5; inset:auto; display:flex; flex-direction:column; align-items:center; gap:8px; width:max-content; max-width:100%; margin:24px auto 0; padding:10px 14px 12px; border:1px solid rgba(199,155,69,.62); background:rgba(16,10,8,.94); box-shadow:0 10px 30px rgba(0,0,0,.34),inset 0 0 0 3px rgba(199,155,69,.08); backdrop-filter:blur(7px); }
-    .language-legend { color:#f0dfb8; font-size:.9rem; font-weight:600; letter-spacing:.04em; }
-    .language-options { display:flex; justify-content:center; gap:4px; }
-    .language-switch--home .language-button { min-width:56px; min-height:46px; font-size:.96rem; }
+    .stage .language-switch--home { position:relative; z-index:5; inset:auto; display:flex; flex-direction:row; align-items:center; gap:10px; width:max-content; max-width:100%; margin:17px auto 0; padding:5px 7px 5px 14px; border:1px solid rgba(199,155,69,.42); border-radius:999px; background:rgba(16,10,8,.76); box-shadow:0 7px 20px rgba(0,0,0,.22); backdrop-filter:blur(7px); }
+    .language-legend { color:#e8d6ae; font-size:.82rem; font-weight:500; letter-spacing:.02em; white-space:nowrap; }
+    .language-options { display:flex; justify-content:center; gap:3px; }
+    .language-switch--home .language-button { min-width:46px; min-height:38px; padding:0 8px; border-radius:999px; font-size:.86rem; }
     .sound-toggle { position: fixed; z-index: 31; top: max(64px, calc(env(safe-area-inset-top, 0px) + 60px)); right: max(14px, env(safe-area-inset-right)); min-width: 112px; height: 44px; border: 1px solid rgba(199,155,69,.58); background: rgba(16,10,8,.92); color: #f0dfb8; cursor: pointer; letter-spacing: .04em; font-size: .82rem; backdrop-filter: blur(7px); }
     .sound-toggle:hover { border-color: var(--gold); background: rgba(73,26,17,.72); }
     .sound-icon { display: inline-block; margin-right: 7px; color: var(--gold); }
