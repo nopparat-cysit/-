@@ -98,8 +98,8 @@
     .seal-button:active { transform: scale(.98); }
     .corner-label { position: fixed; z-index: 30; top: max(12px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); display: flex; align-items: center; }
     .company-logos { display:flex; align-items:center; gap:7px; }
-    .company-logo { display:block; width:128px; height:58px; padding:3px 5px; object-fit:contain; background:#fff; border:1px solid rgba(199,155,69,.42); border-radius:3px; box-shadow:0 3px 12px rgba(0,0,0,.22); }
-    .company-logo--capital-one { width:112px; }
+    .company-logo { display:block; width:132px; height:62px; padding:0; object-fit:contain; background:transparent; border:0; border-radius:0; box-shadow:none; }
+    .company-logo--capital-one { width:132px; }
     .language-switch { position:fixed; z-index:32; top:max(12px,env(safe-area-inset-top)); right:max(14px,env(safe-area-inset-right)); display:flex; gap:3px; padding:4px; border:1px solid rgba(199,155,69,.58); background:rgba(16,10,8,.92); backdrop-filter:blur(7px); }
     .language-button { min-width:44px; min-height:40px; padding:0 8px; border:0; background:transparent; color:#f0dfb8; cursor:pointer; font-size:.82rem; font-weight:500; letter-spacing:.03em; transition:background 200ms,color 200ms; }
     .language-button:hover { color:var(--ivory); }
@@ -264,8 +264,8 @@
     @media (max-width: 540px) {
       .corner-label { top:max(10px,env(safe-area-inset-top));left:max(10px,env(safe-area-inset-left)); }
       .company-logos { gap:5px; }
-      .company-logo { width:82px;height:40px;padding:2px 4px; }
-      .company-logo--capital-one { width:72px; }
+      .company-logo { width:86px;height:40px;padding:0; }
+      .company-logo--capital-one { width:86px; }
       .language-switch { top:max(10px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right)); }
       .language-button { min-width:40px;min-height:44px;font-size:.76rem; }
       .sound-toggle { min-width:104px;height:44px;font-size:.78rem;top:max(60px,calc(env(safe-area-inset-top, 0px) + 58px));right:max(12px,env(safe-area-inset-right)); }
@@ -305,8 +305,8 @@
       .action-button { flex:none;width:100%;min-height:48px; }
       .corner-label { display:flex;top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left)); }
       .company-logos { gap:4px; }
-      .company-logo { width:70px;height:34px;padding:2px 3px; }
-      .company-logo--capital-one { width:62px; }
+      .company-logo { width:70px;height:34px;padding:0; }
+      .company-logo--capital-one { width:70px; }
       .scene .number-content { padding-left:8px;padding-right:8px; }
       .fortune-slip { width:100%; }
       #scene-number { padding-top:max(132px,calc(env(safe-area-inset-top, 0px) + 120px));padding-bottom:28px; }
@@ -349,8 +349,8 @@
     <div class="corner-label" id="companyBrand" role="group" aria-label="โลโก้บริษัท">
       <span class="visually-hidden" id="brandLabel">THE ORACLE OF FORTUNE</span>
       <div class="company-logos">
-        <img class="company-logo company-logo--kw" src="assets/keller-williams-thailand.png" alt="Keller Williams Thailand" decoding="async">
-        <img class="company-logo company-logo--capital-one" src="assets/capital-one-real-estate-thailand.webp" alt="Capital One Real Estate Thailand" decoding="async">
+        <img class="company-logo company-logo--capital-one" src="assets/capital-one-real-estate.png" alt="Capital One Real Estate Thailand" decoding="async">
+        <img class="company-logo company-logo--kw" src="assets/keller-williams-thailand-white.png" alt="Keller Williams Thailand" decoding="async">
       </div>
     </div>
     <div class="language-switch language-switch--utility" role="group" aria-label="เลือกภาษา" id="languageSwitchUtility">
@@ -906,10 +906,6 @@
 
     async function saveFortunePaperImage(number) {
       if (document.fonts?.ready) await document.fonts.ready;
-      const companyLogoImages = (await Promise.all([...document.querySelectorAll(".company-logo")].map(async image => {
-        try { if (image.decode) await image.decode(); return image.naturalWidth ? image : null; }
-        catch (_) { return null; }
-      }))).filter(Boolean);
       const width = 1000, workHeight = 3000;
       const savedLanguage = currentLanguage;
       const paper = document.createElement("canvas");
@@ -1027,21 +1023,7 @@
       ctx.fillStyle = gold; ctx.font = `600 17px ${fontFamily}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText(`✦   ${level}   ✦`,width/2,y);
       y += 55;
-      y += 24;
-      if (companyLogoImages.length) {
-        const boxWidth = companyLogoImages.length > 1 ? 218 : 230, boxHeight = 74, gap = 16;
-        const rowWidth = companyLogoImages.length*boxWidth + (companyLogoImages.length-1)*gap;
-        const logoTop = y;
-        companyLogoImages.forEach((logo,index) => {
-          const boxX = (width-rowWidth)/2 + index*(boxWidth+gap);
-          ctx.fillStyle = "#fff"; ctx.fillRect(boxX,logoTop,boxWidth,boxHeight);
-          ctx.strokeStyle = "rgba(154,116,64,.42)"; ctx.lineWidth = 1; ctx.strokeRect(boxX+.5,logoTop+.5,boxWidth-1,boxHeight-1);
-          const scale = Math.min((boxWidth-16)/logo.naturalWidth,(boxHeight-12)/logo.naturalHeight);
-          const logoWidth = logo.naturalWidth*scale, logoHeight = logo.naturalHeight*scale;
-          ctx.drawImage(logo,boxX+(boxWidth-logoWidth)/2,logoTop+(boxHeight-logoHeight)/2,logoWidth,logoHeight);
-        });
-        y += boxHeight + 22;
-      } else y += 38;
+      y += 64;
       const imageHeight = Math.ceil(y+35);
       ctx.strokeStyle = "rgba(109,16,21,.72)"; ctx.lineWidth = 1.5; ctx.strokeRect(17,17,width-34,imageHeight-34);
       ctx.strokeStyle = "rgba(154,116,64,.75)"; ctx.lineWidth = 1; ctx.strokeRect(24,24,width-48,imageHeight-48);
