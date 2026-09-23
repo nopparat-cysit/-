@@ -881,7 +881,7 @@
       const drawBlock = (text,x,top,maxWidth,font,color,lineHeight,align="left") => {
         const lines = wrapPaperText(ctx,text,maxWidth,font,currentLanguage);
         ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = "alphabetic";
-        const drawX = align === "center" ? x + maxWidth/2 : x;
+        const drawX = x;
         const clipX = align === "center" ? x - maxWidth/2 : x;
         ctx.save(); ctx.beginPath(); ctx.rect(clipX,top-lineHeight,maxWidth,Math.max(lineHeight,lines.length*lineHeight+4)); ctx.clip();
         lines.forEach((line,index) => ctx.fillText(line,drawX,top + index*lineHeight,maxWidth));
