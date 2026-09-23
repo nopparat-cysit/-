@@ -84,6 +84,12 @@
     .language-button { min-width:44px; min-height:40px; padding:0 8px; border:0; background:transparent; color:#f0dfb8; cursor:pointer; font-size:.82rem; font-weight:500; letter-spacing:.03em; transition:background 200ms,color 200ms; }
     .language-button:hover { color:var(--ivory); }
     .language-button.is-current { color:var(--gold-light); background:rgba(130,38,23,.58); box-shadow:inset 0 0 0 1px rgba(199,155,69,.35); }
+    .stage[data-scene="temple"] .language-switch--utility { display:none; }
+    .stage:not([data-scene="temple"]) .language-switch--home { display:none; }
+    .stage .language-switch--home { position:relative; z-index:5; inset:auto; display:flex; flex-direction:column; align-items:center; gap:8px; width:max-content; max-width:100%; margin:24px auto 0; padding:10px 14px 12px; border:1px solid rgba(199,155,69,.62); background:rgba(16,10,8,.94); box-shadow:0 10px 30px rgba(0,0,0,.34),inset 0 0 0 3px rgba(199,155,69,.08); backdrop-filter:blur(7px); }
+    .language-legend { color:#f0dfb8; font-size:.9rem; font-weight:600; letter-spacing:.04em; }
+    .language-options { display:flex; justify-content:center; gap:4px; }
+    .language-switch--home .language-button { min-width:56px; min-height:46px; font-size:.96rem; }
     .sound-toggle { position: fixed; z-index: 31; top: max(64px, calc(env(safe-area-inset-top, 0px) + 60px)); right: max(14px, env(safe-area-inset-right)); min-width: 112px; height: 44px; border: 1px solid rgba(199,155,69,.58); background: rgba(16,10,8,.92); color: #f0dfb8; cursor: pointer; letter-spacing: .04em; font-size: .82rem; backdrop-filter: blur(7px); }
     .sound-toggle:hover { border-color: var(--gold); background: rgba(73,26,17,.72); }
     .sound-icon { display: inline-block; margin-right: 7px; color: var(--gold); }
@@ -272,7 +278,7 @@
   <a class="skip-link" href="#main" id="skipLink">ข้ามไปยังเนื้อหาหลัก</a>
   <div class="stage" id="main" data-scene="temple">
     <div class="corner-label" id="brandLabel" aria-hidden="true">THE ORACLE OF FORTUNE</div>
-    <div class="language-switch" role="group" aria-label="เลือกภาษา" id="languageSwitch">
+    <div class="language-switch language-switch--utility" role="group" aria-label="เลือกภาษา" id="languageSwitchUtility">
       <button class="language-button is-current" type="button" data-language="th" aria-label="ภาษาไทย" aria-pressed="true">TH</button>
       <button class="language-button" type="button" data-language="en" aria-label="English" aria-pressed="false">EN</button>
       <button class="language-button" type="button" data-language="zh" aria-label="简体中文" aria-pressed="false">中文</button>
@@ -391,6 +397,14 @@
           <div class="eyebrow" id="heroEyebrow">A quiet moment with your own fortune</div>
           <h1 class="hero-title" id="heroTitle">เซียมซี</h1>
           <p class="hero-subtitle"><span id="heroLineOne">บางคำตอบ ไม่ได้ถูกค้นพบ</span><br><span id="heroLineTwo">แต่กำลังรอให้คุณเปิดมัน</span><br><span class="hero-note" id="heroNote">เขย่าเซียมซีจริง แล้วนำเลขที่ได้มากรอกที่นี่</span></p>
+          <div class="language-switch language-switch--home" role="group" aria-label="เลือกภาษา" id="languageSwitch">
+            <span class="language-legend" id="languageLegend">เลือกภาษา</span>
+            <div class="language-options">
+              <button class="language-button is-current" type="button" data-language="th" aria-label="ภาษาไทย" aria-pressed="true">TH</button>
+              <button class="language-button" type="button" data-language="en" aria-label="English" aria-pressed="false">EN</button>
+              <button class="language-button" type="button" data-language="zh" aria-label="简体中文" aria-pressed="false">中文</button>
+            </div>
+          </div>
           <button class="seal-button" id="beginButton" type="button" aria-label="ไปกรอกหมายเลขเซียมซีที่ได้จากการเขย่าจริง">กรอกเลขเซียมซี</button>
         </div>
       </section>
@@ -697,7 +711,8 @@
       document.getElementById("fortuneNumber").setAttribute("aria-label",copy.numberLabel);
       document.getElementById("scene-reveal").setAttribute("aria-label",copy.revealAria);
       document.getElementById("paperEmblem").setAttribute("aria-label",copy.emblem);
-      document.getElementById("languageSwitch").setAttribute("aria-label",copy.languageLabel);
+      document.querySelectorAll(".language-switch").forEach(switcher => switcher.setAttribute("aria-label",copy.languageLabel));
+      document.getElementById("languageLegend").textContent = copy.languageLabel;
       document.getElementById("soundLabel").textContent = soundEnabled ? copy.soundOn : copy.soundOff;
       document.getElementById("soundToggle").setAttribute("aria-label",soundEnabled ? copy.soundOnAria : copy.soundOffAria);
       document.getElementById("sceneName").textContent = copy.scenes[stage.dataset.scene];
