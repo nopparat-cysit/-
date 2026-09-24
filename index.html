@@ -259,6 +259,11 @@
       .scene--result { padding-top:88px; }
     }
     @media (max-width: 540px) {
+      html,body { height:auto;min-height:100%; }
+      body { overflow-x:hidden;overflow-y:auto; }
+      .stage { height:auto;min-height:100vh;min-height:100svh;min-height:100dvh;overflow:hidden; }
+      .scene:not(.is-active) { height:100%;overflow:hidden; }
+      .scene.is-active { position:relative;inset:auto;height:auto;min-height:100vh;min-height:100svh;min-height:100dvh;overflow:visible; }
       .corner-label { position:absolute;top:max(72px,calc(env(safe-area-inset-top, 0px) + 64px));left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));width:auto;justify-content:center; }
       .company-logos { width:min(100%,380px);justify-content:space-evenly;gap:5px; }
       .company-logo,.company-logo--capital-one { flex:0 1 calc(50% - 5px);width:calc(50% - 5px);height:auto;max-height:78px;padding:0; }
@@ -273,7 +278,8 @@
       .hero-subtitle { margin-top:17px; font-size:clamp(1.05rem,4.8vw,1.25rem); }
       .hero-note { padding:5px 8px; }
       .seal-button { min-height:58px; padding:0 24px; font-size:1rem; }
-      .lantern--one { right:5%;top:12%; }
+      .lantern--one { width:clamp(34px,9vw,40px);right:max(12px,env(safe-area-inset-right));top:max(0px,env(safe-area-inset-top, 0px));filter:drop-shadow(0 2px 4px rgba(226,72,34,.2)); }
+      .lantern--one.is-lit { filter:drop-shadow(0 0 8px rgba(255,160,68,.65)); }
       .lantern--two { left:2%;top:27%; }
       .incense { left:-3%;bottom:3%;opacity:.26; }
       .number-content { margin-top:auto;padding:16px 13px; }
@@ -281,6 +287,7 @@
       .number-instruction { font-size:1.05rem; }
       .fortune-slip { width:100%;margin-top:22px;padding:27px 18px 23px; }
       .scene.scene--result { padding-left:14px;padding-right:14px;padding-top:max(166px,calc(env(safe-area-inset-top, 0px) + 156px))!important; }
+      .scene.scene--result.is-active { overflow:visible; }
       .scene--result .result-overline { display:none; }
       .reading-list { grid-template-columns:1fr; }
       .reading-item,.reading-item:nth-child(odd),.reading-item:nth-child(even) { border-right:0;padding:15px 5px; }
@@ -759,11 +766,13 @@
         scene.setAttribute("aria-hidden", String(!active));
       });
       stage.dataset.scene = name;
+      document.documentElement.style.setProperty("--scroll-y","0px");
+      if (matchMedia("(max-width: 540px)").matches) window.scrollTo(0,0);
       sceneNumber.textContent = ({temple:"01",number:"02",reveal:"03",result:"04"})[name];
       sceneName.textContent = translations[currentLanguage].scenes[name];
       if (name === "result") {
         document.getElementById("resultHeading").focus({preventScroll:true});
-        document.querySelector(".scene--result").scrollTop = 0;
+        if (!matchMedia("(max-width: 540px)").matches) document.querySelector(".scene--result").scrollTop = 0;
       }
       syncBrandPlacement();
     }
@@ -976,7 +985,9 @@
         ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = "alphabetic";
         const drawX = x;
         const clipX = align === "center" ? x - maxWidth/2 : x;
-        ctx.save(); ctx.beginPath(); ctx.rect(clipX,top-lineHeight,maxWidth,Math.max(lineHeight,lines.length*lineHeight+4)); ctx.clip();
+        const clipTop = top-lineHeight;
+        const clipHeight = (lines.length + .55)*lineHeight;
+        ctx.save(); ctx.beginPath(); ctx.rect(clipX,clipTop,maxWidth,clipHeight); ctx.clip();
         lines.forEach((line,index) => ctx.fillText(line,drawX,top + index*lineHeight,maxWidth));
         ctx.restore();
         return top + lines.length*lineHeight;
@@ -1181,7 +1192,13 @@
       const x = (event.clientX-bounds.left)/bounds.width-.5, y = (event.clientY-bounds.top)/bounds.height-.5;
       stage.style.setProperty("--px",`${Math.round(x*22)}px`); stage.style.setProperty("--py",`${Math.round(y*18)}px`);
     },{passive:true});
-    document.querySelector(".scene--result").addEventListener("scroll",event => document.documentElement.style.setProperty("--scroll-y",`${event.currentTarget.scrollTop}px`),{passive:true});
+    const resultScene = document.querySelector(".scene--result");
+    const updateResultParallax = () => {
+      const scrollY = matchMedia("(max-width: 540px)").matches ? window.scrollY : resultScene.scrollTop;
+      document.documentElement.style.setProperty("--scroll-y",`${scrollY}px`);
+    };
+    resultScene.addEventListener("scroll",updateResultParallax,{passive:true});
+    window.addEventListener("scroll",updateResultParallax,{passive:true});
 
     /* =========================
        EVENT WIRING
