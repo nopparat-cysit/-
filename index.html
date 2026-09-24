@@ -263,17 +263,22 @@
     @media (max-width: 540px) {
       html,body { height:auto;min-height:100%; }
       body { overflow-x:hidden;overflow-y:auto; }
-      .stage { height:auto;min-height:100vh;min-height:100svh;min-height:100dvh;overflow:hidden; }
+      .stage { height:auto;min-height:100vh;min-height:100svh;overflow:hidden; }
       .scene:not(.is-active) { height:100%;overflow:hidden; }
-      .scene.is-active { position:relative;inset:auto;height:auto;min-height:100vh;min-height:100svh;min-height:100dvh;overflow:visible; }
+      .scene.is-active { position:relative;inset:auto;height:auto;min-height:100vh;min-height:100svh;overflow:visible;transform:none;transition:opacity 350ms var(--ease),visibility 0s linear 350ms;transition-delay:0s; }
       .corner-label { position:absolute;top:max(72px,calc(env(safe-area-inset-top, 0px) + 64px));left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));width:auto;justify-content:center; }
       .company-logos { width:min(100%,380px);justify-content:space-evenly;gap:5px; }
       .company-logo,.company-logo--capital-one { flex:0 1 calc(50% - 5px);width:calc(50% - 5px);height:auto;max-height:78px;padding:0; }
       .language-switch { position:absolute;top:max(10px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right)); }
       .language-button { min-width:40px;min-height:44px;font-size:.76rem; }
       .stage:not([data-scene="temple"]) .lantern { visibility:hidden;pointer-events:none; }
-      .scene { justify-content:flex-start; overflow-y:auto; padding-top:max(166px,calc(env(safe-area-inset-top, 0px) + 156px)); padding-bottom:max(56px,calc(env(safe-area-inset-bottom, 0px) + 40px)); scrollbar-width:none; }
+      .scene { justify-content:flex-start; overflow-y:auto; padding-top:max(166px,calc(env(safe-area-inset-top, 0px) + 156px)); padding-bottom:max(56px,calc(env(safe-area-inset-bottom, 0px) + 40px)); scrollbar-width:none; transition:opacity 350ms var(--ease),visibility 0s linear 350ms; }
       .scene::-webkit-scrollbar { display:none;width:0;height:0; }
+      .temple-art { transition:none; }
+      .temple-art .mountains,.temple-art .far-roof,.temple-art .foreground { transform:none; }
+      .lantern,.smoke-path { animation:none; }
+      .result-moon,.result-mountain { transform:none; }
+      #particles { opacity:.2; }
       .scene--temple .scene-content,#scene-number .number-content,.scene--reveal .reveal-paper { margin-top:auto; margin-bottom:auto; }
       .scene-content { margin-top:auto; }
       .hero-title { margin-top:18px; }
@@ -465,8 +470,8 @@
         <div class="corner-label" id="companyBrand" role="group" aria-label="โลโก้บริษัท">
           <span class="visually-hidden" id="brandLabel">THE ORACLE OF FORTUNE</span>
           <div class="company-logos">
-            <img class="company-logo company-logo--capital-one" src="assets/capital-one-real-estate.png" alt="Capital One Real Estate Thailand" decoding="async">
-            <img class="company-logo company-logo--kw" src="assets/keller-williams-thailand-white.png" alt="Keller Williams Thailand" decoding="async">
+            <img class="company-logo company-logo--capital-one" src="assets/capital-one-real-estate.png" alt="Capital One Real Estate Thailand" decoding="sync" fetchpriority="high">
+            <img class="company-logo company-logo--kw" src="assets/keller-williams-thailand-white.png" alt="Keller Williams Thailand" decoding="sync" fetchpriority="high">
           </div>
         </div>
         <div class="scene-content">
@@ -750,11 +755,12 @@
     let resultStatusKey = "";
     let revealTimer = 0;
     const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const mobileViewport = matchMedia("(max-width: 540px)");
 
     function syncBrandPlacement() {
       const activeScene = scenes.find(scene => scene.classList.contains("is-active"));
       if (!activeScene) return;
-      const target = matchMedia("(max-width: 540px)").matches ? activeScene : stage;
+      const target = mobileViewport.matches ? activeScene : stage;
       if (companyBrand.parentElement !== target) target.prepend(companyBrand);
       if (languageSwitchUtility.parentElement !== target) target.prepend(languageSwitchUtility);
     }
@@ -769,12 +775,12 @@
       });
       stage.dataset.scene = name;
       document.documentElement.style.setProperty("--scroll-y","0px");
-      if (matchMedia("(max-width: 540px)").matches) window.scrollTo(0,0);
+      if (mobileViewport.matches) window.scrollTo(0,0);
       sceneNumber.textContent = ({temple:"01",number:"02",reveal:"03",result:"04"})[name];
       sceneName.textContent = translations[currentLanguage].scenes[name];
       if (name === "result") {
         document.getElementById("resultHeading").focus({preventScroll:true});
-        if (!matchMedia("(max-width: 540px)").matches) document.querySelector(".scene--result").scrollTop = 0;
+        if (!mobileViewport.matches) document.querySelector(".scene--result").scrollTop = 0;
       }
       syncBrandPlacement();
     }
@@ -1163,28 +1169,32 @@
       const canvas = document.getElementById("particles");
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
-      let width = 0, height = 0, frame = 0;
+      let width = 0, height = 0, pixelRatio = 0, frame = 0;
       const motes = [];
       function resize() {
         const dpr = Math.min(window.devicePixelRatio || 1,1.5);
-        width = canvas.clientWidth; height = canvas.clientHeight;
+        const nextWidth = canvas.clientWidth, nextHeight = canvas.clientHeight;
+        if (nextWidth === width && nextHeight === height && dpr === pixelRatio) return false;
+        width = nextWidth; height = nextHeight; pixelRatio = dpr;
         canvas.width = Math.round(width*dpr); canvas.height = Math.round(height*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
         motes.length = 0;
         for (let i=0;i<28;i++) motes.push({x:Math.random()*width,y:Math.random()*height,r:.5+Math.random()*1.35,a:.12+Math.random()*.38,v:.08+Math.random()*.22,phase:Math.random()*6.28});
+        return true;
       }
       function draw() {
         cancelAnimationFrame(frame);
         if (document.hidden) return;
+        const animate = !prefersReducedMotion.matches && !mobileViewport.matches;
         ctx.clearRect(0,0,width,height);
         for (const p of motes) {
-          const shimmer = .65 + Math.sin(performance.now()*.0007+p.phase)*.35;
+          const shimmer = animate ? .65 + Math.sin(performance.now()*.0007+p.phase)*.35 : .82;
           ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle = `rgba(226,184,103,${p.a*shimmer})`; ctx.fill();
-          if (!prefersReducedMotion.matches && !numberInput.value) { p.y -= p.v; p.x += Math.sin(performance.now()*.00025+p.phase)*.08; if (p.y < -3) { p.y = height+3; p.x = Math.random()*width; } }
+          if (animate && !numberInput.value) { p.y -= p.v; p.x += Math.sin(performance.now()*.00025+p.phase)*.08; if (p.y < -3) { p.y = height+3; p.x = Math.random()*width; } }
         }
-        frame = requestAnimationFrame(draw);
+        if (animate) frame = requestAnimationFrame(draw);
       }
       resize(); draw();
-      window.addEventListener("resize",resize,{passive:true});
+      window.addEventListener("resize",() => { if (resize()) draw(); },{passive:true});
       document.addEventListener("visibilitychange",() => { if (document.hidden) cancelAnimationFrame(frame); else draw(); });
     }
 
@@ -1196,7 +1206,8 @@
     },{passive:true});
     const resultScene = document.querySelector(".scene--result");
     const updateResultParallax = () => {
-      const scrollY = matchMedia("(max-width: 540px)").matches ? window.scrollY : resultScene.scrollTop;
+      if (mobileViewport.matches) return;
+      const scrollY = resultScene.scrollTop;
       document.documentElement.style.setProperty("--scroll-y",`${scrollY}px`);
     };
     resultScene.addEventListener("scroll",updateResultParallax,{passive:true});
