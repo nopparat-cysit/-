@@ -61,10 +61,9 @@
     }
     .skip-link:focus { transform: translateY(0); }
     .visually-hidden { position: absolute!important; width: 1px!important; height: 1px!important; padding: 0!important; margin: -1px!important; overflow: hidden!important; clip: rect(0,0,0,0)!important; white-space: nowrap!important; border: 0!important; }
-    .stage { position: relative; width: 100%; height:100vh; min-height:100vh; height:100dvh; min-height: 100svh; isolation: isolate; overflow: hidden; background: radial-gradient(ellipse at 50% 55%, #321714 0%, #1c100e 45%, #110d0b 100%); }
-    .stage::before, .stage::after { content: ""; pointer-events: none; position: absolute; z-index: 25; inset: 0; }
+    .stage { position: relative; width: 100%; height:100vh; min-height:100vh; height:100dvh; min-height: 100svh; isolation: isolate; overflow: hidden; background:#110b09; }
+    .stage::before { content: ""; pointer-events: none; position: absolute; z-index: 25; inset: 0; }
     .stage::before { background: radial-gradient(ellipse at center, transparent 42%, rgba(8,5,4,.53) 100%); }
-    .stage::after { opacity: .13; mix-blend-mode: screen; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E"); }
     .scene {
       position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center;
       overflow-x:hidden; overflow-y:auto; overscroll-behavior-y:contain; -webkit-overflow-scrolling:touch; touch-action:pan-y pinch-zoom;
@@ -74,11 +73,6 @@
     }
     .scene.is-active { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0) scale(1); transition-delay: 0s; }
     .scene--result { align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; padding: 78px 20px max(36px, env(safe-area-inset-bottom)); scrollbar-color: var(--burnt-gold) transparent; }
-    .ambient { position: absolute; inset: -3%; z-index: -1; pointer-events: none; overflow: hidden; }
-    .temple-art { position: absolute; width: 110%; height: 108%; inset: -4% -5%; transform: translate3d(calc(var(--px) * -.35), calc(var(--py) * -.28), 0) scale(1.04); transition: transform 900ms var(--ease); }
-    .temple-art .mountains { transform: translate3d(calc(var(--px) * -.2), calc(var(--py) * -.1), 0); }
-    .temple-art .far-roof { transform: translate3d(calc(var(--px) * -.45), calc(var(--py) * -.18), 0); }
-    .temple-art .foreground { transform: translate3d(calc(var(--px) * .24), calc(var(--py) * .12), 0); }
     .scene-content { position: relative; z-index: 4; width: min(100%, 760px); text-align: center; margin-top: 8vh; }
     .scene--temple .scene-content { isolation:isolate; }
     .scene--temple .scene-content::before { content:""; position:absolute; z-index:-1; inset:-26px -5% -22px; border:1px solid rgba(199,155,69,.16); border-radius:50%; background:radial-gradient(ellipse,rgba(13,8,7,.88) 0%,rgba(13,8,7,.72) 48%,rgba(13,8,7,.28) 76%,transparent 100%); box-shadow:0 18px 60px rgba(0,0,0,.28); filter:blur(3px); pointer-events:none; }
@@ -102,6 +96,13 @@
     .company-logo { display:block; width:132px; height:62px; padding:0; object-fit:contain; background:transparent; border:0; border-radius:0; box-shadow:none; }
     .company-logo--capital-one { width:132px; }
     .language-switch { position:fixed; z-index:32; top:max(12px,env(safe-area-inset-top)); right:max(14px,env(safe-area-inset-right)); display:flex; gap:3px; padding:4px; border:1px solid rgba(199,155,69,.58); background:rgba(16,10,8,.92); backdrop-filter:blur(7px); }
+    .language-switch--utility { right:max(68px,calc(env(safe-area-inset-right) + 56px)); }
+    .fullscreen-button { position:fixed; z-index:36; top:max(12px,env(safe-area-inset-top)); right:max(12px,env(safe-area-inset-right)); display:grid; place-items:center; width:42px; height:42px; padding:0; border:1px solid rgba(199,155,69,.62); border-radius:50%; background:rgba(16,10,8,.9); color:#f0d79c; cursor:pointer; box-shadow:0 5px 16px rgba(0,0,0,.22); backdrop-filter:blur(7px); transition:background 200ms,border-color 200ms,transform 200ms,box-shadow 200ms; }
+    .fullscreen-button:hover { border-color:#edc97f; background:rgba(76,35,21,.94); box-shadow:0 7px 20px rgba(0,0,0,.3),0 0 16px rgba(199,155,69,.16); }
+    .fullscreen-button:active { transform:scale(.94); }
+    .fullscreen-button:focus-visible { outline:2px solid #edc97f; outline-offset:3px; }
+    .fullscreen-button svg { display:block; width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .fullscreen-button[hidden] { display:none; }
     .language-button { min-width:44px; min-height:40px; padding:0 8px; border:0; background:transparent; color:#f0dfb8; cursor:pointer; font-size:.82rem; font-weight:500; letter-spacing:.03em; transition:background 200ms,color 200ms; }
     .language-button:hover { color:var(--ivory); }
     .language-button.is-current { color:var(--gold-light); background:rgba(130,38,23,.58); box-shadow:inset 0 0 0 1px rgba(199,155,69,.35); }
@@ -118,32 +119,31 @@
        TEMPLE SCENE
        ========================= */
     #particles { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .67; }
-    .lantern { position: absolute; z-index: 3; width: clamp(76px, 13vw, 135px); height: auto; transform-origin: 50% -12px; animation: lantern-sway 7s ease-in-out infinite; filter: drop-shadow(0 8px 24px rgba(226,72,34,.2)); cursor: pointer; transition: filter 500ms; }
+    .lantern { position:absolute; z-index:3; display:block; width:clamp(76px,13vw,135px); height:auto; padding:0; border:0; background:transparent; transform-origin:50% -12px; animation:lantern-sway 7s ease-in-out infinite; filter:drop-shadow(0 8px 24px rgba(226,72,34,.2)); cursor:pointer; transition:filter 500ms; }
+    .lantern-image { display:block; width:100%; height:auto; }
     .lantern--one { right: 12%; top: 8%; }
     .lantern--two { left: 9%; top: 20%; width: clamp(55px, 8vw, 92px); opacity: .76; animation-delay: -2.6s; }
-    .lantern--two,.incense { pointer-events:none; }
+    .lantern--two { pointer-events:none; cursor:default; }
     .lantern.is-lit { filter: drop-shadow(0 0 29px rgba(255,160,68,.85)); }
     .lantern.is-hovered { animation-duration: 2.5s; }
-    .incense { position: absolute; z-index: 2; width: 160px; height: 290px; bottom: 2%; left: 13%; opacity: .36; filter: blur(2px); }
-    .smoke-path { fill: none; stroke: #d9c5a0; stroke-width: 3; stroke-linecap: round; opacity: .44; animation: smoke-rise 8s ease-in-out infinite; }
-    .smoke-path:nth-child(2) { animation-delay: -3s; opacity: .25; }
-    .smoke-path:nth-child(3) { animation-delay: -5s; opacity: .2; }
-    .scene--temple.door-open .temple-art .gate-door { transform: perspective(900px) rotateY(62deg); transform-origin: 50% 78%; opacity: .15; transition: transform 900ms var(--ease), opacity 700ms; }
-    .temple-art .gate-door { transition: transform 900ms var(--ease), opacity 700ms; }
-    .temple-art .gate-door--left { transform-origin: 48% 78%; }
-    .temple-art .gate-door--right { transform-origin: 52% 78%; }
-    .temple-art .gate-door--right { transform: perspective(900px) rotateY(0deg); }
-    .scene--temple.door-open .temple-art .gate-door--left { transform: perspective(900px) rotateY(-65deg); }
-    .scene--temple.door-open .temple-art .gate-door--right { transform: perspective(900px) rotateY(65deg); }
+    .stage-background { position:fixed; z-index:0; inset:0; width:100vw; height:100vh; height:100dvh; min-height:100svh; object-fit:cover; object-position:center; transform:translate3d(0,var(--background-shift,0px),0) scale(1.08); }
+    .stage.door-opening .stage-background { animation:background-zoom 650ms var(--ease) both; filter:brightness(1.12); }
+    @keyframes background-zoom { from { transform:translate3d(0,var(--background-shift,0px),0) scale(1.08); } to { transform:translate3d(0,var(--background-shift,0px),0) scale(1.12); } }
     .scene--temple.door-open .scene-content { transform: scale(.97); opacity: 0; transition: transform 600ms, opacity 450ms; }
     @keyframes lantern-sway { 0%,100% { rotate: -2deg; } 50% { rotate: 2deg; } }
-    @keyframes smoke-rise { 0% { transform: translateY(20px) translateX(0) scale(.92); opacity: .05; } 45% { opacity: .43; } 100% { transform: translateY(-110px) translateX(16px) scale(1.12); opacity: .02; } }
 
     /* =========================
        NUMBER SELECTOR
        ========================= */
-    .number-content { position: relative; z-index: 4; isolation:isolate; width: min(100%, 570px); padding:clamp(18px,3vw,30px); text-align: center; margin-top: 4vh; }
+        .number-content { position: relative; z-index: 4; isolation:isolate; width: min(100%, 570px); padding:clamp(18px,3vw,30px); text-align: center; margin-top: 4vh; }
     .number-content::before { content:""; position:absolute; z-index:-1; inset:-14px 0; border:1px solid rgba(199,155,69,.2); border-radius:50%; background:radial-gradient(ellipse,rgba(13,8,7,.94) 0%,rgba(13,8,7,.82) 54%,rgba(13,8,7,.42) 78%,transparent 100%); box-shadow:0 18px 60px rgba(0,0,0,.3); filter:blur(2px); pointer-events:none; }
+    .scene-back { display:inline-flex; align-items:center; justify-content:center; gap:8px; width:max-content; max-width:100%; min-height:40px; margin:0 auto 12px; padding:0 12px; border:1px solid rgba(199,155,69,.48); background:rgba(20,12,9,.45); color:#f0dfb9; cursor:pointer; font:inherit; font-size:.86rem; transition:background 220ms,border-color 220ms,color 220ms; }
+    .scene-back:hover { border-color:rgba(237,201,127,.82); background:rgba(62,30,20,.72); color:#fff0c8; }
+    .back-arrow { color:var(--gold-light); font-size:1.1em; line-height:1; transition:transform 220ms; }
+    .scene-back:hover .back-arrow { transform:translateX(-3px); }
+    .scene-back--paper { margin:21px auto 0; border-color:rgba(129,88,42,.38); background:transparent; color:#68471f; }
+    .scene-back--paper .back-arrow { color:#9b7139; }
+    .scene-back--paper:hover { border-color:rgba(129,88,42,.58); background:rgba(129,88,42,.07); color:#751a18; }
     .number-heading { margin: 10px 0 0; font-family:var(--font-display); font-size: clamp(1.9rem, 7vw, 3rem); line-height:1.4; font-weight: 600; color: #fff0c8; letter-spacing: .02em; text-shadow:0 2px 4px #080504,0 0 20px rgba(0,0,0,.8); }
     .number-instruction { max-width:34ch; margin: 8px auto 0; line-height: 1.8; color: #fff0cc; font-size: clamp(1.08rem,2vw,1.22rem); font-weight:500; text-shadow:0 2px 4px #080504,0 0 16px #080504; }
     .fortune-slip { position: relative; width: min(84vw, 390px); margin: 27px auto 18px; padding: 32px 22px 25px; color: var(--ink); background: linear-gradient(120deg,#f5ebd2,#eadbb9 54%,#f0e2c2); box-shadow: 0 22px 55px rgba(0,0,0,.48), inset 0 0 0 1px rgba(111,60,30,.42); transform: rotate(-.35deg); }
@@ -165,7 +165,7 @@
     /* =========================
        REVEAL RITUAL
        ========================= */
-    .scene--reveal { background: radial-gradient(ellipse at center, #482113 0%, #1d100d 42%, #090706 100%); flex-direction:column; }
+    .scene--reveal { background:linear-gradient(rgba(22,11,8,.42),rgba(9,7,6,.62)),url("assets/temple-background.png") center / cover no-repeat; flex-direction:column; }
     .reveal-aura { position:absolute; width:min(100vw,600px); aspect-ratio:1; border:1px solid rgba(199,155,69,.7); border-radius:50%; box-shadow:0 0 0 18px rgba(199,155,69,.035),0 0 90px rgba(199,155,69,.15),inset 0 0 60px rgba(199,155,69,.13); transform:scale(.2); opacity:0; }
     .scene--reveal.is-active .reveal-aura { animation: circle-draw 1800ms var(--ease) forwards; }
     .reveal-aura::before,.reveal-aura::after { content:""; position:absolute; inset:10%; border:1px solid rgba(199,155,69,.23); border-radius:50%; }
@@ -194,10 +194,6 @@
     /* =========================
        FORTUNE RESULT
        ========================= */
-    .scene--result::before { content:""; position:fixed; inset:0; z-index:-2; background:radial-gradient(ellipse at 50% 30%,#3a1b13,#140d0a 66%,#0c0907); }
-    .result-atmosphere { position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden; }
-    .result-moon { position:absolute; right:6%; top:10%; width:190px; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 35% 35%,rgba(224,183,106,.2),rgba(156,104,42,.05) 60%,transparent 70%); transform:translateY(calc(var(--scroll-y,0px) * -.1)); }
-    .result-mountain { position:absolute; bottom:0; left:-5%; width:110%; height:34%; opacity:.4; transform:translateY(calc(var(--scroll-y,0px) * -.04)); }
     .result-layout { position:relative; width:min(100%,840px); margin:0 auto; text-align:center; }
     .result-overline { color:var(--gold); font-size:.7rem; letter-spacing:.25em; }
     .result-paper { position:relative; overflow:hidden; margin:19px auto 0; padding:clamp(30px,7vw,58px) clamp(21px,6vw,58px) 42px; color:#2c1b12; text-align:center; background:radial-gradient(ellipse at 12% 5%,rgba(255,255,255,.48),transparent 34%),linear-gradient(135deg,#f2e6c9,#e8d9b5 47%,#dfcba1); box-shadow:0 28px 90px rgba(0,0,0,.5),0 0 0 1px rgba(199,155,69,.65),0 0 0 8px rgba(199,155,69,.075); transform:rotate(-.25deg); }
@@ -271,14 +267,13 @@
       .company-logos { width:min(100%,380px);justify-content:space-evenly;gap:5px; }
       .company-logo,.company-logo--capital-one { flex:0 1 calc(50% - 5px);width:calc(50% - 5px);height:auto;max-height:78px;padding:0; }
       .language-switch { position:absolute;top:max(10px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right)); }
+      .language-switch--utility { right:max(62px,calc(env(safe-area-inset-right,0px) + 58px)); }
+      .stage[data-scene="temple"] .lantern--one { right:max(62px,calc(env(safe-area-inset-right,0px) + 58px)); }
+      .stage:not([data-scene="temple"]) .fullscreen-button { top:max(10px,env(safe-area-inset-top)); }
       .language-button { min-width:40px;min-height:44px;font-size:.76rem; }
       .stage:not([data-scene="temple"]) .lantern { visibility:hidden;pointer-events:none; }
       .scene { justify-content:flex-start; overflow-y:auto; padding-top:max(166px,calc(env(safe-area-inset-top, 0px) + 156px)); padding-bottom:max(56px,calc(env(safe-area-inset-bottom, 0px) + 40px)); scrollbar-width:none; transition:opacity 350ms var(--ease),visibility 0s linear 350ms; }
       .scene::-webkit-scrollbar { display:none;width:0;height:0; }
-      .temple-art { transition:none; }
-      .temple-art .mountains,.temple-art .far-roof,.temple-art .foreground { transform:none; }
-      .lantern,.smoke-path { animation:none; }
-      .result-moon,.result-mountain { transform:none; }
       #particles { opacity:.2; }
       .scene--temple .scene-content,#scene-number .number-content,.scene--reveal .reveal-paper { margin-top:auto; margin-bottom:auto; }
       .scene-content { margin-top:auto; }
@@ -289,7 +284,6 @@
       .lantern--one { width:clamp(34px,9vw,40px);right:max(12px,env(safe-area-inset-right));top:max(0px,env(safe-area-inset-top, 0px));filter:drop-shadow(0 2px 4px rgba(226,72,34,.2)); }
       .lantern--one.is-lit { filter:drop-shadow(0 0 8px rgba(255,160,68,.65)); }
       .lantern--two { left:2%;top:27%; }
-      .incense { left:-3%;bottom:3%;opacity:.26; }
       .number-content { margin-top:auto;padding:16px 13px; }
       .number-content::before { inset:-14px -2px; }
       .number-instruction { font-size:1.05rem; }
@@ -357,26 +351,23 @@
     .draw-button { position:relative; display:block; width:200px; height:230px; margin:auto; padding:0; border:0; background:none; color:#fbe3a1; cursor:pointer; -webkit-tap-highlight-color:transparent; }
     .draw-button:focus-visible { outline:2px solid #edc97f; outline-offset:8px; border-radius:24px; }
     .draw-halo { position:absolute; inset:20px -28px -12px; border-radius:50%; background:radial-gradient(ellipse,rgba(218,158,54,.22),transparent 66%); animation:ritual-glow 3s ease-in-out infinite; }
-    .draw-vessel { position:absolute; width:124px; height:185px; left:38px; bottom:6px; transform-origin:50% 90%; filter:drop-shadow(0 15px 12px #0008); }
-    .draw-sticks { position:absolute; inset:0; }
-    .draw-sticks i { position:absolute; bottom:80px; left:var(--x); width:12px; height:110px; border-radius:5px 5px 1px 1px; background:linear-gradient(90deg,#93602a,#f2d497 40%,#bf8b43); border-top:20px solid #9e2623; transform:rotate(var(--r)); transform-origin:50% 100%; box-shadow:1px 0 2px #28150c; }
-    .draw-cup { position:absolute; inset:68px 0 0; border-radius:10px 10px 32px 32px / 8px 8px 16px 16px; border:1px solid #e0ab59; background:repeating-linear-gradient(90deg,transparent 0 17px,#260b0738 18px 20px),linear-gradient(90deg,#571713,#a63828 30%,#87251e 65%,#49100e); box-shadow:inset 0 5px #e9b964,inset 0 -7px #3d100d; }
-    .draw-cup::before { content:""; position:absolute; inset:13px 9px; border:1px solid #d3a24c88; border-radius:4px 4px 20px 20px; }
-    .draw-cup span { position:absolute; left:37px; top:31px; width:48px; height:48px; display:grid; place-items:center; border:1px solid #e7be70; color:#ffe1a1; font:32px serif; transform:rotate(45deg); background:#681a15; }
-    .draw-cup b { transform:rotate(-45deg); font-weight:400; }
-    .draw-chosen { position:absolute; left:89px; top:0; width:23px; height:143px; padding-top:26px; border-radius:7px 7px 2px 2px; background:linear-gradient(90deg,#c7934d,#ffe9b2 45%,#d7aa64); border-top:23px solid #a82e24; color:#701c16; font:bold 21px Georgia,serif; opacity:0; transform:translateY(75px) rotate(-8deg); box-shadow:0 0 25px #efc87966; }
+    .draw-vessel { position:absolute; z-index:1; width:152px; height:228px; left:24px; bottom:-3px; transform-origin:50% 90%; filter:drop-shadow(0 15px 12px #0008); }
+    .draw-vessel-image { display:block; width:100%; height:100%; object-fit:contain; }
+    .draw-chosen { position:absolute; z-index:2; left:58px; top:8px; width:68px; height:198px; opacity:0; transform:translateY(75px) rotate(-8deg); pointer-events:none; }
+    .draw-chosen img { display:block; width:100%; height:100%; object-fit:contain; }
+    .draw-number { position:absolute; top:27%; left:25%; display:grid; width:50%; height:14%; place-items:center; transform:translateY(-50%); color:#6d2116; font:800 15px/1 Arial,sans-serif; letter-spacing:0; text-align:center; white-space:nowrap; text-shadow:0 1px #fff8dc; }
     .draw-caption { display:block; margin-top:8px; color:#efd49b; font-size:.95rem; letter-spacing:.06em; }
-    .draw-status { min-height:1.8em; margin:8px 0 0; color:#d3b67f; font-size:.88rem; }
+    .draw-status { display:flex; align-items:center; justify-content:center; height:3.6em; margin:8px 0 0; color:#d3b67f; font-size:.88rem; line-height:1.45; text-align:center; text-wrap:balance; opacity:0; visibility:hidden; transition:opacity 320ms ease; }
+    .draw-status:not(:empty) { opacity:1; visibility:visible; }
     .draw-button.is-shaking .draw-vessel { animation:shake-vessel .32s ease-in-out 6; }
-    .draw-button.is-shaking .draw-sticks i { animation:rattle-sticks .16s ease-in-out 12 alternate; }
+
     .draw-button.has-drawn .draw-chosen { animation:emerge-stick .85s cubic-bezier(.2,.8,.2,1) forwards; }
     .draw-button.has-drawn .draw-halo { background:radial-gradient(ellipse,rgba(238,186,83,.4),transparent 68%); }
     @keyframes shake-vessel { 0%,100% { transform:rotate(0); } 25% { transform:translate(-5px,-3px) rotate(-12deg); } 75% { transform:translate(5px,-3px) rotate(12deg); } }
-    @keyframes rattle-sticks { to { translate:0 -9px; } }
-    @keyframes emerge-stick { from { opacity:0; transform:translateY(75px) rotate(-8deg); } to { opacity:1; transform:translate(52px,-16px) rotate(14deg); } }
+        @keyframes emerge-stick { from { opacity:0; transform:translateY(75px) rotate(-8deg); } to { opacity:1; transform:translate(64px,-24px) rotate(10deg); } }
     @keyframes ritual-glow { 50% { opacity:.5; transform:scale(.92); } }
     @media (max-width:540px) { .draw-button { height:210px; } .draw-ritual { margin-top:12px; } }
-    @media (prefers-reduced-motion:reduce) { .draw-button *, .draw-button.is-shaking .draw-vessel, .draw-button.is-shaking .draw-sticks i { animation:none; } .draw-button.has-drawn .draw-chosen { animation:none; opacity:1; transform:translate(52px,-16px) rotate(14deg); } }
+    @media (prefers-reduced-motion:reduce) { .draw-button *, .draw-button.is-shaking .draw-vessel { animation:none; } .draw-button.has-drawn .draw-chosen { animation:none; opacity:1; transform:translate(64px,-24px) rotate(10deg); } }
 
     #scene-temple { overflow-y:auto; }
     #scene-temple .scene-content { margin-top:auto; margin-bottom:auto; padding:24px 0; }
@@ -385,12 +376,18 @@
     #scene-temple .draw-ritual { margin:8px auto; }
     #scene-temple .draw-status { max-width:30ch; margin:8px auto; }
     .manual-number-button { display:block; margin:14px auto 0; min-height:46px; }
-    #homeRevealButton[hidden] { display:none; }
-    .offer-note { max-width:560px; padding:24px; border:1px solid #ac824b66; border-radius:12px; background:linear-gradient(135deg,#fff8e580,#e4c78e30); text-align:left; box-shadow:0 4px 18px #61421c0a; }
-    .offer-note strong { display:block; margin:0 0 12px; font-size:.88rem; letter-spacing:.02em; }
-    .offer-description { margin:0; font-size:1.08rem; line-height:1.9; color:#442d19; overflow-wrap:anywhere; text-wrap:pretty; }
-    .offer-note a { display:inline-block; margin-top:16px; padding:9px 16px; border:1px solid #8a422d66; border-radius:6px; background:#fff9e755; font-size:.9rem; font-weight:600; text-decoration:none; }
-    .offer-note a:hover { background:#fff4d6; }
+    #homeRevealButton { display:block; min-width:170px; margin:0 auto; visibility:visible; opacity:1; transform:translateY(0); pointer-events:auto; transition:opacity 320ms var(--ease),transform 320ms var(--ease),filter 320ms var(--ease); }
+    #homeRevealButton.is-ready { filter:brightness(1.08); }
+    #homeRevealButton:disabled { opacity:.72; cursor:wait; }
+    .offer-note { position:relative; display:grid; justify-items:center; gap:10px; max-width:600px; margin:22px auto 0; padding:21px 24px 22px; border:1px solid rgba(129,88,42,.42); border-radius:5px; background:rgba(255,250,236,.18); color:#51381e; text-align:center; box-shadow:0 3px 12px rgba(70,43,18,.035); }
+    .offer-note::before { content:""; position:absolute; inset:7px; pointer-events:none; background:linear-gradient(#a47e43,#a47e43) left top/12px 1px no-repeat,linear-gradient(#a47e43,#a47e43) left top/1px 12px no-repeat,linear-gradient(#a47e43,#a47e43) right top/12px 1px no-repeat,linear-gradient(#a47e43,#a47e43) right top/1px 12px no-repeat,linear-gradient(#a47e43,#a47e43) left bottom/12px 1px no-repeat,linear-gradient(#a47e43,#a47e43) left bottom/1px 12px no-repeat,linear-gradient(#a47e43,#a47e43) right bottom/12px 1px no-repeat,linear-gradient(#a47e43,#a47e43) right bottom/1px 12px no-repeat; }
+    .offer-note strong { display:flex; align-items:center; justify-content:center; gap:9px; max-width:100%; margin:0; color:#751a18; font-size:.85rem; font-weight:700; letter-spacing:.025em; }
+    .offer-note strong::before,.offer-note strong::after { content:"◇"; color:#a47e43; font-size:.78em; }
+    .offer-description { margin:0; color:#49351f; font-size:1.06rem; font-weight:500; line-height:1.75; overflow-wrap:anywhere; text-wrap:pretty; }
+    .offer-price { display:inline; margin:0 .12em; color:#751a18; font-size:1.16em; font-weight:800; line-height:inherit; white-space:nowrap; text-decoration:underline; text-decoration-color:rgba(164,126,67,.55); text-decoration-thickness:1px; text-underline-offset:.18em; }
+    .offer-note a { display:inline-flex; align-items:center; justify-content:center; gap:10px; justify-self:center; width:max-content; max-width:100%; margin:2px 0 0; padding:8px 15px; border:1px solid rgba(117,26,24,.48); border-radius:3px; background:rgba(255,249,231,.34); color:#751a18; font-size:.9rem; font-weight:650; text-decoration:none; box-shadow:inset 0 0 0 2px rgba(151,111,55,.07); transition:background 180ms ease,border-color 180ms ease; }
+    .offer-note a::after { content:"↗"; color:#987033; font-size:.95rem; }
+    .offer-note a:hover { border-color:rgba(117,26,24,.7); background:rgba(201,157,77,.13); }
     .offer-note a:focus-visible { outline:2px solid #751a18; outline-offset:3px; }
     @media(max-width:540px) { .offer-note { padding:18px; } .offer-description { font-size:1rem; line-height:1.85; } #scene-temple .hero-subtitle { font-size:.95rem; } }
   </style>
@@ -403,108 +400,17 @@
       <button class="language-button" type="button" data-language="en" aria-label="English" aria-pressed="false">EN</button>
       <button class="language-button" type="button" data-language="zh" aria-label="简体中文" aria-pressed="false">中文</button>
     </div>
+    <button class="fullscreen-button" id="fullscreenButton" type="button" aria-label="เปิดเต็มจอ" title="เปิดเต็มจอ" aria-pressed="false">
+      <svg class="fullscreen-icon fullscreen-icon--enter" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1v4M16 3h4a1 1 0 0 1 1 1v4M21 16v4a1 1 0 0 1-1 1h-4M8 21H4a1 1 0 0 1-1-1v-4"/></svg>
+      <svg class="fullscreen-icon fullscreen-icon--exit" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M9 3v5a1 1 0 0 1-1 1H3M21 9h-5a1 1 0 0 1-1-1V3M15 21v-5a1 1 0 0 1 1-1h5M3 15h5a1 1 0 0 1 1 1v5"/></svg>
+    </button>
     <div class="scene-index" aria-hidden="true"><strong id="sceneNumber">01</strong><span id="sceneName">THE TEMPLE</span></div>
 
-    <!-- Layered temple illustration: moon, mountains, tiled roofs, gate, beams and carved columns. -->
-    <svg class="temple-art" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <defs>
-        <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#100b0a"/><stop offset=".54" stop-color="#29110f"/><stop offset="1" stop-color="#4b1c14"/></linearGradient>
-        <radialGradient id="moonGlow"><stop stop-color="#efd49a" stop-opacity=".34"/><stop offset="1" stop-color="#d59f4c" stop-opacity="0"/></radialGradient>
-        <linearGradient id="roof" x2="0" y2="1"><stop stop-color="#6b2720"/><stop offset="1" stop-color="#25100e"/></linearGradient>
-        <linearGradient id="pillar" x2="1"><stop stop-color="#42100f"/><stop offset=".48" stop-color="#74221a"/><stop offset="1" stop-color="#260e0c"/></linearGradient>
-        <linearGradient id="ground" x2="0" y2="1"><stop stop-color="#35150f"/><stop offset="1" stop-color="#100b09"/></linearGradient>
-        <filter id="softGlow"><feGaussianBlur stdDeviation="18"/></filter>
-      </defs>
-      <rect width="1440" height="900" fill="url(#sky)"/>
-      <circle cx="1050" cy="214" r="170" fill="url(#moonGlow)"/>
-      <circle cx="1050" cy="214" r="64" fill="#d8b36e" opacity=".38"/>
-      <circle cx="1030" cy="194" r="52" fill="#ecd39e" opacity=".32"/>
-      <g class="mountains" fill="#211310" opacity=".76">
-        <path d="M0 564 110 465l62 43 95-140 105 148 112-90 123 130 126-197 110 146 108-118 141 168 98-96 150 117v224H0z"/>
-        <path d="m0 630 156-101 120 54 133-111 99 99 180-81 98 79 171-115 124 101 127-54 232 106v192H0z" fill="#301711" opacity=".72"/>
-      </g>
-      <g class="far-roof" opacity=".82" fill="url(#roof)" stroke="#986333" stroke-opacity=".48" stroke-width="3">
-        <path d="M300 446q220-190 420-170 200-20 420 170l-85-14-31 27-22-35q-278-116-564 0l-24 35-31-27z"/>
-        <path d="M385 435q170-123 335-120 165-3 335 120l-41 5-32 25-18-29q-252-92-488 0l-18 29-32-25z" fill="#3a1713"/>
-        <path d="M528 434q95-71 192-71t192 71l-33 10-20 20-16-27q-129-44-246 0l-16 27-20-20z" fill="#4c2017"/>
-      </g>
-      <g opacity=".56" fill="#170d0b">
-        <path d="M575 490h290v248H575z"/><path d="M520 500q200-145 400 0l-27 10-29 19-18-29q-128-41-252 0l-18 29-29-19z" fill="#572119"/>
-        <path d="M625 560h72v178h-72zM744 560h72v178h-72z" fill="#32120f"/>
-      </g>
-      <g class="foreground">
-        <path d="M96 354Q720 44 1344 354l-68 7-48 45-37-48q-471-198-942 0l-37 48-48-45z" fill="#1c0c0b" stroke="#96622f" stroke-width="5"/>
-        <path d="M153 357Q720 115 1287 357l-69 13-41 32-30-42q-429-151-854 0l-30 42-41-32z" fill="url(#roof)" stroke="#c09143" stroke-opacity=".76" stroke-width="3"/>
-        <path d="M236 375Q720 197 1204 375l-54 12-31 27-25-33q-372-117-748 0l-25 33-31-27z" fill="#381713" stroke="#8d592f" stroke-width="2"/>
-        <path d="M313 393Q720 274 1127 393l-44 10-28 25-19-29q-317-91-632 0l-19 29-28-25z" fill="#5a2419" stroke="#9c6a36" stroke-width="2"/>
-        <g fill="#bd8e48">
-          <path d="M93 351q-34-6-43 20 27-8 53 3l27-20zM1347 351q34-6 43 20-27-8-53 3l-27-20z"/>
-          <circle cx="720" cy="329" r="8"/><path d="M711 321h18v-19h-18z"/>
-          <circle cx="287" cy="379" r="5"/><circle cx="1153" cy="379" r="5"/>
-        </g>
-        <g fill="none" stroke="#b98c4b" stroke-opacity=".8" stroke-width="2">
-          <path d="M224 359q496-203 992 0M300 384q420-158 840 0M398 411q322-112 644 0"/>
-          <path d="M720 280v51m-16-39 16 14 16-14M474 352l-25-17m517 17 25-17"/>
-        </g>
-        <!-- Gate lintel and elaborate fretwork -->
-        <path d="M377 438h686v36H377z" fill="#461512" stroke="#bd8d45" stroke-width="3"/>
-        <path d="M393 446h654v5H393zm0 15h654v3H393z" fill="#d0a458" opacity=".75"/>
-        <g fill="none" stroke="#bd9453" stroke-width="2" opacity=".85">
-          <path d="M431 453h38l12 10 12-10h38m24 0h38l12 10 12-10h38m24 0h38l12 10 12-10h38m24 0h38l12 10 12-10h38m24 0h38l12 10 12-10h38"/>
-          <path d="M520 441v27m100-27v27m100-27v27m100-27v27m100-27v27"/>
-        </g>
-        <!-- Side pillars with carved bases and capitals -->
-        <g>
-          <path d="M383 469h58v306h-58z" fill="url(#pillar)" stroke="#aa7138" stroke-width="3"/>
-          <path d="M999 469h58v306h-58z" fill="url(#pillar)" stroke="#aa7138" stroke-width="3"/>
-          <path d="M372 462h80v18h-80zm0 304h80v21h-80zm614-304h80v18h-80zm0 304h80v21h-80z" fill="#501713" stroke="#c09246" stroke-width="2"/>
-          <path d="M397 492h30v260h-30zm616 0h30v260h-30z" fill="none" stroke="#cf9d50" stroke-opacity=".43" stroke-width="2"/>
-          <path d="M386 493h52m-52 9h52m-52 240h52m-52 9h52m562-258h52m-52 9h52m-52 240h52m-52 9h52" stroke="#daa953" stroke-opacity=".6" stroke-width="2"/>
-          <path d="M398 540h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28" stroke="#d1a057" stroke-opacity=".28"/>
-          <path d="M1014 540h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28m-28 12h28" stroke="#d1a057" stroke-opacity=".28"/>
-        </g>
-        <!-- Paired doors, latticed windows, brass rings -->
-        <g class="gate-door gate-door--left">
-          <path d="M466 477h244v294H466z" fill="#421310" stroke="#b4803c" stroke-width="3"/>
-          <path d="M480 491h216v267H480z" fill="#35110f" stroke="#835328" stroke-width="2"/>
-          <path d="M491 503h194v240H491z" fill="none" stroke="#bd8a42" stroke-width="2"/>
-          <g fill="none" stroke="#986c3b" stroke-width="3" opacity=".9">
-            <path d="M491 543h194M491 583h194M491 623h194M491 663h194M491 703h194M530 503v240m39-240v240m39-240v240m39-240v240"/>
-            <path d="m491 543 194 160m-194 0 194-160m-155-40 155 128m-194 0 155-128" opacity=".5"/>
-          </g>
-          <circle cx="687" cy="629" r="7" fill="#d2a24f"/><circle cx="687" cy="629" r="3" fill="#6e2717"/>
-        </g>
-        <g class="gate-door gate-door--right">
-          <path d="M730 477h244v294H730z" fill="#421310" stroke="#b4803c" stroke-width="3"/>
-          <path d="M744 491h216v267H744z" fill="#35110f" stroke="#835328" stroke-width="2"/>
-          <path d="M755 503h194v240H755z" fill="none" stroke="#bd8a42" stroke-width="2"/>
-          <g fill="none" stroke="#986c3b" stroke-width="3" opacity=".9">
-            <path d="M755 543h194M755 583h194M755 623h194M755 663h194M755 703h194M794 503v240m39-240v240m39-240v240m39-240v240"/>
-            <path d="m755 543 194 160m-194 0 194-160m-155-40 155 128m-194 0 155-128" opacity=".5"/>
-          </g>
-          <circle cx="757" cy="629" r="7" fill="#d2a24f"/><circle cx="757" cy="629" r="3" fill="#6e2717"/>
-        </g>
-        <path d="M342 787h756" stroke="#c09047" stroke-width="3" opacity=".65"/>
-        <path d="M0 786q720-65 1440 0v114H0z" fill="url(#ground)"/>
-        <path d="M118 825q602-76 1204 0M246 858q474-55 948 0" fill="none" stroke="#80512b" stroke-opacity=".28" stroke-width="2"/>
-      </g>
-    </svg>
-
-    <!-- Hand-drawn Chinese lanterns with cap, ribs, body highlight and tassel. -->
-    <svg class="lantern lantern--one" id="lanternOne" viewBox="0 0 130 210" role="button" tabindex="0" aria-label="แตะโคมเพื่อให้สว่างขึ้น" aria-pressed="false">
-      <defs><radialGradient id="lanternRed"><stop stop-color="#b63828"/><stop offset=".73" stop-color="#7b1715"/><stop offset="1" stop-color="#42100e"/></radialGradient></defs>
-      <path d="M65 0v16" stroke="#c99a4c" stroke-width="3"/><path d="M48 17q17-11 34 0l8 9H40z" fill="#a17335" stroke="#e2bd6e" stroke-width="2"/>
-      <path d="M38 27q-17 18-15 48t15 69q27 16 54 0 17-42 15-69T92 27z" fill="url(#lanternRed)" stroke="#d6a952" stroke-width="2"/>
-      <path d="M29 45q36 12 72 0M24 69q41 11 82 0M26 107q39-11 78 0M34 133q31-9 62 0" fill="none" stroke="#d7aa5b" stroke-width="2" opacity=".77"/>
-      <path d="M38 31q-8 51 0 108M53 28q-6 60 0 115M77 28q6 60 0 115M92 31q8 51 0 108" fill="none" stroke="#efc878" stroke-width="1.3" opacity=".6"/>
-      <path d="M39 144q26 17 52 0l-6 13q-20 9-40 0z" fill="#9e7134" stroke="#d5a652" stroke-width="2"/>
-      <path d="M65 157v25m0 0q-6 10-12 18m12-18q6 10 12 18" fill="none" stroke="#d2a24e" stroke-width="2"/><circle cx="65" cy="75" r="12" fill="none" stroke="#e1bd71" stroke-width="2"/><path d="M59 75h12m-6-6v12" stroke="#e1bd71" stroke-width="1.5"/>
-      <path d="M41 34q-10 40-2 77" fill="none" stroke="#f3dbab" stroke-width="4" opacity=".25"/>
-    </svg>
-    <svg class="lantern lantern--two" viewBox="0 0 130 210" aria-hidden="true">
-      <path d="M65 0v16" stroke="#c99a4c" stroke-width="3"/><path d="M48 17q17-11 34 0l8 9H40z" fill="#a17335" stroke="#e2bd6e" stroke-width="2"/><path d="M38 27q-17 18-15 48t15 69q27 16 54 0 17-42 15-69T92 27z" fill="#7b1715" stroke="#d6a952" stroke-width="2"/><path d="M29 55q36 12 72 0M25 95q40-11 80 0M38 32q-8 51 0 108m54-108q8 51 0 108" fill="none" stroke="#d7aa5b" stroke-width="2"/><path d="M39 144q26 17 52 0l-6 13q-20 9-40 0z" fill="#9e7134" stroke="#d5a652" stroke-width="2"/><path d="M65 157v38m0-13-12 17m12-17 12 17" fill="none" stroke="#d2a24e" stroke-width="2"/>
-    </svg>
-    <svg class="incense" viewBox="0 0 170 300" aria-hidden="true"><path class="smoke-path" d="M72 293C26 239 131 226 83 166S53 75 96 7"/><path class="smoke-path" d="M105 295c35-50-41-75 2-125S93 81 123 29"/><path class="smoke-path" d="M43 298C3 249 67 201 35 154S64 76 49 27"/></svg>
+    <img class="stage-background" src="assets/temple-background.png" alt="" aria-hidden="true" fetchpriority="high" decoding="async">
+    <button class="lantern lantern--one" id="lanternOne" type="button" aria-label="แตะโคมเพื่อให้สว่างขึ้น" aria-pressed="false">
+      <img class="lantern-image" src="assets/temple-lantern.png" alt="" aria-hidden="true" decoding="async">
+    </button>
+    <img class="lantern lantern--two" src="assets/temple-lantern.png" alt="" aria-hidden="true" decoding="async">
     <canvas id="particles" aria-hidden="true"></canvas>
 
     <main>
@@ -532,13 +438,13 @@
           <div class="draw-ritual">
             <button class="draw-button" id="drawButton" type="button" aria-label="เขย่าเซียมซีเพื่อสุ่มเลข">
               <span class="draw-halo" aria-hidden="true"></span>
-              <span class="draw-vessel" aria-hidden="true"><span class="draw-sticks"><i style="--x:12px;--r:-18deg"></i><i style="--x:27px;--r:-10deg"></i><i style="--x:43px;--r:-5deg"></i><i style="--x:58px;--r:3deg"></i><i style="--x:75px;--r:10deg"></i><i style="--x:91px;--r:17deg"></i></span><span class="draw-cup"><span><b>吉</b></span></span></span>
-              <span class="draw-chosen" id="drawnStick" aria-hidden="true"></span>
+              <span class="draw-vessel" aria-hidden="true"><img class="draw-vessel-image" src="assets/fortune-cup.png" alt="" decoding="async"></span>
+              <span class="draw-chosen" id="drawnStick" aria-hidden="true"><img src="assets/fortune-stick.png" alt="" decoding="async"><span class="draw-number"></span></span>
             </button>
             <span class="draw-caption" id="drawCaption">แตะกระบอกเพื่อเสี่ยงเซียมซี</span>
-            <p class="draw-status" id="drawStatus" role="status" aria-live="polite"></p>
+            <p class="draw-status" id="drawStatus" role="status" aria-live="polite">ตั้งจิตถึงสิ่งที่อยากรู้ แล้วแตะกระบอก</p>
           </div>
-          <button class="seal-button" id="homeRevealButton" type="button" hidden>เปิดคำทำนาย</button>
+          <button class="seal-button" id="homeRevealButton" type="button" aria-hidden="false">เริ่มเสี่ยงเซียมซี</button>
           <button class="action-button manual-number-button" id="beginButton" type="button" aria-label="กรอกเลขนำโชคด้วยตัวเอง">กรอกเลขนำโชค</button>
         </div>
       </section>
@@ -546,6 +452,7 @@
       <!-- Scene 02: enter only the number drawn from a real fortune-stick set -->
       <section class="scene" id="scene-number" aria-labelledby="numberTitle" aria-hidden="true">
         <div class="number-content">
+          <button class="scene-back" id="numberBackButton" type="button"><span class="back-arrow" aria-hidden="true">←</span><span id="numberBackLabel">กลับหน้าแรก</span></button>
           <div class="eyebrow" id="numberEyebrow">Enter the number from your real draw</div>
           <h2 class="number-heading" id="numberTitle">เลขเซียมซีของคุณ</h2>
           <p class="number-instruction" id="numberInstruction">ใส่เฉพาะหมายเลขที่ได้จากการเขย่าเซียมซีจริง</p>
@@ -580,10 +487,6 @@
 
       <!-- Scene 04: the source-backed fortune is printed on an aged paper scroll -->
       <section class="scene scene--result" id="scene-result" aria-labelledby="resultHeading" aria-hidden="true">
-        <div class="result-atmosphere" aria-hidden="true">
-          <div class="result-moon"></div>
-          <svg class="result-mountain" viewBox="0 0 1440 360" preserveAspectRatio="none"><path d="M0 242 126 151l95 49 109-127 129 154 121-105 137 132 108-185 129 164 111-98 127 125 144-92 134 91v101H0z" fill="#291310"/><path d="m0 282 185-101 129 62 148-105 129 110 173-78 124 83 166-124 131 105 136-64 219 99v91H0z" fill="#381910" opacity=".7"/></svg>
-        </div>
         <div class="result-layout">
           <div class="result-overline" id="resultOverline">THE ORACLE HAS SPOKEN</div>
           <article class="result-paper" id="resultPaper">
@@ -603,6 +506,7 @@
               <div class="meaning-panel" id="meaningPanel"><div><p id="meaningText"></p></div></div>
             </div>
           </article>
+          <button class="scene-back scene-back--paper" id="resultBackButton" type="button"><span class="back-arrow" aria-hidden="true">←</span><span id="resultBackLabel">กลับไปแก้เลข</span></button>
           <div class="result-actions">
             <button class="action-button action-button--primary" id="againButton" type="button">เสี่ยงเซียมซีอีกครั้ง</button>
             <button class="action-button" id="saveButton" type="button">บันทึกคำทำนาย</button>
@@ -630,27 +534,27 @@
     const fortuneLevels = ["มหามงคล","มงคล","มหามงคล","มหามงคล","มงคล","กลาง","มงคล","มหามงคล","มงคล","มหามงคล","มงคล","กลาง","มงคล","มงคล","กลาง","มหามงคล","มงคล","มหามงคล","มหามงคล","มงคล","กลาง","มหามงคล","มหามงคล","มงคล","มงคล","มหามงคล","ควรระวัง","มงคล","มหามงคล","มหามงคล"];
     const translations = {
       th: {
-        htmlLang:"th", title:"เปิดชะตาเซียมซี — คำทำนายของคุณ", description:"เปิดคำทำนายเซียมซีในประสบการณ์ดิจิทัลที่ได้รับแรงบันดาลใจจากศาลเจ้าจีน", skip:"ข้ามไปยังเนื้อหาหลัก", brand:"เปิดชะตาเซียมซี", companyLogos:"โลโก้บริษัท", languageLabel:"เลือกภาษา",
+        htmlLang:"th", title:"เปิดชะตาเซียมซี — คำทำนายของคุณ", description:"เปิดคำทำนายเซียมซีในประสบการณ์ดิจิทัลที่ได้รับแรงบันดาลใจจากศาลเจ้าจีน", skip:"ข้ามไปยังเนื้อหาหลัก", brand:"เปิดชะตาเซียมซี", companyLogos:"โลโก้บริษัท", languageLabel:"เลือกภาษา", fullscreenEnter:"เปิดเต็มจอ", fullscreenExit:"ออกจากเต็มจอ",
         scenes:{temple:"ศาลเจ้า",number:"หมายเลขของคุณ",reveal:"เปิดคำทำนาย",result:"คำทำนายของคุณ"},
-        heroEyebrow:"ช่วงเวลาเงียบสงบกับคำทำนายของคุณ",heroTitle:"เซียมซี",heroLineOne:"บางคำตอบ ไม่ได้ถูกค้นพบ",heroLineTwo:"แต่กำลังรอให้คุณเปิดมัน",heroNote:"เขย่าเซียมซีจริง แล้วนำเลขที่ได้มากรอกที่นี่",begin:"กรอกเลขเซียมซี",beginAria:"ไปกรอกหมายเลขเซียมซีที่ได้จากการเขย่าจริง",
+        heroEyebrow:"ช่วงเวลาเงียบสงบกับคำทำนายของคุณ",heroTitle:"เซียมซี",heroLineOne:"บางคำตอบ ไม่ได้ถูกค้นพบ",heroLineTwo:"แต่กำลังรอให้คุณเปิดมัน",heroNote:"เขย่าเซียมซีจริง แล้วนำเลขที่ได้มากรอกที่นี่",backHome:"กลับหน้าแรก",backNumber:"กลับไปแก้เลข",begin:"กรอกเลขเซียมซี",beginAria:"ไปกรอกหมายเลขเซียมซีที่ได้จากการเขย่าจริง",
         numberEyebrow:"หมายเลขจากเซียมซีจริง",numberTitle:"เลขเซียมซีของคุณ",numberInstruction:"ใส่เฉพาะหมายเลขที่ได้จากการเขย่าเซียมซีจริง",numberLabel:"กรอกหมายเลขเซียมซี ตั้งแต่ 1 ถึง 30",numberCaption:"กรอกหมายเลขเซียมซี · ๑ — ๓๐",numberRange:"หมายเลขเซียมซีมีตั้งแต่ ๑ ถึง ๓๐",revealButton:"เปิดคำทำนาย",errorEmpty:"โปรดกรอกหมายเลขที่คุณได้รับ",errorRange:"กรุณาเลือกหมายเลขตั้งแต่ 1 ถึง 30",
         revealAria:"กำลังเปิดคำทำนาย",revealPrompt:"คำตอบของคุณ",numberPrefix:"หมายเลข",fortuneNo:"เซียมซีหมายเลข",resultOverline:"คำทำนายปรากฏแล้ว",emblem:"ตรามงคล",section:"คำทำนาย",offerLabel:"สิทธิพิเศษจากใบนี้",levelPrefix:"ระดับคำทำนาย",levelNames:{"มหามงคล":"มหามงคล","มงคล":"มงคล","กลาง":"กลาง","ควรระวัง":"ควรระวัง"},
         categories:{work:"การงาน",money:"การเงิน",love:"ความรัก",health:"สุขภาพ",luck:"โชคลาภ"},meaningToggle:"เลขนี้หมายถึงอะไร?",meaningCollapse:"ซ่อนรายละเอียด",meaningSummary:"ลองรับฟังถ้อยคำจากใบนี้ แล้วเลือกก้าวต่อไปให้สอดคล้องกับความตั้งใจของคุณ",meaningDetail:"ลองถามใจตัวเองว่า สิ่งใดในคำทำนายนี้เชื่อมโยงกับชีวิตตอนนี้ และก้าวเล็ก ๆ แบบไหนที่คุณเลือกทำได้ คำทำนายเป็นเพียงแนวทางชวนคิด ไม่ใช่คำตัดสินอนาคต",
         demo:"หมายเลขนี้ยังไม่มีข้อมูลเฉพาะ จึงแสดงคำทำนายตัวอย่าง",again:"เสี่ยงเซียมซีอีกครั้ง",save:"บันทึกเป็นภาพ",share:"แชร์คำทำนาย",saveDone:"บันทึกใบคำทำนายเป็นภาพ PNG แล้ว",saveFailed:"บันทึกภาพไม่สำเร็จ ลองอีกครั้ง",shareDone:"ส่งต่อคำทำนายแล้ว",shareCopied:"คัดลอกคำทำนายและลิงก์ไว้ในคลิปบอร์ดแล้ว",shareFailed:"ไม่สามารถแชร์ได้ในเบราว์เซอร์นี้ ลองบันทึกคำทำนายแทน",footer:"ขอให้แสงแห่งปัญญานำทางคุณในทุกก้าวต่อจากนี้",loading:"เปิดประตูแห่งโชคชะตา",lantern:"แตะโคมเพื่อให้สว่างขึ้น",shareTitle:"Fortune",languageNames:{th:"ภาษาไทย",en:"English",zh:"简体中文"}
       },
       en: {
-        htmlLang:"en",title:"The Oracle of Fortune — Your Reading",description:"Reveal your fortune in a quiet digital experience inspired by a Chinese temple.",skip:"Skip to main content",brand:"THE ORACLE OF FORTUNE",companyLogos:"Company logos",languageLabel:"Choose language",
+        htmlLang:"en",title:"The Oracle of Fortune — Your Reading",description:"Reveal your fortune in a quiet digital experience inspired by a Chinese temple.",skip:"Skip to main content",brand:"THE ORACLE OF FORTUNE",companyLogos:"Company logos",languageLabel:"Choose language",fullscreenEnter:"Enter fullscreen",fullscreenExit:"Exit fullscreen",
         scenes:{temple:"THE TEMPLE",number:"YOUR NUMBER",reveal:"THE REVEAL",result:"YOUR FORTUNE"},
-        heroEyebrow:"A quiet moment with your own fortune",heroTitle:"Fortune",heroLineOne:"Some answers aren't found.",heroLineTwo:"They're waiting for you to uncover them.",heroNote:"Draw a real fortune stick, then enter its number here.",begin:"Enter your number",beginAria:"Enter the number from your real fortune-stick draw",
+        heroEyebrow:"A quiet moment with your own fortune",heroTitle:"Fortune",heroLineOne:"Some answers aren't found.",heroLineTwo:"They're waiting for you to uncover them.",heroNote:"Draw a real fortune stick, then enter its number here.",backHome:"Back to home",backNumber:"Edit number",begin:"Enter your number",beginAria:"Enter the number from your real fortune-stick draw",
         numberEyebrow:"YOUR NUMBER FROM THE REAL DRAW",numberTitle:"Your fortune number",numberInstruction:"Enter only the number you drew in person.",numberLabel:"Enter your fortune number, from 1 to 30",numberCaption:"FORTUNE NUMBER · 1 — 30",numberRange:"Fortune numbers range from 1 to 30.",revealButton:"Reveal my fortune",errorEmpty:"Please enter the number you drew.",errorRange:"Choose a number from 1 to 30.",
         revealAria:"Revealing your fortune",revealPrompt:"Your answer awaits",numberPrefix:"Fortune No.",fortuneNo:"FORTUNE No.",resultOverline:"THE ORACLE HAS SPOKEN",emblem:"Fortune seal",section:"Your reading",offerLabel:"A special offer with this fortune",levelPrefix:"Fortune level",levelNames:{"มหามงคล":"Great blessing","มงคล":"Favorable","กลาง":"Neutral","ควรระวัง":"Take care"},
         categories:{work:"Work",money:"Money",love:"Love",health:"Wellbeing",luck:"Good fortune"},meaningToggle:"What does this number mean?",meaningCollapse:"Hide details",meaningSummary:"Take these words as a prompt, and choose a next step that feels true to your intentions.",meaningDetail:"Ask yourself which part of this reading resonates with your life today, and what small step you can choose to take. A fortune is a reflection prompt, not a verdict on your future.",
         demo:"A sample reading is shown for this number.",again:"Draw again",save:"Save as image",share:"Share reading",saveDone:"Your fortune paper was saved as a PNG image.",saveFailed:"The image could not be saved. Please try again.",shareDone:"Your reading has been shared.",shareCopied:"Reading and link copied to your clipboard.",shareFailed:"Sharing isn't available here. You can save the reading instead.",footer:"May wisdom light the way for every step ahead.",loading:"Opening the gate of fortune",lantern:"Tap the lantern to light it",shareTitle:"Fortune",languageNames:{th:"Thai",en:"English",zh:"Simplified Chinese"}
       },
       zh: {
-        htmlLang:"zh-CN",title:"求签 · 为你揭晓签语",description:"在灵感源自中国寺庙的数字体验中，开启属于你的签语。",skip:"跳转到主要内容",brand:"签语 · 命运神谕",companyLogos:"公司标志",languageLabel:"选择语言",
+        htmlLang:"zh-CN",title:"求签 · 为你揭晓签语",description:"在灵感源自中国寺庙的数字体验中，开启属于你的签语。",skip:"跳转到主要内容",brand:"签语 · 命运神谕",companyLogos:"公司标志",languageLabel:"选择语言",fullscreenEnter:"进入全屏",fullscreenExit:"退出全屏",
         scenes:{temple:"神殿",number:"输入签号",reveal:"揭晓",result:"你的签语"},
-        heroEyebrow:"静下心来，聆听属于你的签语",heroTitle:"求签",heroLineOne:"有些答案，无须寻找。",heroLineTwo:"它一直在等你亲手揭开。",heroNote:"请先在线下求签，再输入签号。",begin:"输入签号",beginAria:"输入你在线下抽到的签号",
+        heroEyebrow:"静下心来，聆听属于你的签语",heroTitle:"求签",heroLineOne:"有些答案，无须寻找。",heroLineTwo:"它一直在等你亲手揭开。",heroNote:"请先在线下求签，再输入签号。",backHome:"返回首页",backNumber:"返回修改号码",begin:"输入签号",beginAria:"输入你在线下抽到的签号",
         numberEyebrow:"输入你抽到的签号",numberTitle:"你的签号",numberInstruction:"只需填写你在线下抽到的号码。",numberLabel:"请输入签号，范围为 1 到 30",numberCaption:"签号 · 1 — 30",numberRange:"签号范围为 1 至 30。",revealButton:"揭开签语",errorEmpty:"请输入你抽到的签号。",errorRange:"请输入 1 到 30 之间的号码。",
         revealAria:"正在揭晓签语",revealPrompt:"属于你的答案",numberPrefix:"签号",fortuneNo:"签号",resultOverline:"神谕已至",emblem:"吉祥印章",section:"签语",offerLabel:"本签附赠优惠",levelPrefix:"签运",levelNames:{"มหามงคล":"大吉","มงคล":"吉","กลาง":"平","ควรระวัง":"谨慎"},
         categories:{work:"事业",money:"财运",love:"感情",health:"身心",luck:"好运"},meaningToggle:"这个签号意味着什么？",meaningCollapse:"收起详情",meaningSummary:"把这段话当作一个提醒，选择与你内心愿望相契合的下一步。",meaningDetail:"不妨想一想，签语中的哪句话与你当下的生活相呼应，以及你愿意采取怎样的小行动。签语是启发思考的提示，并非对未来的定论。",
@@ -804,6 +708,9 @@
     const numberError = document.getElementById("numberError");
     const companyBrand = document.getElementById("companyBrand");
     const languageSwitchUtility = document.getElementById("languageSwitchUtility");
+    const fullscreenButton = document.getElementById("fullscreenButton");
+    const fullscreenEnterIcon = fullscreenButton.querySelector(".fullscreen-icon--enter");
+    const fullscreenExitIcon = fullscreenButton.querySelector(".fullscreen-icon--exit");
     const sceneElement = name => document.getElementById(`scene-${name}`);
     const promotions = [
       { th:"โครงการแซฟไฟร์ จองพิเศษเพียง 5,000 บาท จากราคาจองปกติและราคาจองในงาน 10,000 บาท", en:"Sapphire: Reserve for a special price of THB 5,000, down from the regular and event booking fee of THB 10,000.", zh:"Sapphire 项目：特惠预订价仅 5,000 泰铢，原价及活动现场预订价为 10,000 泰铢。", url:"https://www.capitaloneth.com/sapphire" },
@@ -819,12 +726,32 @@
     let isDrawing = false;
     let drawnNumber = null;
     const drawCopy = {
-      th:{hero:"แตะกระบอกเสี่ยงเซียมซี หรือกรอกเลขที่คุณมี",begin:"กรอกเลขนำโชค",beginAria:"กรอกเลขนำโชคด้วยตัวเอง",eyebrow:"เลขนำโชคของคุณ",instruction:"กรอกเลขนำโชคของคุณ ตั้งแต่ 1 ถึง 30",tap:"แตะกระบอกเพื่อเสี่ยงเซียมซี",shake:"กำลังเขย่าเซียมซี…",ready:"เปิดคำทำนายจากเลขที่คุณได้รับได้เลย",aria:"เขย่าเซียมซีเพื่อสุ่มเลข"},
-      en:{hero:"Draw a fortune stick here, or enter your own number.",begin:"Enter a lucky number",beginAria:"Enter your lucky number manually",eyebrow:"YOUR LUCKY NUMBER",instruction:"Enter your lucky number from 1 to 30.",tap:"Tap the cup to draw your fortune",shake:"Shaking the fortune sticks…",ready:"Your number is ready. Reveal your reading below.",aria:"Shake the cup to draw a random fortune number"},
-      zh:{hero:"轻触签筒抽签，或输入您的签号。",begin:"输入幸运数字",beginAria:"手动输入幸运数字",eyebrow:"您的幸运数字",instruction:"请输入 1 至 30 的幸运数字。",tap:"轻触签筒，抽取您的签",shake:"正在摇签…",ready:"签号已出，请揭晓下方签语。",aria:"摇动签筒，随机抽取签号"}
+      th:{hero:"แตะกระบอกเสี่ยงเซียมซี หรือกรอกเลขที่คุณมี",begin:"กรอกเลขนำโชค",beginAria:"กรอกเลขนำโชคด้วยตัวเอง",eyebrow:"เลขนำโชคของคุณ",instruction:"กรอกเลขนำโชคของคุณ ตั้งแต่ 1 ถึง 30",tap:"แตะกระบอกเพื่อเสี่ยงเซียมซี",start:"เริ่มเสี่ยงเซียมซี",idle:"ตั้งจิตถึงสิ่งที่อยากรู้ แล้วแตะกระบอก",waiting:"กำลังเปิดทางสู่คำตอบของคุณ",shake:"กำลังเขย่าเซียมซี…",ready:"เปิดคำทำนายจากเลขที่คุณได้รับได้เลย",aria:"เขย่าเซียมซีเพื่อสุ่มเลข"},
+      en:{hero:"Draw a fortune stick here, or enter your own number.",begin:"Enter a lucky number",beginAria:"Enter your lucky number manually",eyebrow:"YOUR LUCKY NUMBER",instruction:"Enter your lucky number from 1 to 30.",tap:"Tap the cup to draw your fortune",start:"Draw a fortune stick",idle:"Take a quiet moment to think about what you want to ask.",waiting:"Your answer is on its way.",shake:"Shaking the fortune sticks…",ready:"Your number is ready. Reveal your reading below.",aria:"Shake the cup to draw a random fortune number"},
+      zh:{hero:"轻触签筒抽签，或输入您的签号。",begin:"输入幸运数字",beginAria:"手动输入幸运数字",eyebrow:"您的幸运数字",instruction:"请输入 1 至 30 的幸运数字。",tap:"轻触签筒，抽取您的签",start:"开始求签",idle:"静下心来，想好所求，再轻触签筒。",waiting:"正在为您揭开答案。",shake:"正在摇签…",ready:"签号已出，请揭晓下方签语。",aria:"摇动签筒，随机抽取签号"}
     };
     const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
     const mobileViewport = matchMedia("(max-width: 540px)");
+
+    function syncFullscreenButton() {
+      const isFullscreen = Boolean(document.fullscreenElement);
+      const label = translations[currentLanguage][isFullscreen ? "fullscreenExit" : "fullscreenEnter"];
+      fullscreenButton.setAttribute("aria-pressed",String(isFullscreen));
+      fullscreenButton.setAttribute("aria-label",label);
+      fullscreenButton.title = label;
+      fullscreenEnterIcon.hidden = isFullscreen;
+      fullscreenExitIcon.hidden = !isFullscreen;
+    }
+    fullscreenButton.hidden = !(document.fullscreenEnabled && document.documentElement.requestFullscreen && document.exitFullscreen);
+    document.addEventListener("fullscreenchange",syncFullscreenButton);
+    fullscreenButton.addEventListener("click",async () => {
+      try {
+        if (document.fullscreenElement) await document.exitFullscreen();
+        else await document.documentElement.requestFullscreen();
+      } catch (_) {
+        syncFullscreenButton();
+      }
+    });
 
     function syncBrandPlacement() {
       const activeScene = scenes.find(scene => scene.classList.contains("is-active"));
@@ -843,7 +770,6 @@
         scene.setAttribute("aria-hidden", String(!active));
       });
       stage.dataset.scene = name;
-      document.documentElement.style.setProperty("--scroll-y","0px");
       if (mobileViewport.matches) window.scrollTo(0,0);
       sceneNumber.textContent = ({temple:"01",number:"02",reveal:"03",result:"04"})[name];
       sceneName.textContent = translations[currentLanguage].scenes[name];
@@ -862,22 +788,28 @@
       copy.numberEyebrow = draw.eyebrow; copy.numberInstruction = draw.instruction;
       document.getElementById("drawButton").setAttribute("aria-label",draw.aria);
       document.getElementById("drawCaption").textContent = isDrawing ? draw.shake : draw.tap;
-      document.getElementById("drawStatus").textContent = drawnNumber ? `${copy.numberPrefix} ${localizedNumber(drawnNumber)} · ${draw.ready}` : "";
+      document.getElementById("drawStatus").textContent = isDrawing ? draw.waiting : drawnNumber ? `${copy.numberPrefix} ${localizedNumber(drawnNumber)} · ${draw.ready}` : draw.idle;
       const wasExpanded = document.getElementById("meaningToggle").getAttribute("aria-expanded") === "true";
       document.documentElement.lang = copy.htmlLang;
       document.getElementById("companyBrand").setAttribute("aria-label",copy.companyLogos);
       document.title = copy.title;
+      syncFullscreenButton();
       document.querySelector('meta[name="description"]').setAttribute("content",copy.description);
       const labels = {
         skipLink:copy.skip, brandLabel:copy.brand, heroEyebrow:copy.heroEyebrow, heroTitle:copy.heroTitle,
         heroLineOne:copy.heroLineOne, heroLineTwo:copy.heroLineTwo, heroNote:copy.heroNote, beginButton:copy.begin,
         numberEyebrow:copy.numberEyebrow, numberTitle:copy.numberTitle, numberInstruction:copy.numberInstruction,
+        numberBackLabel:copy.backHome, resultBackLabel:copy.backNumber,
         fortuneNumberLabel:copy.numberLabel, numberHelp:copy.numberCaption, numberRange:copy.numberRange,
-        homeRevealButton:copy.revealButton, revealButton:copy.revealButton, revealPrompt:copy.revealPrompt, resultOverline:copy.resultOverline,
+        homeRevealButton:isDrawing ? draw.shake : drawnNumber ? copy.revealButton : draw.start, revealButton:copy.revealButton, revealPrompt:copy.revealPrompt, resultOverline:copy.resultOverline,
         paperSectionLabel:copy.section, againButton:copy.again, saveButton:copy.save, shareButton:copy.share,
         resultFooter:copy.footer, loadingText:copy.loading
       };
       Object.entries(labels).forEach(([id,value]) => { document.getElementById(id).textContent = value; });
+      const homeRevealButton = document.getElementById("homeRevealButton");
+      homeRevealButton.disabled = isDrawing;
+      homeRevealButton.setAttribute("aria-hidden","false");
+      homeRevealButton.classList.toggle("is-ready",Boolean(drawnNumber));
       document.getElementById("beginButton").setAttribute("aria-label",copy.beginAria);
       document.getElementById("fortuneNumber").setAttribute("aria-label",copy.numberLabel);
       document.getElementById("scene-reveal").setAttribute("aria-label",copy.revealAria);
@@ -946,7 +878,7 @@
     function formatFortuneSummary(fortune, number) {
       const copy = translations[currentLanguage];
       const shownNumber = localizedNumber(number);
-      return `${copy.numberPrefix} ${shownNumber} · ${fortune.title}\n\n${copy.section}\n${fortune.poem}\n\n${copy.categories.work}\n${fortune.work}\n\n${copy.categories.money}\n${fortune.money}\n\n${copy.categories.love}\n${fortune.love}\n\n${copy.categories.health}\n${fortune.health}\n\n${copy.categories.luck}\n${fortune.luck}${fortune.promotion && fortune.promotion !== "—" ? `\n\n${copy.offerLabel}\n${fortune.promotion}${fortune.promotionUrl ? `\n${fortune.promotionUrl}` : ""}` : ""}`;
+      return `${copy.numberPrefix} ${shownNumber} · ${fortune.title}\n\n${copy.section}\n${fortune.poem}\n\n${copy.categories.work}\n${fortune.work}\n\n${copy.categories.money}\n${fortune.money}\n\n${copy.categories.love}\n${fortune.love}\n\n${copy.categories.health}\n${fortune.health}\n\n${copy.categories.luck}\n${fortune.luck}`;
     }
 
     function wrapPaperText(ctx,text,maxWidth,font,language) {
@@ -1025,9 +957,6 @@
         heading:item.querySelector("h3")?.textContent.trim() || "",
         text:item.querySelector("p")?.textContent.trim() || ""
       }));
-      const offerElement = document.getElementById("offerNote");
-      const offerLabel = offerElement.querySelector("strong")?.textContent.trim() || "";
-      const offerText = offerElement.querySelector(".offer-description")?.textContent.trim() || "";
       const level = document.getElementById("fortuneLevel").textContent.trim();
 
       const wash = ctx.createLinearGradient(0,0,width,workHeight);
@@ -1108,14 +1037,6 @@
         y = rowTop + rowHeight;
       }
 
-      if (!offerElement.hidden && (offerLabel || offerText)) {
-        y += 28;
-        ctx.setLineDash([5,5]); ctx.strokeStyle = "rgba(125,69,34,.5)"; ctx.beginPath(); ctx.moveTo(90,y); ctx.lineTo(width-90,y); ctx.stroke(); ctx.setLineDash([]);
-        y += 30;
-        y = drawBlock(`${offerLabel}${offerLabel && offerText ? "  " : ""}${offerText}`,width/2,y,810,`400 18px ${fontFamily}`,muted,32,"center") + 19;
-        ctx.setLineDash([5,5]); ctx.beginPath(); ctx.moveTo(90,y); ctx.lineTo(width-90,y); ctx.stroke(); ctx.setLineDash([]);
-      }
-
       y += 26;
       const badgeWidth = Math.min(650,Math.max(280,ctx.measureText(level).width+95));
       ctx.fillStyle = "rgba(147,76,53,.08)"; ctx.fillRect((width-badgeWidth)/2,y-27,badgeWidth,54);
@@ -1185,7 +1106,13 @@
         const link = document.createElement("a");
         link.href = fortune.promotionUrl; link.target = "_blank"; link.rel = "noopener noreferrer";
         link.textContent = {th:"ดูรายละเอียดโครงการ",en:"View project details",zh:"查看项目详情"}[currentLanguage];
-        const description = document.createElement("p"); description.className = "offer-description"; description.textContent = fortune.promotion;
+        const description = document.createElement("p"); description.className = "offer-description";
+        const price = fortune.promotion.match(/(?:THB\s*)?\d[\d,]*(?:\s*(?:บาท|泰铢|baht(?:-weight)?))?/i);
+        if (price) {
+          const start = price.index;
+          const highlight = document.createElement("span"); highlight.className = "offer-price"; highlight.textContent = price[0];
+          description.append(document.createTextNode(fortune.promotion.slice(0,start)),highlight,document.createTextNode(fortune.promotion.slice(start+price[0].length)));
+        } else description.textContent = fortune.promotion;
         offer.append(label,description,link);
       } else { offer.hidden = true; }
       document.getElementById("fortuneLevel").textContent = `${copy.levelPrefix} · ${fortune.level || copy.levelNames["มงคล"]}`;
@@ -1223,12 +1150,15 @@
     function resetFortune() {
       clearTimeout(drawTimer); isDrawing = false; drawnNumber = null;
       document.getElementById("drawButton").classList.remove("is-shaking","has-drawn");
-      document.getElementById("homeRevealButton").hidden = true;
+      document.getElementById("homeRevealButton").classList.remove("is-ready");
+      document.getElementById("homeRevealButton").setAttribute("aria-hidden","false");
+      document.getElementById("homeRevealButton").disabled = false;
+      document.getElementById("homeRevealButton").textContent = drawCopy[currentLanguage].start;
       document.getElementById("beginButton").disabled = false;
       document.getElementById("drawButton").disabled = false;
       document.getElementById("revealButton").disabled = false;
       numberInput.disabled = false;
-      document.getElementById("drawStatus").textContent = "";
+      document.getElementById("drawStatus").textContent = drawCopy[currentLanguage].idle;
       document.getElementById("drawCaption").textContent = drawCopy[currentLanguage].tap;
       clearTimeout(revealTimer);
       selectedNumber = null;
@@ -1238,6 +1168,8 @@
       document.getElementById("resultStatus").textContent = "";
       resultStatusKey = "";
       sceneElement("temple").classList.remove("door-open");
+      stage.classList.remove("door-opening");
+      backgroundImage.style.setProperty("--background-shift","0px");
       goToScene("temple");
     }
 
@@ -1277,29 +1209,34 @@
       document.addEventListener("visibilitychange",() => { if (document.hidden) cancelAnimationFrame(frame); else draw(); });
     }
 
-    stage.addEventListener("pointermove",event => {
-      if (prefersReducedMotion.matches || event.pointerType === "touch") return;
-      const bounds = stage.getBoundingClientRect();
-      const x = (event.clientX-bounds.left)/bounds.width-.5, y = (event.clientY-bounds.top)/bounds.height-.5;
-      stage.style.setProperty("--px",`${Math.round(x*22)}px`); stage.style.setProperty("--py",`${Math.round(y*18)}px`);
-    },{passive:true});
+
     const resultScene = document.querySelector(".scene--result");
-    const updateResultParallax = () => {
-      if (mobileViewport.matches) return;
-      const scrollY = resultScene.scrollTop;
-      document.documentElement.style.setProperty("--scroll-y",`${scrollY}px`);
+    const backgroundImage = document.querySelector(".stage-background");
+    const updateBackgroundParallax = () => {
+      const scrollTop = mobileViewport.matches ? window.scrollY : resultScene.scrollTop;
+      backgroundImage.style.setProperty("--background-shift",`${-Math.min(scrollTop,1200)*.035}px`);
     };
-    resultScene.addEventListener("scroll",updateResultParallax,{passive:true});
-    window.addEventListener("scroll",updateResultParallax,{passive:true});
+    resultScene.addEventListener("scroll",updateBackgroundParallax,{passive:true});
+    window.addEventListener("scroll",updateBackgroundParallax,{passive:true});
 
     /* =========================
        EVENT WIRING
        ========================= */
+    document.getElementById("numberBackButton").addEventListener("click",() => {
+      sceneElement("temple").classList.remove("door-open");
+      stage.classList.remove("door-opening");
+      document.getElementById("numberError").textContent = "";
+      goToScene("temple");
+    });
+    document.getElementById("resultBackButton").addEventListener("click",() => {
+      goToScene("number");
+      numberInput.focus({preventScroll:true});
+    });
     document.getElementById("beginButton").addEventListener("click",() => {
       if (isDrawing) return;
       const temple = sceneElement("temple");
-      temple.classList.add("door-open");
-      setTimeout(() => { goToScene("number"); numberInput.focus({preventScroll:true}); },prefersReducedMotion.matches ? 60 : 650);
+      temple.classList.add("door-open"); stage.classList.add("door-opening");
+      setTimeout(() => { stage.classList.remove("door-opening"); goToScene("number"); numberInput.focus({preventScroll:true}); },prefersReducedMotion.matches ? 60 : 650);
     });
     document.getElementById("drawButton").addEventListener("click",() => {
       if (isDrawing) return;
@@ -1307,25 +1244,35 @@
       const button = document.getElementById("drawButton");
       button.disabled = true; numberInput.disabled = true;
       document.getElementById("beginButton").disabled = true;
-      document.getElementById("homeRevealButton").hidden = true;
+      const homeRevealButton = document.getElementById("homeRevealButton");
+      homeRevealButton.classList.remove("is-ready");
+      homeRevealButton.setAttribute("aria-hidden","false");
+      homeRevealButton.disabled = true;
+      homeRevealButton.textContent = drawCopy[currentLanguage].shake;
       document.getElementById("revealButton").disabled = true;
       button.classList.remove("has-drawn"); button.classList.add("is-shaking");
       document.getElementById("drawCaption").textContent = drawCopy[currentLanguage].shake;
-      document.getElementById("drawStatus").textContent = ""; numberError.textContent = "";
+      document.getElementById("drawStatus").textContent = drawCopy[currentLanguage].waiting; numberError.textContent = "";
       drawTimer = setTimeout(() => {
         drawnNumber = Math.floor(Math.random() * MAX_FORTUNE_NUMBER) + 1;
         numberInput.value = drawnNumber;
-        document.getElementById("drawnStick").textContent = String(drawnNumber).padStart(2,"0");
+        document.querySelector("#drawnStick .draw-number").textContent = String(drawnNumber).padStart(2,"0");
         button.classList.remove("is-shaking"); button.classList.add("has-drawn");
         isDrawing = false; button.disabled = false; numberInput.disabled = false;
         document.getElementById("beginButton").disabled = false;
-        document.getElementById("homeRevealButton").hidden = false;
+        homeRevealButton.disabled = false;
+        homeRevealButton.setAttribute("aria-hidden","false");
+        homeRevealButton.textContent = translations[currentLanguage].revealButton;
+        homeRevealButton.classList.add("is-ready");
         document.getElementById("revealButton").disabled = false;
         document.getElementById("drawCaption").textContent = drawCopy[currentLanguage].tap;
         document.getElementById("drawStatus").textContent = `${translations[currentLanguage].numberPrefix} ${localizedNumber(drawnNumber)} · ${drawCopy[currentLanguage].ready}`;
       },prefersReducedMotion.matches ? 100 : 1950);
     });
-    document.getElementById("homeRevealButton").addEventListener("click",playReveal);
+    document.getElementById("homeRevealButton").addEventListener("click",() => {
+      if (drawnNumber == null) document.getElementById("drawButton").click();
+      else playReveal();
+    });
     document.getElementById("fortuneForm").addEventListener("submit",event => { event.preventDefault(); playReveal(); });
     numberInput.addEventListener("input",() => { numberError.textContent = ""; });
     document.querySelectorAll(".language-button").forEach(button => button.addEventListener("click",() => applyLanguage(button.dataset.language)));
