@@ -96,12 +96,12 @@
     .company-logo { display:block; width:132px; height:62px; padding:0; object-fit:contain; background:transparent; border:0; border-radius:0; box-shadow:none; }
     .company-logo--capital-one { width:132px; }
     .language-switch { position:fixed; z-index:32; top:max(12px,env(safe-area-inset-top)); right:max(14px,env(safe-area-inset-right)); display:flex; gap:3px; padding:4px; border:1px solid rgba(199,155,69,.58); background:rgba(16,10,8,.92); backdrop-filter:blur(7px); }
-    .language-switch--utility { right:max(68px,calc(env(safe-area-inset-right) + 56px)); }
-    .fullscreen-button { position:fixed; z-index:36; top:max(12px,env(safe-area-inset-top)); right:max(12px,env(safe-area-inset-right)); display:grid; place-items:center; width:42px; height:42px; padding:0; border:1px solid rgba(199,155,69,.62); border-radius:50%; background:rgba(16,10,8,.9); color:#f0d79c; cursor:pointer; box-shadow:0 5px 16px rgba(0,0,0,.22); backdrop-filter:blur(7px); transition:background 200ms,border-color 200ms,transform 200ms,box-shadow 200ms; }
+    .language-switch--utility { right:max(80px,calc(env(safe-area-inset-right,0px) + 68px)); }
+    .fullscreen-button { box-sizing:border-box; position:fixed; z-index:36; top:max(18px,calc(env(safe-area-inset-top,0px) + 10px)); right:max(18px,calc(env(safe-area-inset-right,0px) + 10px)); display:grid; place-items:center; width:44px; height:44px; padding:0; border:1px solid rgba(199,155,69,.7); border-radius:50%; background:rgba(16,10,8,.94); color:#ffe5a5; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,.3); backdrop-filter:blur(7px); transition:background 200ms,border-color 200ms,transform 200ms,box-shadow 200ms; }
     .fullscreen-button:hover { border-color:#edc97f; background:rgba(76,35,21,.94); box-shadow:0 7px 20px rgba(0,0,0,.3),0 0 16px rgba(199,155,69,.16); }
     .fullscreen-button:active { transform:scale(.94); }
     .fullscreen-button:focus-visible { outline:2px solid #edc97f; outline-offset:3px; }
-    .fullscreen-button svg { display:block; width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .fullscreen-button svg { display:block; width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
     .fullscreen-button[hidden] { display:none; }
     .language-button { min-width:44px; min-height:40px; padding:0 8px; border:0; background:transparent; color:#f0dfb8; cursor:pointer; font-size:.82rem; font-weight:500; letter-spacing:.03em; transition:background 200ms,color 200ms; }
     .language-button:hover { color:var(--ivory); }
@@ -267,9 +267,9 @@
       .company-logos { width:min(100%,380px);justify-content:space-evenly;gap:5px; }
       .company-logo,.company-logo--capital-one { flex:0 1 calc(50% - 5px);width:calc(50% - 5px);height:auto;max-height:78px;padding:0; }
       .language-switch { position:absolute;top:max(10px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right)); }
-      .language-switch--utility { right:max(62px,calc(env(safe-area-inset-right,0px) + 58px)); }
-      .stage[data-scene="temple"] .lantern--one { right:max(62px,calc(env(safe-area-inset-right,0px) + 58px)); }
-      .stage:not([data-scene="temple"]) .fullscreen-button { top:max(10px,env(safe-area-inset-top)); }
+      .language-switch--utility { right:max(76px,calc(env(safe-area-inset-right,0px) + 68px)); }
+      .stage[data-scene="temple"] .lantern--one { right:max(76px,calc(env(safe-area-inset-right,0px) + 68px)); }
+      .stage:not([data-scene="temple"]) .fullscreen-button { top:max(18px,calc(env(safe-area-inset-top,0px) + 10px)); }
       .language-button { min-width:40px;min-height:44px;font-size:.76rem; }
       .stage:not([data-scene="temple"]) .lantern { visibility:hidden;pointer-events:none; }
       .scene { justify-content:flex-start; overflow-y:auto; padding-top:max(166px,calc(env(safe-area-inset-top, 0px) + 156px)); padding-bottom:max(56px,calc(env(safe-area-inset-bottom, 0px) + 40px)); scrollbar-width:none; transition:opacity 350ms var(--ease),visibility 0s linear 350ms; }
