@@ -377,6 +377,22 @@
     @keyframes ritual-glow { 50% { opacity:.5; transform:scale(.92); } }
     @media (max-width:540px) { .draw-button { height:210px; } .draw-ritual { margin-top:12px; } }
     @media (prefers-reduced-motion:reduce) { .draw-button *, .draw-button.is-shaking .draw-vessel, .draw-button.is-shaking .draw-sticks i { animation:none; } .draw-button.has-drawn .draw-chosen { animation:none; opacity:1; transform:translate(52px,-16px) rotate(14deg); } }
+
+    #scene-temple { overflow-y:auto; }
+    #scene-temple .scene-content { margin-top:auto; margin-bottom:auto; padding:24px 0; }
+    #scene-temple .hero-title { font-size:clamp(3rem,8vh,5rem); }
+    #scene-temple .hero-subtitle { margin-top:10px; font-size:1.05rem; line-height:1.6; }
+    #scene-temple .draw-ritual { margin:8px auto; }
+    #scene-temple .draw-status { max-width:30ch; margin:8px auto; }
+    .manual-number-button { display:block; margin:14px auto 0; min-height:46px; }
+    #homeRevealButton[hidden] { display:none; }
+    .offer-note { max-width:560px; padding:24px; border:1px solid #ac824b66; border-radius:12px; background:linear-gradient(135deg,#fff8e580,#e4c78e30); text-align:left; box-shadow:0 4px 18px #61421c0a; }
+    .offer-note strong { display:block; margin:0 0 12px; font-size:.88rem; letter-spacing:.02em; }
+    .offer-description { margin:0; font-size:1.08rem; line-height:1.9; color:#442d19; overflow-wrap:anywhere; text-wrap:pretty; }
+    .offer-note a { display:inline-block; margin-top:16px; padding:9px 16px; border:1px solid #8a422d66; border-radius:6px; background:#fff9e755; font-size:.9rem; font-weight:600; text-decoration:none; }
+    .offer-note a:hover { background:#fff4d6; }
+    .offer-note a:focus-visible { outline:2px solid #751a18; outline-offset:3px; }
+    @media(max-width:540px) { .offer-note { padding:18px; } .offer-description { font-size:1rem; line-height:1.85; } #scene-temple .hero-subtitle { font-size:.95rem; } }
   </style>
 </head>
 <body>
@@ -513,16 +529,6 @@
               <button class="language-button" type="button" data-language="zh" aria-label="简体中文" aria-pressed="false">中文</button>
             </div>
           </div>
-          <button class="seal-button" id="beginButton" type="button" aria-label="ไปกรอกหมายเลขเซียมซีที่ได้จากการเขย่าจริง">กรอกเลขเซียมซี</button>
-        </div>
-      </section>
-
-      <!-- Scene 02: enter only the number drawn from a real fortune-stick set -->
-      <section class="scene" id="scene-number" aria-labelledby="numberTitle" aria-hidden="true">
-        <div class="number-content">
-          <div class="eyebrow" id="numberEyebrow">Enter the number from your real draw</div>
-          <h2 class="number-heading" id="numberTitle">เลขเซียมซีของคุณ</h2>
-          <p class="number-instruction" id="numberInstruction">ใส่เฉพาะหมายเลขที่ได้จากการเขย่าเซียมซีจริง</p>
           <div class="draw-ritual">
             <button class="draw-button" id="drawButton" type="button" aria-label="เขย่าเซียมซีเพื่อสุ่มเลข">
               <span class="draw-halo" aria-hidden="true"></span>
@@ -532,6 +538,18 @@
             <span class="draw-caption" id="drawCaption">แตะกระบอกเพื่อเสี่ยงเซียมซี</span>
             <p class="draw-status" id="drawStatus" role="status" aria-live="polite"></p>
           </div>
+          <button class="seal-button" id="homeRevealButton" type="button" hidden>เปิดคำทำนาย</button>
+          <button class="action-button manual-number-button" id="beginButton" type="button" aria-label="กรอกเลขนำโชคด้วยตัวเอง">กรอกเลขนำโชค</button>
+        </div>
+      </section>
+
+      <!-- Scene 02: enter only the number drawn from a real fortune-stick set -->
+      <section class="scene" id="scene-number" aria-labelledby="numberTitle" aria-hidden="true">
+        <div class="number-content">
+          <div class="eyebrow" id="numberEyebrow">Enter the number from your real draw</div>
+          <h2 class="number-heading" id="numberTitle">เลขเซียมซีของคุณ</h2>
+          <p class="number-instruction" id="numberInstruction">ใส่เฉพาะหมายเลขที่ได้จากการเขย่าเซียมซีจริง</p>
+
           <form id="fortuneForm" novalidate>
             <div class="fortune-slip">
               <i class="slip-corner a" aria-hidden="true"></i><i class="slip-corner b" aria-hidden="true"></i><i class="slip-corner c" aria-hidden="true"></i><i class="slip-corner d" aria-hidden="true"></i>
@@ -801,9 +819,9 @@
     let isDrawing = false;
     let drawnNumber = null;
     const drawCopy = {
-      th:{hero:"แตะกระบอกเสี่ยงเซียมซี หรือกรอกเลขที่คุณมี",begin:"เสี่ยงเซียมซี",beginAria:"ไปเสี่ยงเซียมซีหรือกรอกหมายเลข",eyebrow:"เสี่ยงเซียมซี",instruction:"ตั้งจิตอธิษฐาน แล้วแตะกระบอกเพื่อสุ่มเลข หรือกรอกเลขที่คุณมี",tap:"แตะกระบอกเพื่อเสี่ยงเซียมซี",shake:"กำลังเขย่าเซียมซี…",ready:"เปิดคำทำนายจากเลขที่คุณได้รับได้เลย",aria:"เขย่าเซียมซีเพื่อสุ่มเลข"},
-      en:{hero:"Draw a fortune stick here, or enter your own number.",begin:"Draw a fortune",beginAria:"Draw a fortune stick or enter a number",eyebrow:"YOUR MOMENT OF FORTUNE",instruction:"Set an intention and tap the cup, or enter your own number.",tap:"Tap the cup to draw your fortune",shake:"Shaking the fortune sticks…",ready:"Your number is ready. Reveal your reading below.",aria:"Shake the cup to draw a random fortune number"},
-      zh:{hero:"轻触签筒抽签，或输入您的签号。",begin:"开始求签",beginAria:"抽签或输入签号",eyebrow:"诚心求签",instruction:"静心许愿，轻触签筒抽签，或输入您的签号。",tap:"轻触签筒，抽取您的签",shake:"正在摇签…",ready:"签号已出，请揭晓下方签语。",aria:"摇动签筒，随机抽取签号"}
+      th:{hero:"แตะกระบอกเสี่ยงเซียมซี หรือกรอกเลขที่คุณมี",begin:"กรอกเลขนำโชค",beginAria:"กรอกเลขนำโชคด้วยตัวเอง",eyebrow:"เลขนำโชคของคุณ",instruction:"กรอกเลขนำโชคของคุณ ตั้งแต่ 1 ถึง 30",tap:"แตะกระบอกเพื่อเสี่ยงเซียมซี",shake:"กำลังเขย่าเซียมซี…",ready:"เปิดคำทำนายจากเลขที่คุณได้รับได้เลย",aria:"เขย่าเซียมซีเพื่อสุ่มเลข"},
+      en:{hero:"Draw a fortune stick here, or enter your own number.",begin:"Enter a lucky number",beginAria:"Enter your lucky number manually",eyebrow:"YOUR LUCKY NUMBER",instruction:"Enter your lucky number from 1 to 30.",tap:"Tap the cup to draw your fortune",shake:"Shaking the fortune sticks…",ready:"Your number is ready. Reveal your reading below.",aria:"Shake the cup to draw a random fortune number"},
+      zh:{hero:"轻触签筒抽签，或输入您的签号。",begin:"输入幸运数字",beginAria:"手动输入幸运数字",eyebrow:"您的幸运数字",instruction:"请输入 1 至 30 的幸运数字。",tap:"轻触签筒，抽取您的签",shake:"正在摇签…",ready:"签号已出，请揭晓下方签语。",aria:"摇动签筒，随机抽取签号"}
     };
     const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
     const mobileViewport = matchMedia("(max-width: 540px)");
@@ -855,7 +873,7 @@
         heroLineOne:copy.heroLineOne, heroLineTwo:copy.heroLineTwo, heroNote:copy.heroNote, beginButton:copy.begin,
         numberEyebrow:copy.numberEyebrow, numberTitle:copy.numberTitle, numberInstruction:copy.numberInstruction,
         fortuneNumberLabel:copy.numberLabel, numberHelp:copy.numberCaption, numberRange:copy.numberRange,
-        revealButton:copy.revealButton, revealPrompt:copy.revealPrompt, resultOverline:copy.resultOverline,
+        homeRevealButton:copy.revealButton, revealButton:copy.revealButton, revealPrompt:copy.revealPrompt, resultOverline:copy.resultOverline,
         paperSectionLabel:copy.section, againButton:copy.again, saveButton:copy.save, shareButton:copy.share,
         resultFooter:copy.footer, loadingText:copy.loading
       };
@@ -1009,7 +1027,7 @@
       }));
       const offerElement = document.getElementById("offerNote");
       const offerLabel = offerElement.querySelector("strong")?.textContent.trim() || "";
-      const offerText = [...offerElement.childNodes].filter(node => node.nodeType === Node.TEXT_NODE).map(node => node.textContent.trim()).join(" ").trim();
+      const offerText = offerElement.querySelector(".offer-description")?.textContent.trim() || "";
       const level = document.getElementById("fortuneLevel").textContent.trim();
 
       const wash = ctx.createLinearGradient(0,0,width,workHeight);
@@ -1167,7 +1185,8 @@
         const link = document.createElement("a");
         link.href = fortune.promotionUrl; link.target = "_blank"; link.rel = "noopener noreferrer";
         link.textContent = {th:"ดูรายละเอียดโครงการ",en:"View project details",zh:"查看项目详情"}[currentLanguage];
-        offer.append(label,document.createTextNode(fortune.promotion),link);
+        const description = document.createElement("p"); description.className = "offer-description"; description.textContent = fortune.promotion;
+        offer.append(label,description,link);
       } else { offer.hidden = true; }
       document.getElementById("fortuneLevel").textContent = `${copy.levelPrefix} · ${fortune.level || copy.levelNames["มงคล"]}`;
       document.getElementById("meaningText").textContent = fortune.meaningDetail || copy.meaningDetail;
@@ -1204,6 +1223,8 @@
     function resetFortune() {
       clearTimeout(drawTimer); isDrawing = false; drawnNumber = null;
       document.getElementById("drawButton").classList.remove("is-shaking","has-drawn");
+      document.getElementById("homeRevealButton").hidden = true;
+      document.getElementById("beginButton").disabled = false;
       document.getElementById("drawButton").disabled = false;
       document.getElementById("revealButton").disabled = false;
       numberInput.disabled = false;
@@ -1275,6 +1296,7 @@
        EVENT WIRING
        ========================= */
     document.getElementById("beginButton").addEventListener("click",() => {
+      if (isDrawing) return;
       const temple = sceneElement("temple");
       temple.classList.add("door-open");
       setTimeout(() => { goToScene("number"); numberInput.focus({preventScroll:true}); },prefersReducedMotion.matches ? 60 : 650);
@@ -1284,6 +1306,8 @@
       isDrawing = true; drawnNumber = null;
       const button = document.getElementById("drawButton");
       button.disabled = true; numberInput.disabled = true;
+      document.getElementById("beginButton").disabled = true;
+      document.getElementById("homeRevealButton").hidden = true;
       document.getElementById("revealButton").disabled = true;
       button.classList.remove("has-drawn"); button.classList.add("is-shaking");
       document.getElementById("drawCaption").textContent = drawCopy[currentLanguage].shake;
@@ -1294,11 +1318,14 @@
         document.getElementById("drawnStick").textContent = String(drawnNumber).padStart(2,"0");
         button.classList.remove("is-shaking"); button.classList.add("has-drawn");
         isDrawing = false; button.disabled = false; numberInput.disabled = false;
+        document.getElementById("beginButton").disabled = false;
+        document.getElementById("homeRevealButton").hidden = false;
         document.getElementById("revealButton").disabled = false;
         document.getElementById("drawCaption").textContent = drawCopy[currentLanguage].tap;
         document.getElementById("drawStatus").textContent = `${translations[currentLanguage].numberPrefix} ${localizedNumber(drawnNumber)} · ${drawCopy[currentLanguage].ready}`;
       },prefersReducedMotion.matches ? 100 : 1950);
     });
+    document.getElementById("homeRevealButton").addEventListener("click",playReveal);
     document.getElementById("fortuneForm").addEventListener("submit",event => { event.preventDefault(); playReveal(); });
     numberInput.addEventListener("input",() => { numberError.textContent = ""; });
     document.querySelectorAll(".language-button").forEach(button => button.addEventListener("click",() => applyLanguage(button.dataset.language)));
